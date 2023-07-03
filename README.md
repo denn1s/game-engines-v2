@@ -1,53 +1,36 @@
-# Game Loop Tutorial
+## Pong
 
-This tutorial explains the main game loop of a simple game using the following code as an example:
+In this exercise, you will create a simple Pong game by modifying the given Game class. You will need to update the initialization, setup, event handling, game state update, rendering, and cleanup methods to support the Pong game mechanics. The game should consist of two paddles and a ball that bounces between them. When a player scores a point by getting the ball past their opponent's paddle, the game should print the name of the player who scored and exit the game. This exercise will help you understand the different stages of the game loop and how they work together to create a functional game. Remember to focus on the core mechanics and not to worry about implementing a scoring system or other advanced features at this point, as this is just an introductory exercise.
 
-```cpp
-#include "Game/Game.h"
+1. Your task is to modify the Game class to create a Pong game.
 
-//Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+2. Initialize the game window:
+   - Update the 'init' method in the Game class.
+   - Set up the game window with a title, width, and height.
 
-Game *game = NULL;
+3. Set up game objects and variables:
+   - Update the 'setup' method in the Game class.
+   - Create and initialize two paddle objects for the players.
+   - Create and initialize a ball object.
+   - Define variables for player names, ball speed, and paddle speed.
 
-int main( int argc, char* args[] )
-{
-    game = new Game();
+4. Handle user input and events:
+   - Update the 'handleEvents' method in the Game class.
+   - Process keyboard input for moving the paddles up and down.
+   - Ensure that the paddles do not move outside the game window.
 
-    game->init("Brand new game", SCREEN_WIDTH, SCREEN_HEIGHT);
-    game->setup();
+5. Update the game state:
+   - Update the 'update' method in the Game class.
+   - Update the position of the ball according to its speed and direction.
+   - Check for collisions between the ball and the paddles.
+   - Check for collisions between the ball and the top and bottom edges of the game window.
+   - Check if the ball goes past a paddle, indicating a point has been scored. If so, print the name of the player who scored and exit the game.
 
-    while (game->running())
-    {
-      game->frameStart();
-      game->handleEvents();
-      game->update();
-      game->render();
-      game->frameEnd();
-    }
+6. Render the game objects:
+   - Update the 'render' method in the Game class.
+   - Clear the screen.
+   - Draw the paddles and ball on the screen.
 
-    game->clean();
-
-    return 0;
-}
-```
-
-## Game Loop Stages
-The game loop is the core of any game, and it is responsible for constantly updating the game state and rendering the screen. The main stages of the game loop are:
-
-1. Initialization: This stage sets up the game window and initializes the game's core systems. In our example, this is done with the game->init() and game->setup() calls:
-  * game->init(): Initializes the game window with the specified title, width, and height.
-  * game->setup(): Sets up game-specific objects, such as loading textures or initializing game entities.
-
-2. Game Loop: This is the main loop that runs continuously while the game is running. It consists of several sub-stages:
-  * game->frameStart(): Marks the beginning of a new frame. This is typically used to measure the time since the previous frame, which can be helpful for ensuring consistent game speed across different devices.
-  * game->handleEvents(): Processes user input and other events, such as keyboard or mouse events, and updates the game state accordingly.
-  * game->update(): Updates the game's internal state, such as moving game entities or detecting collisions. This stage is where the game's logic is implemented.
-  * game->render(): Draws the game objects on the screen. This stage is responsible for rendering the game's visuals.
-  * game->frameEnd(): Marks the end of the current frame. This can be used to perform cleanup tasks, limit the frame rate, or swap buffers for double buffering.
-
-3. Cleanup: This stage is responsible for releasing any resources used by the game and shutting down the game's systems. In our example, this is done with the game->clean() call:
-  * game->clean(): Releases resources, such as textures or fonts, and shuts down any systems that were initialized during the setup stage.
-
-Each of these stages should be tailored to your specific game's requirements, and additional stages can be added as needed. Understanding these stages and their roles will help you create a solid foundation for building your game.
+7. Cleanup:
+   - Update the 'clean' method in the Game class.
+   - Release any resources used by the game, such as textures.
