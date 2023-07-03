@@ -7,18 +7,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_PRINT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/")
+
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 add_subdirectory(src/Game)
-
-target_include_directories(${PROJECT_NAME}
-  PUBLIC
-    ${PROJECT_SOURCE_DIR}/src/Game
-)
-
-target_link_directories(${PROJECT_NAME}
-  PRIVATE src/Game
-)
 
 target_link_libraries(${PROJECT_NAME}
   SDL2main

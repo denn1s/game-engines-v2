@@ -1,16 +1,12 @@
 #include <iostream>
 #include <SDL2/SDL.h>
-#include "../print.h"
+#include "print.h"
 #include "Game.h"
-
-int screen_width;
-int screen_height;
 
 SDL_Rect ball;
 SDL_Rect paddle;
 
-
-Game::Game()
+Game::Game(const char* title, int width, int height)
 {
   int maxFPS = 60;
   frameDuration = (1.0f / maxFPS) * 1000.0f;  // how many mili seconds in one frame
@@ -19,30 +15,23 @@ Game::Game()
   frameCount = 0;
   lastFPSUpdateTime = 0;
   FPS = 0;
+
+  SDL_Init(SDL_INIT_EVERYTHING);
+  
+  window = SDL_CreateWindow(title, 0, 0, width, height, 0);
+  renderer = SDL_CreateRenderer(window, -1, 0);
+  
+  SDL_SetRenderDrawColor(renderer, 200, 255, 255, 1);
+  print("Game Start!");
+
+  screen_width = width;
+  screen_height = height;
+
+  isRunning = true;
 }
 
 Game::~Game()
 {}
-
-void Game::init(const char* title, int width, int height)
-{
-  if(SDL_Init(SDL_INIT_EVERYTHING) == 0)
-  {
-    window = SDL_CreateWindow(title, 0, 0, width, height, 0);
-    renderer = SDL_CreateRenderer(window, -1, 0);
-    SDL_SetRenderDrawColor(renderer, 200, 255, 255, 1);
-    print("Game Start!");
-
-    screen_width = width;
-    screen_height = height;
-
-    isRunning = true;
-  } else {
-    isRunning = false;
-  }
-  counter = 0;
-}
-
 
 void Game::setup()
 {
@@ -59,7 +48,7 @@ void Game::setup()
 
 void Game::frameStart()
 {
-  print("---- Frame: ", counter, " ----");
+  print("---- Frame: ", frameCount, " ----");
   frameStartTimestamp = SDL_GetTicks();
   dT = frameEndTimestamp - frameStartTimestamp;
 }
@@ -74,8 +63,6 @@ void Game::frameEnd()
   {
     SDL_Delay(frameDuration - actualFrameDuration);
   }
-
-  counter++;
   
   frameCount++;
   // Update FPS counter every second

@@ -2,10 +2,9 @@
 
 class Game {
   public:
-    Game();
+    Game(const char* title, int width, int height);
     ~Game();
 
-    void init(const char* title, int width, int height);
     void setup();
     void frameStart();
     void frameEnd();
@@ -15,11 +14,15 @@ class Game {
     void clean();
     bool running();
 
+
   private:
-    int counter;
     bool isRunning;
     SDL_Window *window;
     SDL_Renderer *renderer;
+
+    int screen_width;
+    int screen_height;
+
     // for frame management
     Uint32 frameStartTimestamp;
     Uint32 frameEndTimestamp;
