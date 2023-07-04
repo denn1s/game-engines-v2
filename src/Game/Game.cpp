@@ -3,9 +3,6 @@
 #include "print.h"
 #include "Game.h"
 
-SDL_Rect ball;
-SDL_Rect paddle;
-
 Game::Game(const char* title, int width, int height)
 {
   int maxFPS = 60;

@@ -1,13 +1,18 @@
-#include "Game/Game.h"
-
-//Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+#include <print.h>
 
 int main( int argc, char* args[] )
 {
-    Game game = Game("Brand new game", SCREEN_WIDTH, SCREEN_HEIGHT);
-    game.run();
+    print("hello world");
+}
+
+/*
+#include "Pong/Pong.h"
+
+int main( int argc, char* args[] )
+{
+    Pong pong = Pong();
+    pong.run();
 
     return 0;
 }
+*/
