@@ -62,7 +62,7 @@ void Scene::setup()
 {
   print("Scene Setup");
   
-  for (SetupSystem* sys: setupSystems)
+  for (std::shared_ptr<SetupSystem> sys: setupSystems)
   {
     sys->run();
   }
@@ -72,7 +72,7 @@ void Scene::update(double dT)
 {
   print("Scene Update");
   
-  for (UpdateSystem* sys: updateSystems)
+  for (std::shared_ptr<UpdateSystem> sys: updateSystems)
   {
     sys->run(dT);
   }
@@ -82,7 +82,7 @@ void Scene::render(SDL_Renderer* renderer)
 {
   print("Scene Render");
   
-  for (RenderSystem* sys: renderSystems)
+  for (std::shared_ptr<RenderSystem> sys: renderSystems)
   {
     sys->run(renderer);
   }
@@ -92,7 +92,7 @@ void Scene::event(SDL_Event event)
 {
   print("Scene Events");
   
-  for (EventSystem* sys: eventSystems)
+  for (std::shared_ptr<EventSystem> sys: eventSystems)
   {
     sys->run(event);
   }

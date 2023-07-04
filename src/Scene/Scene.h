@@ -12,10 +12,10 @@ class RenderSystem;
 
 class Scene {
   private:
-    std::vector<SetupSystem*> setupSystems;
-    std::vector<EventSystem*> eventSystems;
-    std::vector<UpdateSystem*> updateSystems;
-    std::vector<RenderSystem*> renderSystems;
+    std::vector<std::shared_ptr<SetupSystem>> setupSystems;
+    std::vector<std::shared_ptr<EventSystem>> eventSystems;
+    std::vector<std::shared_ptr<UpdateSystem>> updateSystems;
+    std::vector<std::shared_ptr<RenderSystem>> renderSystems;
     std::string name;
 
   public:
