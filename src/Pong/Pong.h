@@ -11,5 +11,6 @@ class Pong : public Game {
     Pong();
     ~Pong();
 
-    void setup() override;
+  private:
+    std::unique_ptr<Scene> createGameplayScene();
 };

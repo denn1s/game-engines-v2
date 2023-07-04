@@ -8,7 +8,7 @@ class Game {
     Game(const char* title, int width, int height);
     ~Game();
 
-    virtual void setup() = 0;
+    void setup();
     void frameStart();
     void frameEnd();
     void handleEvents();

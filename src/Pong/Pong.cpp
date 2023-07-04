@@ -2,14 +2,22 @@
 #include "Pong.h"
 
 Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
-    // Constructor implementation
+    std::unique_ptr<Scene> gameplayScene = createGameplayScene();
+    setScene(std::move(gameplayScene));
 }
 
 Pong::~Pong() {
     // destructor implementation
 }
 
-void Pong::setup() {
-    print("Setting up Pong game...");
-    // Add your Pong-specific setup code here
+std::unique_ptr<Scene> Pong::createGameplayScene()
+{
+    // Create a unique_ptr to hold the created scene
+    std::unique_ptr<Scene> gameplayScene = std::make_unique<Scene>("Gameplay");
+
+    // Configure the introScene object as needed
+    // ...
+
+    return gameplayScene;
 }
+

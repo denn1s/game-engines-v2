@@ -1,6 +1,6 @@
-#include <iostream>
 #include <SDL2/SDL.h>
 #include "print.h"
+#include "isDefined.h"
 #include "Game.h"
 
 Game::Game(const char* title, int width, int height)
@@ -29,6 +29,14 @@ Game::Game(const char* title, int width, int height)
 
 Game::~Game()
 {}
+
+void Game::setup()
+{
+  print("Game Setup...");
+
+  isDefined(currentScene, "CurrentScene is not initialized");
+  currentScene->setup();
+}
 
 void Game::frameStart()
 {
