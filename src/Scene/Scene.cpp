@@ -5,9 +5,9 @@
 
 #include "Scene.h"
 
-#include "Entities.hpp"
-#include "Components.hpp"
-#include "System.h"
+#include "ECS/Entity.h"
+#include "ECS/Components.h"
+#include "ECS/System.h"
 
 
 Scene::Scene(const std::string& name)

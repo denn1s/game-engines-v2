@@ -1,10 +1,7 @@
+#include <print.h>
 #include "Pong.h"
 
-class Pong : public Game {
-  public:
-    // Implement the setup function for Pong
-    void setup() override {
-        std::cout << "Setting up Pong game..." << std::endl;
-        // Add your Pong-specific setup code here
-    }
-};
+void Pong::setup() {
+    print("Setting up Pong game...");
+    // Add your Pong-specific setup code here
+}

@@ -9,24 +9,24 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(SDL2 REQUIRED)
 
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
+   "${PROJECT_SOURCE_DIR}/src/*.cpp"
+)
+
 add_executable(${PROJECT_NAME} 
    src/main.cpp
 )
 
-include_directories(
-  ${PROJECT_SOURCE_DIR}/include
-  ${SDL2_INCLUDE_DIR} 
+target_include_directories(${PROJECT_NAME}
+   PRIVATE ${PROJECT_SOURCE_DIR}/include
+   PUBLIC ${PROJECT_SOURCE_DIR}/src/Game
+   PUBLIC ${PROJECT_SOURCE_DIR}/src
 )
 
-file(GLOB SOURCES 
-   "${PROJECT_SOURCE_DIR}/src/*.cpp"
-) 
+target_sources(${PROJECT_NAME}
+   PRIVATE ${SOURCES}
+)
 
 target_link_libraries(${PROJECT_NAME}
-   ${SOURCES}
-   ${SDL2_LIBRARY}  
+   ${SDL2_LIBRARY}
 )
-
-get_property(inc_dirs DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
-message("inc_dirs = ${inc_dirs}")
-message(STATUS "Project source dir: " ${PROJECT_SOURCE_DIR})
