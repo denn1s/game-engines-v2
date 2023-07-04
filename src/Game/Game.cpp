@@ -33,19 +33,6 @@ Game::Game(const char* title, int width, int height)
 Game::~Game()
 {}
 
-void Game::setup()
-{
-  ball.x = 20;
-  ball.y = 20;
-  ball.w = 15;
-  ball.h = 15;
-
-  paddle.x = (screen_width / 2) - 50;
-  paddle.y = screen_height - 20;
-  paddle.w = 100;
-  paddle.h = 20;
-}
-
 void Game::frameStart()
 {
   print("---- Frame: ", frameCount, " ----");
@@ -89,59 +76,15 @@ void Game::handleEvents()
       isRunning = false;
     }
 
-    if (event.type == SDL_KEYDOWN)
-    {
-      switch (event.key.keysym.sym)
-      {
-        case SDLK_LEFT:
-          paddle.x -= 10;
-          break;
-        case SDLK_RIGHT:
-          paddle.x += 10;
-          break;
-      }
-    }
+    currentScene->event(event);
   }
 }
-
-int sx = 2;
-int sy = 2;
 
 void Game::update()
 {
   print("Game Updating...");
 
-  // collisions 
-  if (ball.x <= 0)
-  {
-    sx *= -1;
-  }
-
-  if (ball.x + ball.w >= screen_width)
-  {
-    sx *= -1;
-  }
-
-  if (ball.y <= 0)
-  {
-    sy *= -1;
-  }
-
-  if (ball.y + ball.h >= screen_height)
-  {
-    isRunning = false;
-  }
-
-  if (ball.y + ball.h >= paddle.y &&
-      ball.x + ball.w >= paddle.x &&
-      ball.x <= paddle.x + paddle.w)
-  {
-    sy *= -1.1;
-    sx *= 1.1;
-  }
-
-  ball.x += sx;
-  ball.y += sy;
+  currentScene->update(dT);
 }
 
 void Game::render()
@@ -150,14 +93,10 @@ void Game::render()
 
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
   SDL_RenderClear(renderer);
-  // actually render stuff
-  SDL_SetRenderDrawColor(renderer, 255, 255 ,255, 1);
-  SDL_RenderFillRect(renderer, &ball);
-  SDL_RenderFillRect(renderer, &paddle);
-
+  
+  currentScene->render(renderer);
 
   SDL_RenderPresent(renderer);
-
   vprint(FPS);
 }
 
@@ -172,4 +111,28 @@ void Game::clean()
 bool Game::running()
 {
   return isRunning;
+}
+
+void Game::run()
+{
+    setup();
+
+    while (running())
+    {
+      frameStart();
+      handleEvents();
+      update();
+      render();
+      frameEnd();
+    }
+
+    clean();
+}
+
+void Game::setScene(std::unique_ptr<Scene> newScene) {
+  currentScene = std::move(newScene);
+}
+
+Scene* Game::getCurrentScene() const {
+  return currentScene.get();
 }

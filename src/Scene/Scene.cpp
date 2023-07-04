@@ -1,7 +1,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <SDL2/SDL.h>
-#include "../print.h"
+#include "print.h"
 
 #include "Scene.h"
 
@@ -43,7 +43,7 @@ void Scene::addSetupSystem(std::shared_ptr<SetupSystem> s)
 void Scene::addEventSystem(std::shared_ptr<EventSystem> s)
 {
   s->setScene(this);
-  inputSystems.push_back(s);
+  eventSystems.push_back(s);
 }
 
 void Scene::addUpdateSystem(std::shared_ptr<UpdateSystem> s)
@@ -70,7 +70,7 @@ void Scene::setup()
 
 void Scene::update(double dT)
 {
-  std::cout << "Scene Update" << std::endl;
+  print("Scene Update");
   
   for (UpdateSystem* sys: updateSystems)
   {
@@ -80,10 +80,20 @@ void Scene::update(double dT)
 
 void Scene::render(SDL_Renderer* renderer)
 {
-  std::cout << "Scene Render" << std::endl;
+  print("Scene Render");
   
   for (RenderSystem* sys: renderSystems)
   {
     sys->run(renderer);
+  }
+}
+
+void Scene::event(SDL_Event event)
+{
+  print("Scene Events");
+  
+  for (EventSystem* sys: eventSystems)
+  {
+    sys->run(event);
   }
 }

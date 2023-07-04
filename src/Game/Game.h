@@ -1,11 +1,14 @@
 #include <SDL2/SDL.h>
+#include <memory>
+#include "Scene/Scene.h"
+
 
 class Game {
   public:
     Game(const char* title, int width, int height);
     ~Game();
 
-    void setup();
+    virtual void setup() = 0;
     void frameStart();
     void frameEnd();
     void handleEvents();
@@ -14,6 +17,10 @@ class Game {
     void clean();
     bool running();
 
+    void run();
+
+    void setScene(std::unique_ptr<Scene> newScene);
+    Scene* getCurrentScene() const;
 
   private:
     bool isRunning;
@@ -32,4 +39,7 @@ class Game {
     int frameCount;
     Uint32 lastFPSUpdateTime;
     float FPS;
+
+    // scene logic
+    std::unique_ptr<Scene> currentScene;
 };

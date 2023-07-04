@@ -30,11 +30,12 @@ class Scene {
       int y = 0
     );
     void addSetupSystem(std::shared_ptr<SetupSystem> s);
-    void addInputSystem(std::shared_ptr<InputSystem> s);
+    void addEventSystem(std::shared_ptr<EventSystem> s);
     void addUpdateSystem(std::shared_ptr<UpdateSystem> s);
     void addRenderSystem(std::shared_ptr<RenderSystem> s);
 
     void setup();
     void update(double dT);
     void render(SDL_Renderer* renderer);
+    void event(SDL_Event renderer);
 };
