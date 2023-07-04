@@ -15,6 +15,8 @@ Game::Game(const char* title, int width, int height)
   frameCount = 0;
   lastFPSUpdateTime = 0;
   FPS = 0;
+  frameStartTimestamp = 0;
+  frameEndTimestamp = 0;
 
   SDL_Init(SDL_INIT_EVERYTHING);
   
@@ -48,9 +50,16 @@ void Game::setup()
 
 void Game::frameStart()
 {
-  print("---- Frame: ", frameCount, " ----");
+  std::cout << "---- Frame: " << frameCount << " ----" << std::endl;
   frameStartTimestamp = SDL_GetTicks();
-  dT = frameEndTimestamp - frameStartTimestamp;
+  if (frameEndTimestamp)
+  {
+    dT = (frameStartTimestamp - frameEndTimestamp) / 1000.0f;
+  }
+  else
+  {
+    dT = 0;
+  }
 }
 
 void Game::frameEnd()
