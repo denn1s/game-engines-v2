@@ -25,6 +25,9 @@ Game::Game(const char* title, int width, int height)
   screen_height = height;
 
   isRunning = true;
+
+  frameStartTimestamp = 0;
+  frameEndTimestamp = 0;
 }
 
 Game::~Game()
@@ -40,9 +43,17 @@ void Game::setup()
 
 void Game::frameStart()
 {
-  print("---- Frame: ", frameCount, " ----");
+  std::cout << "---- Frame: " << frameCount << " ----" << std::endl;
   frameStartTimestamp = SDL_GetTicks();
-  dT = frameEndTimestamp - frameStartTimestamp;
+  if (frameEndTimestamp)
+  {
+    dT = (frameStartTimestamp - frameEndTimestamp) / 1000.0f;
+  }
+  else
+  {
+    dT = 0;
+  }
+  print(">> dT", dT);
 }
 
 void Game::frameEnd()

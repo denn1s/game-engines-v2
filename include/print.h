@@ -27,3 +27,10 @@ inline void print(auto first, auto... args) {
         std::cout << std::endl;
     }
 }
+
+
+
+// empty function to print newlines
+inline void print(glm::vec2 v) {
+    std::cout << "V2(" << v.x << ", " << v.y << ")" << std::endl;
+}
