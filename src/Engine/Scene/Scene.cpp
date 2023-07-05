@@ -1,9 +1,8 @@
+#include "Scene.h"
+
 #include <string>
 #include <glm/glm.hpp>
 #include <SDL2/SDL.h>
-#include "print.h"
-
-#include "Scene.h"
 
 #include "ECS/Entity.h"
 #include "ECS/Components.h"
@@ -13,12 +12,10 @@
 Scene::Scene(const std::string& name)
   : name(name)
 {
-  print("Scene ", name, "constructed!");
 }
 
 Scene::~Scene()
 {
-  print("Scene Destroyed!");
 }
 
 Entity Scene::createEntity(const std::string& name, int x, int y)
@@ -60,8 +57,6 @@ void Scene::addRenderSystem(std::shared_ptr<RenderSystem> s)
 
 void Scene::setup()
 {
-  print("Scene Setup");
-  
   for (std::shared_ptr<SetupSystem> sys: setupSystems)
   {
     sys->run();
@@ -70,8 +65,6 @@ void Scene::setup()
 
 void Scene::update(double dT)
 {
-  print("Scene Update");
-  
   for (std::shared_ptr<UpdateSystem> sys: updateSystems)
   {
     sys->run(dT);
@@ -80,8 +73,6 @@ void Scene::update(double dT)
 
 void Scene::render(SDL_Renderer* renderer)
 {
-  print("Scene Render");
-  
   for (std::shared_ptr<RenderSystem> sys: renderSystems)
   {
     sys->run(renderer);
@@ -90,8 +81,6 @@ void Scene::render(SDL_Renderer* renderer)
 
 void Scene::event(SDL_Event event)
 {
-  print("Scene Events");
-  
   for (std::shared_ptr<EventSystem> sys: eventSystems)
   {
     sys->run(event);

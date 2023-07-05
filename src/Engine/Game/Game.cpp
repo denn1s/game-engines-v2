@@ -1,7 +1,8 @@
+#include "Game.h"
+
 #include <SDL2/SDL.h>
 #include "print.h"
 #include "isDefined.h"
-#include "Game.h"
 
 Game::Game(const char* title, int width, int height)
 {
@@ -19,7 +20,6 @@ Game::Game(const char* title, int width, int height)
   renderer = SDL_CreateRenderer(window, -1, 0);
   
   SDL_SetRenderDrawColor(renderer, 200, 255, 255, 1);
-  print("Game Start!");
 
   screen_width = width;
   screen_height = height;
@@ -35,10 +35,9 @@ Game::~Game()
 
 void Game::setup()
 {
-  print("Game Setup...");
-
   isDefined(currentScene, "CurrentScene is not initialized");
   currentScene->setup();
+  print("Game Start.");
 }
 
 void Game::frameStart()
@@ -53,7 +52,6 @@ void Game::frameStart()
   {
     dT = 0;
   }
-  print(">> dT", dT);
 }
 
 void Game::frameEnd()
@@ -76,14 +74,10 @@ void Game::frameEnd()
     lastFPSUpdateTime = currentTime;
     frameCount = 0;
   }
-
-  print();
 }
 
 void Game::handleEvents()
 {
-  print("Game Handling events...");
-
   SDL_Event event;
   while (SDL_PollEvent(&event) != 0)
   {
@@ -98,15 +92,11 @@ void Game::handleEvents()
 
 void Game::update()
 {
-  print("Game Updating...");
-
   currentScene->update(dT);
 }
 
 void Game::render()
 {
-  print("Game Rendering...");
-
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
   SDL_RenderClear(renderer);
   

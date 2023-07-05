@@ -23,17 +23,10 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
     PRIVATE ${PROJECT_SOURCE_DIR}/include
     PUBLIC ${PROJECT_SOURCE_DIR}/src
+    PUBLIC ${PROJECT_SOURCE_DIR}/src/Engine
 )
 
 target_link_libraries(${PROJECT_NAME}
     ${SDL2_LIBRARIES}
     imgui
 )
-
-# get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-# foreach(dir ${dirs})
-#   message(STATUS "dir='${dir}'")
-# endforeach()
-
-# get_target_property(OUT ${PROJECT_NAME} LINK_LIBRARIES)
-# message(STATUS "lib=${OUT}")

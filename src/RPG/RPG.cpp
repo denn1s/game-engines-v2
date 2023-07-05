@@ -1,20 +1,20 @@
-#include "print.h"
-#include "Pong.h"
+#include "RPG.h"
+
+#include "Engine/UI/Systems.h"
+#include "Engine/ECS/Entity.h"
 #include "Systems.h"
 #include "Components.h"
-#include "UI/Systems.h"
-#include "ECS/Entity.h"
 
-Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
+RPG::RPG() : Game("RPG", SCREEN_WIDTH, SCREEN_HEIGHT) {
     std::unique_ptr<Scene> gameplayScene = createGameplayScene();
     setScene(std::move(gameplayScene));
 }
 
-Pong::~Pong() {
+RPG::~RPG() {
     // destructor implementation
 }
 
-std::unique_ptr<Scene> Pong::createGameplayScene()
+std::unique_ptr<Scene> RPG::createGameplayScene()
 {
     // Create a unique_ptr to hold the created scene
     std::unique_ptr<Scene> gameplayScene = std::make_unique<Scene>("Gameplay");
@@ -30,18 +30,6 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
     // Configure the gameplayScene object as needed
     std::shared_ptr<HelloSystem> helloSystem = std::make_shared<HelloSystem>();
     gameplayScene->addSetupSystem(helloSystem);
-
-    std::shared_ptr<RectRenderSystem> rectSystem = std::make_shared<RectRenderSystem>();
-    gameplayScene->addRenderSystem(rectSystem);
-
-    std::shared_ptr<MovementUpdateSystem> movementSystem = std::make_shared<MovementUpdateSystem>(SCREEN_WIDTH, SCREEN_HEIGHT);
-    gameplayScene->addUpdateSystem(movementSystem);
-
-    std::shared_ptr<EngineUISystem> ui = std::make_shared<EngineUISystem>(renderer, window);
-    gameplayScene->addSetupSystem(ui);
-    gameplayScene->addEventSystem(ui);
-    gameplayScene->addUpdateSystem(ui);
-    gameplayScene->addRenderSystem(ui);
 
     return gameplayScene;
 }

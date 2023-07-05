@@ -1,6 +1,5 @@
 #include "Systems.h"
 
-#include "print.h"
 #include "imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_sdlrenderer.h"
@@ -15,8 +14,6 @@ EngineUISystem::EngineUISystem(SDL_Renderer* r, SDL_Window* w)
 EngineUISystem::~EngineUISystem() {}
 
 void EngineUISystem::run() {
-  print("UI engine setup");
-
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -34,13 +31,10 @@ void EngineUISystem::run() {
 }
 
 void EngineUISystem::run(SDL_Event event) {
-  print("UI engine events");
   ImGui_ImplSDL2_ProcessEvent(&event);
 }
 
 void EngineUISystem::run(double dT) {
-  print("UI engine update");
-
   // Start the Dear ImGui frame
   ImGui_ImplSDLRenderer_NewFrame();
   ImGui_ImplSDL2_NewFrame();
@@ -86,7 +80,5 @@ void EngineUISystem::run(double dT) {
 }
 
 void EngineUISystem::run(SDL_Renderer* r) {
-  print("UI engine render");
-
   ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 }

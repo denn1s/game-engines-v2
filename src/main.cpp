@@ -1,9 +1,9 @@
-#include "Pong/Pong.h"
+#include "RPG/RPG.h"
 
 int main()
 {
-    Pong pong = Pong();
-    pong.run();
+    RPG game = RPG();
+    game.run();
 
     return 0;
 }
