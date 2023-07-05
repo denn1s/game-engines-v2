@@ -22,14 +22,15 @@ class Game {
     void setScene(std::unique_ptr<Scene> newScene);
     Scene* getCurrentScene() const;
 
-  private:
-    bool isRunning;
+  protected:
     SDL_Window *window;
     SDL_Renderer *renderer;
 
     int screen_width;
     int screen_height;
 
+  private:
+    bool isRunning;
     // for frame management
     Uint32 frameStartTimestamp;
     Uint32 frameEndTimestamp;

@@ -2,6 +2,7 @@
 #include "Pong.h"
 #include "Systems.h"
 #include "Components.h"
+#include "UI/Systems.h"
 #include "ECS/Entity.h"
 
 Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
@@ -31,6 +32,13 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
 
     std::shared_ptr<MovementUpdateSystem> movementSystem = std::make_shared<MovementUpdateSystem>(SCREEN_WIDTH, SCREEN_HEIGHT);
     gameplayScene->addUpdateSystem(movementSystem);
+
+
+    std::shared_ptr<EngineUISystem> ui = std::make_shared<EngineUISystem>(renderer, window);
+    gameplayScene->addSetupSystem(ui);
+    gameplayScene->addEventSystem(ui);
+    gameplayScene->addUpdateSystem(ui);
+    gameplayScene->addRenderSystem(ui);
 
     return gameplayScene;
 }
