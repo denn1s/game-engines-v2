@@ -4,7 +4,7 @@
 #include <string>
 
 struct NameComponent {
-  std::string tag;
+  std::string name;
 };
 
 struct TransformComponent {

@@ -23,6 +23,10 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
     ball.addComponent<MovementComponent>(MovementComponent{glm::vec2(10, 100)});
     ball.addComponent<SizeComponent>(SizeComponent{glm::vec2(20, 20)});
  
+    Entity ball2 = gameplayScene->createEntity("second ball", 300, 300);
+    ball2.addComponent<MovementComponent>(MovementComponent{glm::vec2(5, 5)});
+    ball2.addComponent<SizeComponent>(SizeComponent{glm::vec2(30, 30)});
+
     // Configure the gameplayScene object as needed
     std::shared_ptr<HelloSystem> helloSystem = std::make_shared<HelloSystem>();
     gameplayScene->addSetupSystem(helloSystem);
@@ -32,7 +36,6 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
 
     std::shared_ptr<MovementUpdateSystem> movementSystem = std::make_shared<MovementUpdateSystem>(SCREEN_WIDTH, SCREEN_HEIGHT);
     gameplayScene->addUpdateSystem(movementSystem);
-
 
     std::shared_ptr<EngineUISystem> ui = std::make_shared<EngineUISystem>(renderer, window);
     gameplayScene->addSetupSystem(ui);

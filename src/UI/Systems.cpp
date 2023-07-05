@@ -5,7 +5,12 @@
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_sdlrenderer.h"
 
-EngineUISystem::EngineUISystem(SDL_Renderer* r, SDL_Window* w) : renderer(r), window(w) {}
+#include "ECS/Components.h"
+
+EngineUISystem::EngineUISystem(SDL_Renderer* r, SDL_Window* w)
+  : renderer(r), window(w) {
+    selectedEntity = entt::null;
+  }
 
 EngineUISystem::~EngineUISystem() {}
 
@@ -41,9 +46,41 @@ void EngineUISystem::run(double dT) {
   ImGui_ImplSDL2_NewFrame();
   ImGui::NewFrame();
 
-  ImGui::Begin("Hello, ImGui!");
-  ImGui::Text("This is a simple example using ImGui with SDL2 and SDL_Renderer.");
+  ImGui::Begin("Entities", nullptr);
+  // ImGui::Text("Test");
+
+  ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+  if (ImGui::TreeNode(UpdateSystem::scene->name.c_str())) {
+      const auto view = UpdateSystem::scene->r.view<NameComponent>();
+      for (const auto& entity : view) {
+        const NameComponent n = view.get<NameComponent>(entity);
+
+        ImGui::TreeNodeEx(n.name.c_str(), ImGuiTreeNodeFlags_Leaf);
+        if (ImGui::IsItemClicked()) {
+            selectedEntity = entity;
+        }
+        ImGui::TreePop();
+      }
+      ImGui::TreePop();
+  }
   ImGui::End();
+  
+  if (selectedEntity != entt::null) {
+    auto& entityTransform =  UpdateSystem::scene->r.get<TransformComponent>(selectedEntity);
+    auto& entityName =  UpdateSystem::scene->r.get<NameComponent>(selectedEntity);
+
+    ImGui::Begin(("Components for " + entityName.name).c_str(), nullptr);
+      if (ImGui::Button("Close")) {
+        selectedEntity = entt::null;
+      }
+      ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+      if (ImGui::CollapsingHeader("Transform")) {
+        ImGui::InputFloat2("Position", &entityTransform.position[0]);
+        ImGui::InputFloat2("Scale", &entityTransform.scale[0]);
+        ImGui::InputDouble("Rotation", &entityTransform.rotation);
+      }
+    ImGui::End();
+  }
 
   ImGui::Render();
 }

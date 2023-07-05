@@ -1,5 +1,5 @@
 #pragma once
-
+#include <entt/entt.hpp>
 #include "ECS/System.h"
 
 class EngineUISystem :
@@ -20,4 +20,5 @@ class EngineUISystem :
   private:
     SDL_Renderer* renderer;
     SDL_Window* window;
+    entt::entity selectedEntity;
 };

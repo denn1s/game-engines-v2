@@ -16,13 +16,13 @@ class Scene {
     std::vector<std::shared_ptr<EventSystem>> eventSystems;
     std::vector<std::shared_ptr<UpdateSystem>> updateSystems;
     std::vector<std::shared_ptr<RenderSystem>> renderSystems;
-    std::string name;
 
   public:
     Scene(const std::string&);
     ~Scene();
 
     entt::registry r;
+    std::string name;
 
     Entity createEntity(
       const std::string& name = "NO NAME",
