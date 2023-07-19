@@ -6,6 +6,7 @@
 class HelloSystem : public SetupSystem {
   public:
     HelloSystem();
+    HelloSystem(const HelloSystem& other);
     ~HelloSystem();
 
     void run() override;

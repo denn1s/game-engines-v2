@@ -3,7 +3,11 @@
 #include "Components.h"
 
 HelloSystem::HelloSystem() {
-    std::cout << "Hello System Constructor" << std::endl;
+  std::cout << "Hello System Constructor" << std::endl;
+}
+
+HelloSystem::HelloSystem(const HelloSystem& other) {
+  std::cout << "Hello System Copy Constructor" << std::endl;
 }
 
 HelloSystem::~HelloSystem() {
@@ -102,7 +106,7 @@ void CollisionUpdateSystem::run(double dT) {
 
             // Check for intersection
             if (SDL_HasIntersection(&box1, &box2)) {
-                exit(1);
+                print("collision!");
             }
         });
     });

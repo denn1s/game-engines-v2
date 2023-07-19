@@ -35,8 +35,6 @@ Game::~Game()
 
 void Game::setup()
 {
-  print("Game Setup...");
-
   isDefined(currentScene, "CurrentScene is not initialized");
   currentScene->setup();
 }
@@ -53,7 +51,6 @@ void Game::frameStart()
   {
     dT = 0;
   }
-  print(">> dT", dT);
 }
 
 void Game::frameEnd()
@@ -82,8 +79,6 @@ void Game::frameEnd()
 
 void Game::handleEvents()
 {
-  print("Game Handling events...");
-
   SDL_Event event;
   while (SDL_PollEvent(&event) != 0)
   {
@@ -92,21 +87,17 @@ void Game::handleEvents()
       isRunning = false;
     }
 
-    currentScene->event(event);
+    currentScene->processEvents(event);
   }
 }
 
 void Game::update()
 {
-  print("Game Updating...");
-
   currentScene->update(dT);
 }
 
 void Game::render()
 {
-  print("Game Rendering...");
-
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
   SDL_RenderClear(renderer);
   

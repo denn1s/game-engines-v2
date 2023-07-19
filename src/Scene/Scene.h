@@ -29,13 +29,37 @@ class Scene {
       int x = 0,
       int y = 0
     );
-    void addSetupSystem(std::shared_ptr<SetupSystem> s);
-    void addEventSystem(std::shared_ptr<EventSystem> s);
-    void addUpdateSystem(std::shared_ptr<UpdateSystem> s);
-    void addRenderSystem(std::shared_ptr<RenderSystem> s);
+    
+    template<typename T>
+    void addSetupSystem(auto&&... args) {
+        auto system = std::make_shared<T>(std::forward<decltype(args)>(args)...);
+        system->setScene(this);
+        setupSystems.push_back(system);
+    }
+
+    template<typename T>
+    void addEventSystem(auto&&... args) {
+        auto system = std::make_shared<T>(std::forward<decltype(args)>(args)...);
+        system->setScene(this);
+        eventSystems.push_back(system);
+    }
+
+    template<typename T>
+    void addUpdateSystem(auto&&... args) {
+        auto system = std::make_shared<T>(std::forward<decltype(args)>(args)...);
+        system->setScene(this);
+        updateSystems.push_back(system);
+    }
+
+    template<typename T>
+    void addRenderSystem(auto&&... args) {
+        auto system = std::make_shared<T>(std::forward<decltype(args)>(args)...);
+        system->setScene(this);
+        renderSystems.push_back(system);
+    }
 
     void setup();
     void update(double dT);
     void render(SDL_Renderer* renderer);
-    void event(SDL_Event renderer);
+    void processEvents(SDL_Event event);
 };

@@ -34,35 +34,11 @@ Entity Scene::createEntity(const std::string& name, int x, int y)
   return entity;
 }
 
-void Scene::addSetupSystem(std::shared_ptr<SetupSystem> s)
-{
-  s->setScene(this);
-  setupSystems.push_back(s);
-}
-
-void Scene::addEventSystem(std::shared_ptr<EventSystem> s)
-{
-  s->setScene(this);
-  eventSystems.push_back(s);
-}
-
-void Scene::addUpdateSystem(std::shared_ptr<UpdateSystem> s)
-{
-  s->setScene(this);
-  updateSystems.push_back(s);
-}
-
-void Scene::addRenderSystem(std::shared_ptr<RenderSystem> s)
-{
-  s->setScene(this);
-  renderSystems.push_back(s);
-}
-
 void Scene::setup()
 {
   print("Scene Setup");
   
-  for (std::shared_ptr<SetupSystem> sys: setupSystems)
+  for (auto sys: setupSystems)
   {
     sys->run();
   }
@@ -72,7 +48,7 @@ void Scene::update(double dT)
 {
   print("Scene Update");
   
-  for (std::shared_ptr<UpdateSystem> sys: updateSystems)
+  for (auto sys: updateSystems)
   {
     sys->run(dT);
   }
@@ -82,17 +58,17 @@ void Scene::render(SDL_Renderer* renderer)
 {
   print("Scene Render");
   
-  for (std::shared_ptr<RenderSystem> sys: renderSystems)
+  for (auto sys: renderSystems)
   {
     sys->run(renderer);
   }
 }
 
-void Scene::event(SDL_Event event)
+void Scene::processEvents(SDL_Event event)
 {
   print("Scene Events");
   
-  for (std::shared_ptr<EventSystem> sys: eventSystems)
+  for (auto sys: eventSystems)
   {
     sys->run(event);
   }
