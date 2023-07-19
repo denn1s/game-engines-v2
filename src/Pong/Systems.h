@@ -26,3 +26,13 @@ class MovementUpdateSystem : public UpdateSystem {
     int screen_width;
     int screen_height;
 };
+
+class PlayerInputEventSystem : public EventSystem {
+  public:
+    void run(SDL_Event event);
+};
+
+class CollisionUpdateSystem : public UpdateSystem {
+  public:
+    void run(double dT);
+};

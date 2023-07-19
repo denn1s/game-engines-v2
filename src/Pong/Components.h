@@ -1,5 +1,10 @@
 #include "ECS/Components.h"
 
 struct SizeComponent {
-  glm::vec2 size;
+  int w;
+  int h;
+};
+
+struct PlayerComponent {
+  short moveSpeed;
 };

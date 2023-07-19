@@ -26,9 +26,9 @@ Entity Scene::createEntity(const std::string& name, int x, int y)
   Entity entity = { r.create(), this };
   entity.addComponent<NameComponent>(name);
   entity.addComponent<TransformComponent>(
-    glm::vec2(x, y),
-    glm::vec2(1, 1),
-    0.0d
+    glm::vec2(x, y)
+    // glm::vec2(1, 1),
+    // 0.0d
   );
 
   return entity;

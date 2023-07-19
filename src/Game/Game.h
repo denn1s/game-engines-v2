@@ -22,7 +22,7 @@ class Game {
     void setScene(std::unique_ptr<Scene> newScene);
     Scene* getCurrentScene() const;
 
-  private:
+  protected:
     bool isRunning;
     SDL_Window *window;
     SDL_Renderer *renderer;

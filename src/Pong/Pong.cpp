@@ -19,8 +19,13 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
     std::unique_ptr<Scene> gameplayScene = std::make_unique<Scene>("Gameplay");
 
     Entity ball = gameplayScene->createEntity("ball", 100, 100);
-    ball.addComponent<MovementComponent>(MovementComponent{glm::vec2(10, 100)});
-    ball.addComponent<SizeComponent>(SizeComponent{glm::vec2(20, 20)});
+    ball.addComponent<SpeedComponent>(100, 100);
+    ball.addComponent<SizeComponent>(20, 20);
+
+    Entity paddle = gameplayScene->createEntity("paddle", (screen_width/2)-50, screen_height-20);
+    paddle.addComponent<SpeedComponent>(0, 0);
+    paddle.addComponent<SizeComponent>(100, 20);
+    paddle.addComponent<PlayerComponent>(200);
  
     // Configure the gameplayScene object as needed
     std::shared_ptr<HelloSystem> helloSystem = std::make_shared<HelloSystem>();
@@ -31,6 +36,12 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
 
     std::shared_ptr<MovementUpdateSystem> movementSystem = std::make_shared<MovementUpdateSystem>(SCREEN_WIDTH, SCREEN_HEIGHT);
     gameplayScene->addUpdateSystem(movementSystem);
+
+    std::shared_ptr<PlayerInputEventSystem> playerInputSystem = std::make_shared<PlayerInputEventSystem>();
+    gameplayScene->addEventSystem(playerInputSystem);
+
+    std::shared_ptr<CollisionUpdateSystem> collisionUpdateSystem = std::make_shared<CollisionUpdateSystem>();
+    gameplayScene->addUpdateSystem(collisionUpdateSystem);
 
     return gameplayScene;
 }
