@@ -17,9 +17,9 @@ class Entity
       print("Entity Destroyed");
     }
 
-    template<typename T, typename... Args>
-    T& addComponent(Args&&... args) {
-      return scene->r.emplace<T>(handle, std::forward<Args>(args)...);
+    template<typename T>
+    auto& addComponent(auto&&... args) {
+      return scene->r.emplace<T>(handle, std::forward<decltype(args)>(args)...);
     }
 
     template<typename T>
