@@ -33,7 +33,12 @@ class PlayerInputEventSystem : public EventSystem {
     void run(SDL_Event event);
 };
 
-class CollisionUpdateSystem : public UpdateSystem {
+class CollisionDetectionUpdateSystem : public UpdateSystem {
+  public:
+    void run(double dT);
+};
+
+class BounceUpdateSystem : public UpdateSystem {
   public:
     void run(double dT);
 };

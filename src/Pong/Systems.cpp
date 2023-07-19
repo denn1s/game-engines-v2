@@ -44,6 +44,10 @@ void MovementUpdateSystem::run(double dT) {
     TransformComponent& t = view.get<TransformComponent>(e);
     SpeedComponent& m = view.get<SpeedComponent>(e);
 
+    if (m.x == 0 && m.y == 0) {
+      continue;
+    }
+
     if (t.position.x <= 0)
     {
       m.x *= -1;
@@ -56,9 +60,10 @@ void MovementUpdateSystem::run(double dT) {
     {
       m.y *= -1;
     }
-    if (t.position.y >= screen_height - 20)
+    if (t.position.y > screen_height - 20)
     {
-      m.y *= -1;
+      print("You lose.");
+      exit(1);
     }
   
     t.position.x += m.x * dT;
@@ -89,16 +94,16 @@ void PlayerInputEventSystem::run(SDL_Event event) {
 }
 
 
+void CollisionDetectionUpdateSystem::run(double dT) {
+    const auto view = scene->r.view<TransformComponent, SizeComponent, ColliderComponent>();
+    const auto view2 = scene->r.view<TransformComponent, SizeComponent>();
 
-void CollisionUpdateSystem::run(double dT) {
-    const auto view = scene->r.view<TransformComponent, SizeComponent>();
-
-    view.each([&](auto e1, TransformComponent& t1, SizeComponent& s1) {
+    view.each([&](auto e1, TransformComponent& t1, SizeComponent& s1, ColliderComponent& c1) {
         // Create a bounding box for the first entity
         SDL_Rect box1 = { t1.position.x, t1.position.y, s1.w, s1.h };
 
         // Check against all other entities
-        view.each([&](auto e2, TransformComponent& t2, SizeComponent& s2) {
+        view2.each([&](auto e2, TransformComponent& t2, SizeComponent& s2) {
             if (e1 == e2) return;  // Skip self
 
             // Create a bounding box for the second entity
@@ -106,8 +111,20 @@ void CollisionUpdateSystem::run(double dT) {
 
             // Check for intersection
             if (SDL_HasIntersection(&box1, &box2)) {
-                print("collision!");
+              c1.triggered = true;
             }
         });
+    });
+}
+
+
+void BounceUpdateSystem::run(double dT) {
+    const auto view = scene->r.view<ColliderComponent, SpeedComponent>();
+
+    view.each([&](auto e, ColliderComponent& c, SpeedComponent& s) {
+      if (c.triggered) {
+        c.triggered = false;
+        s.y *= -1.2;
+      }
     });
 }
