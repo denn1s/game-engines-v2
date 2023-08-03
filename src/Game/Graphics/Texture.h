@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string>
 #include <functional>
+#include "PixelShader.h"
 
 class Texture {
 	public:
@@ -12,8 +13,7 @@ class Texture {
 		Texture(SDL_Renderer* renderer);
 		~Texture();
 
-		void load(std::string path);
-		void executeShader(std::function<Uint32(Uint32)> func);
+		void load(std::string path, PixelShader shader = { nullptr, "" });
 
 		void render(int x, int y, int w = 0, int h = 0, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE);
 

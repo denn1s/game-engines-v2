@@ -1,5 +1,6 @@
 #include "ECS/Components.h"
 #include "Game/Graphics/Texture.h"
+#include "Game/Graphics/PixelShader.h"
 
 struct SizeComponent {
   int w;
@@ -16,4 +17,5 @@ struct PlayerComponent {
 
 struct SpriteComponent {
   std::string textureName;
+  PixelShader shader = { nullptr, "" };
 };

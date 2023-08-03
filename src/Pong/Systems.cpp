@@ -138,8 +138,8 @@ void SimpleSpriteSetupSystem::run() {
   auto view = scene->r.view<SpriteComponent>();
   
   for(auto entity : view) {
-      auto& spriteComponent = view.get<SpriteComponent>(entity);
-      TextureManager::LoadTexture(spriteComponent.textureName, renderer, window);
+      const auto spriteComponent = view.get<SpriteComponent>(entity);
+      TextureManager::LoadTexture(spriteComponent.textureName, renderer, window, spriteComponent.shader);
   }
 }
 
@@ -149,12 +149,12 @@ void SimpleSpriteRenderSystem::run(SDL_Renderer* renderer) {
     for(auto entity : view) {
         auto& spriteComponent = view.get<SpriteComponent>(entity);
         auto& transformComponent = view.get<TransformComponent>(entity);
-        Texture* texture = TextureManager::GetTexture(spriteComponent.textureName);
+        Texture* texture = TextureManager::GetTexture(spriteComponent.textureName, spriteComponent.shader.name);
         texture->render(
           transformComponent.position.x,
           transformComponent.position.y,
-          texture->width,
-          texture->height
+          texture->width * 12,
+          texture->height * 12
         );
     }
 }

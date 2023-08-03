@@ -37,17 +37,7 @@ Texture::~Texture() {
   pitch = 0;
 }
 
-void Texture::executeShader(std::function<Uint32(Uint32)> func) {
-	lockTexture();
-  Uint32* pixels = getPixels();
-  
-  for(int i = 0; i < width * height; ++i) {
-    pixels[i] = func(pixels[i]);
-  }
-  unlockTexture();
-}
-
-void Texture::load(std::string path) {
+void Texture::load(std::string path, PixelShader shader) {
   if (texture != nullptr) {
     SDL_DestroyTexture(texture);
     texture = nullptr;
@@ -58,11 +48,21 @@ void Texture::load(std::string path) {
   SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, format, 0);
   newTexture = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_STREAMING, loadedSurface->w, loadedSurface->h);
 
-  SDL_LockTexture(newTexture, NULL, &pixels, &pitch);
-  memcpy(pixels, formattedSurface->pixels, pitch * formattedSurface->h);
+  Uint32* targetPixels;
+  SDL_LockTexture(newTexture, NULL, reinterpret_cast<void**>(&targetPixels), &pitch);
+
+  Uint32* sourcePixels = reinterpret_cast<Uint32*>(formattedSurface->pixels);
+
+  if (shader.func != nullptr) {
+    for (int i = 0; i < (pitch/4 * formattedSurface->h); ++i) {
+        targetPixels[i] = shader.func(sourcePixels[i]);
+    }
+  } else {
+    memcpy(targetPixels, sourcePixels, pitch * formattedSurface->h);
+  }
+  
   SDL_UnlockTexture(newTexture);
 
-  pixels = nullptr;
   width = loadedSurface->w;
   height = loadedSurface->h;
   
@@ -145,5 +145,5 @@ Uint32 Texture::getPixel(int xy) {
 }
 
 Uint32* Texture::getPixels() {
-	return (Uint32*) pixels;
+	return reinterpret_cast<Uint32*>(pixels);
 }
