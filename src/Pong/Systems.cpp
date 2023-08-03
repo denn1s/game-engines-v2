@@ -2,6 +2,8 @@
 #include "Systems.h"
 #include "Components.h"
 
+#include "Game/Graphics/TextureManager.h"
+
 HelloSystem::HelloSystem() {
   std::cout << "Hello System Constructor" << std::endl;
 }
@@ -127,4 +129,32 @@ void BounceUpdateSystem::run(double dT) {
         s.y *= -1.2;
       }
     });
+}
+
+SimpleSpriteSetupSystem::SimpleSpriteSetupSystem(SDL_Renderer* renderer, SDL_Window* window)
+  : renderer(renderer), window(window) { }
+
+void SimpleSpriteSetupSystem::run() {
+  auto view = scene->r.view<SpriteComponent>();
+  
+  for(auto entity : view) {
+      auto& spriteComponent = view.get<SpriteComponent>(entity);
+      TextureManager::LoadTexture(spriteComponent.textureName, renderer, window);
+  }
+}
+
+void SimpleSpriteRenderSystem::run(SDL_Renderer* renderer) {
+    auto view = scene->r.view<SpriteComponent, TransformComponent>();
+
+    for(auto entity : view) {
+        auto& spriteComponent = view.get<SpriteComponent>(entity);
+        auto& transformComponent = view.get<TransformComponent>(entity);
+        Texture* texture = TextureManager::GetTexture(spriteComponent.textureName);
+        texture->render(
+          transformComponent.position.x,
+          transformComponent.position.y,
+          texture->width,
+          texture->height
+        );
+    }
 }

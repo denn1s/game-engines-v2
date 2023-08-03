@@ -9,7 +9,7 @@ Texture* TextureManager::LoadTexture(const std::string& fileName, SDL_Renderer* 
     }
     
     Texture* tex = new Texture(renderer, window);
-    tex->load(fileName);
+    tex->load("assets/" + fileName);
     
     textures[fileName] = tex;    
     return tex;

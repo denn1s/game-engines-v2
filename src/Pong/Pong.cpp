@@ -22,6 +22,7 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
     ball.addComponent<SpeedComponent>(200, 200);
     ball.addComponent<SizeComponent>(30, 30);
     ball.addComponent<ColliderComponent>(false);
+    ball.addComponent<SpriteComponent>("sprites/2.png");
 
     Entity paddle = gameplayScene->createEntity("paddle", (screen_width/2)-50, screen_height-20);
     paddle.addComponent<SpeedComponent>(0, 0);
@@ -30,10 +31,13 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
 
     gameplayScene->addSetupSystem<HelloSystem>();
     gameplayScene->addRenderSystem<RectRenderSystem>();
-    gameplayScene->addUpdateSystem<MovementUpdateSystem>(SCREEN_WIDTH, SCREEN_HEIGHT);
+    // gameplayScene->addUpdateSystem<MovementUpdateSystem>(SCREEN_WIDTH, SCREEN_HEIGHT);
     gameplayScene->addEventSystem<PlayerInputEventSystem>();
     gameplayScene->addUpdateSystem<CollisionDetectionUpdateSystem>();
     gameplayScene->addUpdateSystem<BounceUpdateSystem>();
+
+    gameplayScene->addSetupSystem<SimpleSpriteSetupSystem>(renderer, window);
+    gameplayScene->addRenderSystem<SimpleSpriteRenderSystem>();
 
     return gameplayScene;
 }

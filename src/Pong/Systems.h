@@ -42,3 +42,18 @@ class BounceUpdateSystem : public UpdateSystem {
   public:
     void run(double dT);
 };
+
+class SimpleSpriteSetupSystem : public SetupSystem {  
+  public:
+    SimpleSpriteSetupSystem(SDL_Renderer* renderer, SDL_Window* window);
+    void run();
+
+  private:
+    SDL_Renderer* renderer;
+    SDL_Window* window;
+};
+
+class SimpleSpriteRenderSystem : public RenderSystem {
+  public:
+    void run(SDL_Renderer* renderer);
+};

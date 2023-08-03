@@ -1,4 +1,5 @@
 #include "ECS/Components.h"
+#include "Game/Graphics/Texture.h"
 
 struct SizeComponent {
   int w;
@@ -11,4 +12,8 @@ struct ColliderComponent {
 
 struct PlayerComponent {
   short moveSpeed;
+};
+
+struct SpriteComponent {
+  std::string textureName;
 };
