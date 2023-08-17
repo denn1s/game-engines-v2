@@ -91,59 +91,144 @@ TilemapSetupSystem::~TilemapSetupSystem() {
 }
 
 void TilemapSetupSystem::run() {
-  Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer);
-  Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer);
   auto& tilemap = scene->world->get<TilemapComponent>();
   tilemap.width = 50;
   tilemap.height = 38;
   tilemap.tileSize = 16;
 
+  Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer);
+  Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer);
+
   FastNoiseLite noise;
   noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-
-  std::vector<int> tmap;
 
   std::srand(std::time(nullptr));
   float offsetX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
   float offsetY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  float zoom = 100.0f; 
+  float zoom = 100.0f;
 
   for (int y = 0; y < tilemap.height; y++) {
-    for (int x = 0; x < tilemap.width; x++) {
-      float factor = noise.GetNoise(
-        static_cast<float>(x + offsetX) * zoom, 
-        static_cast<float>(y + offsetY) * zoom
-      );
+      for (int x = 0; x < tilemap.width; x++) {
+          float factor = noise.GetNoise(
+              static_cast<float>(x + offsetX) * zoom, 
+              static_cast<float>(y + offsetY) * zoom
+          );
 
-      if (factor < 0.5) {
-        tmap.push_back(0);  // grass
-      } else {
-        tmap.push_back(1);
-      }
+          Entity tile = scene->createEntity(
+            "TILE",
+            x * tilemap.tileSize,
+            y * tilemap.tileSize
+          );
+
+          print("Tile");
+          print(x * tilemap.tileSize);
+          print(y * tilemap.tileSize);
+          print("---");
+
+          auto& tileComponent = tile.get<TileComponent>();
+          if (factor < 0.5) {
+              tileComponent.texture = grassTexture;
+              tileComponent.isWater = false;
+          } else {
+              tileComponent.texture = waterTexture;
+              tileComponent.isWater = true;
+          }
+
+          tile.addComponent<AutoTilingInfo>();
+        }
     }
-  }
-
-  for(int i = 0; i < tilemap.height * tilemap.width; i++) {
-    tilemap.map.push_back((tmap[i] == 0) ? grassTexture : waterTexture);
-  }
 }
 
 void TilemapRenderSystem::run(SDL_Renderer* renderer) {
-  auto& tilemap = scene->world->get<TilemapComponent>();
+  auto view = scene->r.view<TileComponent, TransformComponent>();
 
-  for (int y = 0; y < tilemap.height; y++) {
-    for (int x = 0; x < tilemap.width; x++) {
-      Texture* texture = tilemap.map[y * tilemap.width + x];
+  int size = 16;
 
-      int size = tilemap.tileSize * 5;
+  for (auto e : view) {
+    const auto transform = view.get<TransformComponent>(e);
+    const auto tile = view.get<TileComponent>(e);
+    const auto pos = transform.position;
 
-      texture->render(
-        x * size,
-        y * size,
-        size,
-        size
-      );
+    tile.texture->render(
+      pos.x * size,
+      pos.y * size,
+      16,
+      16
+    );
+  }    
+}
+
+// Include the necessary header files
+#include "AutoTilingUpdateSystem.h"
+
+// Define the structure of a Tile
+struct Tile {
+    Texture* texture;
+    bool isWater;
+};
+
+// Define the structure of AutoTilingInfo
+struct AutoTilingInfo {
+    bool needsUpdate;
+    uint8_t surrounding;  // Bitfield of surrounding tiles (N, NE, E, SE, S, SW, W, NW)
+};
+
+// Constructor for the AutoTilingUpdateSystem class
+AutoTilingUpdateSystem::AutoTilingUpdateSystem(Scene* scene)
+    : scene(scene) { }
+
+// run method for the AutoTilingUpdateSystem class
+void AutoTilingUpdateSystem::run() {
+
+    // Get the TilemapComponent from the scene
+    auto& tilemap = scene->r.ctx<TilemapComponent>();
+
+    // Define the delta x and y for each of the eight directions (N, NE, E, SE, S, SW, W, NW)
+    const int dx[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+    const int dy[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+
+    // Loop through each tile in the tilemap
+    for (int y = 0; y < tilemap.height; y++) {
+        for (int x = 0; x < tilemap.width; x++) {
+
+            // Calculate the index of the current tile in the tileEntities vector
+            int index = y * tilemap.width + x;
+
+            // Get the Entity and AutoTilingInfo of the current tile
+            auto& entity = tilemap.tileEntities[index];
+            auto& info = entity.get<AutoTilingInfo>();
+
+            // Reset the surrounding field of the AutoTilingInfo
+            info.surrounding = 0;
+
+            // Loop through each of the eight directions
+            for (int i = 0; i < 8; i++) {
+
+                // Calculate the coordinates of the neighboring tile
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                // Check if the coordinates are out of bounds
+                if (nx < 0 || nx >= tilemap.width || ny < 0 || ny >= tilemap.height) {
+                    continue;  // If out of bounds, skip this iteration
+                }
+
+                // Calculate the index of the neighboring tile in the tileEntities vector
+                int neighborIndex = ny * tilemap.width + nx;
+
+                // Get the Tile of the neighboring tile
+                auto& neighborTile = tilemap.tileEntities[neighborIndex].get<Tile>();
+
+                // Check if the neighboring tile is the same type as the current tile
+                if (neighborTile.isWater == entity.get<Tile>().isWater) {
+
+                    // If the neighboring tile is the same type, set the corresponding bit in the surrounding field
+                    info.surrounding |= (1 << i);
+                }
+            }
+
+            // TODO: update the entity's tile based on info.surrounding
+        }
     }
-  }
 }
 

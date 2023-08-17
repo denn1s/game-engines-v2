@@ -68,7 +68,7 @@ class TilemapSetupSystem : public SetupSystem {
   public:
     TilemapSetupSystem(SDL_Renderer* renderer);
     ~TilemapSetupSystem();
-    void run();
+    void run() override;
 
   private:
     SDL_Renderer* renderer;
@@ -76,6 +76,11 @@ class TilemapSetupSystem : public SetupSystem {
 
 class TilemapRenderSystem : public RenderSystem {
   public:
-    void run(SDL_Renderer* renderer);
+    void run(SDL_Renderer* renderer) override;
+};
+
+class AutoTilingUpdateSystem : UpdateSystem {
+  public:
+    void run(double dT) override;
 };
 

@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include "ECS/Entity.h"
 #include "Game/Graphics/PixelShader.h"
 #include "Game/Graphics/Texture.h"
 
@@ -33,9 +34,18 @@ struct SpriteComponent {
 };
 
 struct TilemapComponent {
-  std::vector<Texture*> map;
   int width;
   int height;
   int tileSize;
+};
+
+struct TileComponent {
+  Texture* texture;
+  bool isWater;
+};
+
+struct AutoTilingInfo {
+    bool needsUpdate;
+    uint8_t surrounding;  // Bitfield of surrounding tiles (N, NE, E, SE, S, SW, W, NW)
 };
 
