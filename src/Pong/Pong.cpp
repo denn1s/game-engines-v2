@@ -42,6 +42,9 @@ Scene* Pong::createGameplayScene()
     SDL_GetTicks()
   );
 
+  scene->addSetupSystem<TilemapSetupSystem>(renderer);
+  scene->addRenderSystem<TilemapRenderSystem>();
+
   scene->addSetupSystem<SpriteSetupSystem>(renderer);
   scene->addRenderSystem<SpriteRenderSystem>();
   scene->addUpdateSystem<SpriteUpdateSystem>();

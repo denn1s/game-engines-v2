@@ -1,7 +1,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <SDL2/SDL.h>
-#include "print.h"
+#include <print.h>
 
 #include "Scene.h"
 
@@ -14,6 +14,9 @@ Scene::Scene(const std::string& name)
   : name(name)
 {
   print("Scene ", name, "constructed!");
+
+  world = new Entity(r.create(), this);
+  world->addComponent<TilemapComponent>();
 }
 
 Scene::~Scene()

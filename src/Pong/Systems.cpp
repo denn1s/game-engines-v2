@@ -1,8 +1,12 @@
 #include <print.h>
+#include <FastNoise.h>
 #include <SDL2/SDL.h>
+#include <ctime>
+#include <cstdlib>
 #include "Systems.h"
 #include "Components.h"
 
+#include "ECS/Entity.h"
 #include "ECS/Components.h"
 #include "Game/Graphics/TextureManager.h"
 
@@ -78,5 +82,68 @@ void SpriteUpdateSystem::run(double dT) {
             }
         }
     }
+}
+
+TilemapSetupSystem::TilemapSetupSystem(SDL_Renderer* renderer)
+    : renderer(renderer) { }
+
+TilemapSetupSystem::~TilemapSetupSystem() {
+}
+
+void TilemapSetupSystem::run() {
+  Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer);
+  Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer);
+  auto& tilemap = scene->world->get<TilemapComponent>();
+  tilemap.width = 50;
+  tilemap.height = 38;
+  tilemap.tileSize = 16;
+
+  FastNoiseLite noise;
+  noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+
+  std::vector<int> tmap;
+
+  std::srand(std::time(nullptr));
+  float offsetX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+  float offsetY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+  float zoom = 100.0f; 
+
+  for (int y = 0; y < tilemap.height; y++) {
+    for (int x = 0; x < tilemap.width; x++) {
+      float factor = noise.GetNoise(
+        static_cast<float>(x + offsetX) * zoom, 
+        static_cast<float>(y + offsetY) * zoom
+      );
+
+      if (factor < 0.5) {
+        tmap.push_back(0);  // grass
+      } else {
+        tmap.push_back(1);
+      }
+    }
+  }
+
+  for(int i = 0; i < tilemap.height * tilemap.width; i++) {
+    tilemap.map.push_back((tmap[i] == 0) ? grassTexture : waterTexture);
+  }
+}
+
+void TilemapRenderSystem::run(SDL_Renderer* renderer) {
+  auto& tilemap = scene->world->get<TilemapComponent>();
+
+  for (int y = 0; y < tilemap.height; y++) {
+    for (int x = 0; x < tilemap.width; x++) {
+      Texture* texture = tilemap.map[y * tilemap.width + x];
+
+      int size = tilemap.tileSize * 5;
+
+      texture->render(
+        x * size,
+        y * size,
+        size,
+        size
+      );
+    }
+  }
 }
 

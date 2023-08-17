@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include "Game/Graphics/PixelShader.h"
+#include "Game/Graphics/Texture.h"
 
 struct NameComponent {
   std::string tag;
@@ -30,3 +31,11 @@ struct SpriteComponent {
 
   Uint32 lastUpdate = 0;
 };
+
+struct TilemapComponent {
+  std::vector<Texture*> map;
+  int width;
+  int height;
+  int tileSize;
+};
+
