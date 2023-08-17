@@ -1,16 +1,5 @@
+#include <iostream>
 #include "Texture.h"
-
-Texture::Texture(SDL_Renderer* renderer, SDL_Window* window) 
-  : renderer(renderer) {
-	texture = NULL;
-	width = 0;
-	height = 0;
-	pixels = NULL;
-	pitch = 0;
-
-  format = SDL_GetWindowPixelFormat(window);
-  mappingFormat = SDL_AllocFormat(format);
-}
 
 Texture::Texture(SDL_Renderer* renderer) 
   : renderer(renderer) {
@@ -45,6 +34,12 @@ void Texture::load(std::string path, PixelShader shader) {
 
 	SDL_Texture* newTexture = nullptr;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+
+  if (loadedSurface == nullptr) {
+    std::cerr << "Failed to load image " << path << ": " << IMG_GetError() << std::endl;
+    exit(1);
+  }
+
   SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, format, 0);
   newTexture = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_STREAMING, loadedSurface->w, loadedSurface->h);
 
@@ -89,11 +84,6 @@ void Texture::render(int x, int y, int w, int h, SDL_Rect* clip, double angle, S
   }
 
 	SDL_Rect renderQuad = { x, y, rWidth, rHeight };
-
-	if(clip != NULL) {
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
-	}
 
 	SDL_RenderCopy(renderer, texture, clip, &renderQuad);
 }

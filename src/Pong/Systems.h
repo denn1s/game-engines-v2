@@ -30,30 +30,37 @@ class MovementUpdateSystem : public UpdateSystem {
 
 class PlayerInputEventSystem : public EventSystem {
   public:
-    void run(SDL_Event event);
+    void run(SDL_Event event) override;
 };
 
 class CollisionDetectionUpdateSystem : public UpdateSystem {
   public:
-    void run(double dT);
+    void run(double dT) override;
 };
 
 class BounceUpdateSystem : public UpdateSystem {
   public:
-    void run(double dT);
+    void run(double dT) override;
 };
 
-class SimpleSpriteSetupSystem : public SetupSystem {  
+class SpriteSetupSystem : public SetupSystem {
   public:
-    SimpleSpriteSetupSystem(SDL_Renderer* renderer, SDL_Window* window);
-    void run();
+    SpriteSetupSystem(SDL_Renderer* renderer);
+    ~SpriteSetupSystem();
+
+    void run() override;
 
   private:
     SDL_Renderer* renderer;
-    SDL_Window* window;
 };
 
-class SimpleSpriteRenderSystem : public RenderSystem {
+class SpriteUpdateSystem : public UpdateSystem {
   public:
-    void run(SDL_Renderer* renderer);
+    void run(double dT) override;
 };
+
+class SpriteRenderSystem : public RenderSystem {
+  public:
+    void run(SDL_Renderer* renderer) override;
+};
+

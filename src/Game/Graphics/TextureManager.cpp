@@ -4,22 +4,22 @@
 
 std::map<std::string, Texture*> TextureManager::textures;
 
-Texture* TextureManager::LoadTexture(const std::string& fileName, SDL_Renderer* renderer, SDL_Window* window, PixelShader shader) {
+Texture* TextureManager::LoadTexture(const std::string& fileName, SDL_Renderer* renderer, PixelShader shader) {
     if (textures.count(fileName + shader.name) > 0) {
         return textures[fileName + shader.name];
     }
     
-    Texture* tex = new Texture(renderer, window);
+    Texture* tex = new Texture(renderer);
     tex->load("assets/" + fileName, shader);
     
     textures[fileName + shader.name] = tex;    
     return tex;
 }
 
-void TextureManager::UnloadTexture(const std::string& fileName) {
-    if (textures.count(fileName) > 0) {
-        delete textures[fileName];
-        textures.erase(fileName);
+void TextureManager::UnloadTexture(const std::string& fileName, const std::string& shaderName) {
+    if (textures.count(fileName + shaderName) > 0) {
+        delete textures[fileName + shaderName];
+        textures.erase(fileName + shaderName);
     }
 }
 

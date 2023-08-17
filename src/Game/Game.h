@@ -19,7 +19,7 @@ class Game {
 
     void run();
 
-    void setScene(std::unique_ptr<Scene> newScene);
+    void setScene(Scene* newScene);
     Scene* getCurrentScene() const;
 
   protected:
@@ -41,5 +41,5 @@ class Game {
     float FPS;
 
     // scene logic
-    std::unique_ptr<Scene> currentScene;
+    Scene* currentScene;
 };
