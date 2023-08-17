@@ -28,7 +28,7 @@ Scene* Pong::createGameplayScene()
   );
   s.lastUpdate = SDL_GetTicks();
 
-  Entity black = scene->createEntity("cat2", 40, 0);
+  Entity black = scene->createEntity("cat2", 20, 0);
   black.addComponent<SpriteComponent>(
     "Sprites/Cat/SpriteSheet.png", 
     0, 0,
