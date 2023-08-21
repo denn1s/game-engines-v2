@@ -91,10 +91,11 @@ TilemapSetupSystem::~TilemapSetupSystem() {
 }
 
 void TilemapSetupSystem::run() {
-  auto& tilemap = scene->world->get<TilemapComponent>();
-  tilemap.width = 50;
-  tilemap.height = 38;
-  tilemap.tileSize = 16;
+  auto& tilemapComponent = scene->world->get<TilemapComponent>();
+  tilemapComponent.width = 50;
+  tilemapComponent.height = 38;
+  tilemapComponent.tileSize = 16;
+  tilemapComponent.tilemap.resize(tilemapComponent.width * tilemapComponent.height);
 
   Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer);
   Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer);
@@ -105,91 +106,65 @@ void TilemapSetupSystem::run() {
   std::srand(std::time(nullptr));
   float offsetX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
   float offsetY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  float zoom = 100.0f;
+  float zoom = 20.0f;
 
-  for (int y = 0; y < tilemap.height; y++) {
-      for (int x = 0; x < tilemap.width; x++) {
+  Terrain grass{grassTexture};
+  Terrain water{waterTexture};  
+
+  for (int y = 0; y < tilemapComponent.height; y++) {
+      for (int x = 0; x < tilemapComponent.width; x++) {
           float factor = noise.GetNoise(
               static_cast<float>(x + offsetX) * zoom, 
               static_cast<float>(y + offsetY) * zoom
           );
 
-          Entity tile = scene->createEntity(
-            "TILE",
-            x * tilemap.tileSize,
-            y * tilemap.tileSize
-          );
+          int index = y * tilemapComponent.width + x;
+          Tile& tile = tilemapComponent.tilemap[index];
 
-          print("Tile");
-          print(x * tilemap.tileSize);
-          print(y * tilemap.tileSize);
-          print("---");
-
-          auto& tileComponent = tile.get<TileComponent>();
           if (factor < 0.5) {
-              tileComponent.texture = grassTexture;
-              tileComponent.isWater = false;
-          } else {
-              tileComponent.texture = waterTexture;
-              tileComponent.isWater = true;
+            tile.up = grass;
+            tile.down = water;
+            tile.needsAutoTiling = true;
+          } else{
+            tile.up = water;
+            tile.needsAutoTiling = false;
           }
-
-          tile.addComponent<AutoTilingInfo>();
         }
     }
 }
 
 void TilemapRenderSystem::run(SDL_Renderer* renderer) {
-  auto view = scene->r.view<TileComponent, TransformComponent>();
+  auto& tilemapComponent = scene->world->get<TilemapComponent>();
+  int width = tilemapComponent.width;
+  int height = tilemapComponent.height;
+  int size = tilemapComponent.tileSize;
+  int scale = 5;
 
-  int size = 16;
-
-  for (auto e : view) {
-    const auto transform = view.get<TransformComponent>(e);
-    const auto tile = view.get<TileComponent>(e);
-    const auto pos = transform.position;
-
-    tile.texture->render(
-      pos.x * size,
-      pos.y * size,
-      16,
-      16
-    );
-  }    
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      Tile& tile = tilemapComponent.tilemap[y * width + x];
+      tile.up.texture->render(
+          x * size * scale,
+          y * size * scale,
+          size * scale,
+          size * scale
+      );
+    }
+  }
 }
-
-// Include the necessary header files
-#include "AutoTilingUpdateSystem.h"
-
-// Define the structure of a Tile
-struct Tile {
-    Texture* texture;
-    bool isWater;
-};
-
-// Define the structure of AutoTilingInfo
-struct AutoTilingInfo {
-    bool needsUpdate;
-    uint8_t surrounding;  // Bitfield of surrounding tiles (N, NE, E, SE, S, SW, W, NW)
-};
-
-// Constructor for the AutoTilingUpdateSystem class
-AutoTilingUpdateSystem::AutoTilingUpdateSystem(Scene* scene)
-    : scene(scene) { }
-
+/*
 // run method for the AutoTilingUpdateSystem class
-void AutoTilingUpdateSystem::run() {
-
+void AutoTilingSetupSystem::run() {
     // Get the TilemapComponent from the scene
-    auto& tilemap = scene->r.ctx<TilemapComponent>();
+    const auto& tilemapComponent = scene->world->get<TilemapComponent>();
 
     // Define the delta x and y for each of the eight directions (N, NE, E, SE, S, SW, W, NW)
     const int dx[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
     const int dy[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
 
     // Loop through each tile in the tilemap
-    for (int y = 0; y < tilemap.height; y++) {
-        for (int x = 0; x < tilemap.width; x++) {
+    for (int y = 0; y < tilemapComponent.height; y++) {
+        for (int x = 0; x < tilemapComponent.width; x++) {
 
             // Calculate the index of the current tile in the tileEntities vector
             int index = y * tilemap.width + x;
@@ -231,4 +206,4 @@ void AutoTilingUpdateSystem::run() {
         }
     }
 }
-
+*/

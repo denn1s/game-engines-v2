@@ -79,8 +79,8 @@ class TilemapRenderSystem : public RenderSystem {
     void run(SDL_Renderer* renderer) override;
 };
 
-class AutoTilingUpdateSystem : UpdateSystem {
+class AutoTilingSetupSystem : SetupSystem {
   public:
-    void run(double dT) override;
+    void run() override;
 };
 
