@@ -1,4 +1,5 @@
 #include <print.h>
+#include "Game/Graphics/PixelShader.h"
 #include "Pong.h"
 #include "Systems.h"
 #include "Components.h"
@@ -18,27 +19,13 @@ Scene* Pong::createGameplayScene()
 {
   Scene* scene = new Scene("GAMEPLAY SCENE");
 
-  Entity white = scene->createEntity("cat1", 0, 0);
-  auto& s = white.addComponent<SpriteComponent>(
+  scene->player->addComponent<SpriteComponent>(
     "Sprites/Cat/SpriteSheet.png",
     0, 0,
     48,
     8,
-    1000
-  );
-  s.lastUpdate = SDL_GetTicks();
-
-  Entity black = scene->createEntity("cat2", 20, 0);
-  black.addComponent<SpriteComponent>(
-    "Sprites/Cat/SpriteSheet.png", 
-    0, 0,
-    48,
-    8,
     1000,
-    PixelShader{
-      [](Uint32 color) -> Uint32 { return (color == 0xF3F2C0FF) ? 0xD2B48CFF : color ; },
-      "red"
-    },
+    PixelShader{nullptr, ""},
     SDL_GetTicks()
   );
 
@@ -49,6 +36,9 @@ Scene* Pong::createGameplayScene()
   scene->addSetupSystem<SpriteSetupSystem>(renderer);
   scene->addRenderSystem<SpriteRenderSystem>();
   scene->addUpdateSystem<SpriteUpdateSystem>();
+
+  scene->addEventSystem<PlayerInputEventSystem>();
+  scene->addUpdateSystem<MovementUpdateSystem>();
 
   return scene;
 }

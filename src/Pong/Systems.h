@@ -19,13 +19,7 @@ class RectRenderSystem : public RenderSystem {
 
 class MovementUpdateSystem : public UpdateSystem {
   public:
-    MovementUpdateSystem(int screen_width, int screen_height);
-
     void run(double dT) override;
-
-  private:
-    int screen_width;
-    int screen_height;
 };
 
 class PlayerInputEventSystem : public EventSystem {
