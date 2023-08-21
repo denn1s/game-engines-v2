@@ -43,6 +43,7 @@ Scene* Pong::createGameplayScene()
   );
 
   scene->addSetupSystem<TilemapSetupSystem>(renderer);
+  scene->addSetupSystem<AutoTilingSetupSystem>();
   scene->addRenderSystem<TilemapRenderSystem>();
 
   scene->addSetupSystem<SpriteSetupSystem>(renderer);

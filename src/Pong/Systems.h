@@ -79,7 +79,7 @@ class TilemapRenderSystem : public RenderSystem {
     void run(SDL_Renderer* renderer) override;
 };
 
-class AutoTilingSetupSystem : SetupSystem {
+class AutoTilingSetupSystem : public SetupSystem {
   public:
     void run() override;
 };

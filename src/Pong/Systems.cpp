@@ -1,8 +1,10 @@
+#include <cstdint>
 #include <print.h>
 #include <FastNoise.h>
 #include <SDL2/SDL.h>
 #include <ctime>
 #include <cstdlib>
+#include <sys/types.h>
 #include "Systems.h"
 #include "Components.h"
 
@@ -97,8 +99,8 @@ void TilemapSetupSystem::run() {
   tilemapComponent.tileSize = 16;
   tilemapComponent.tilemap.resize(tilemapComponent.width * tilemapComponent.height);
 
-  Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer);
-  Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer);
+  Texture* waterTexture = TextureManager::LoadTexture("Tilesets/Water.png", renderer);
+  Texture* grassTexture = TextureManager::LoadTexture("Tilesets/Grass.png", renderer);
 
   FastNoiseLite noise;
   noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
@@ -143,67 +145,113 @@ void TilemapRenderSystem::run(SDL_Renderer* renderer) {
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
       Tile& tile = tilemapComponent.tilemap[y * width + x];
-      tile.up.texture->render(
+      if (tile.down.texture) {
+        SDL_Rect downClip = {
+          tile.down.x,
+          tile.down.y,
+          size,
+          size
+        };
+
+        tile.down.texture->render(
           x * size * scale,
           y * size * scale,
           size * scale,
-          size * scale
+          size * scale,
+          &downClip
+        );
+      }
+
+      SDL_Rect upClip = {
+        tile.up.x,
+        tile.up.y,
+        size,
+        size
+      };
+
+      tile.up.texture->render(
+        x * size * scale,
+        y * size * scale,
+        size * scale,
+        size * scale,
+        &upClip
       );
     }
   }
 }
-/*
+
+std::map<u_int8_t, std::pair<int, int>> m = {
+  {  0, {16, 32} },
+  {  1, { 0, 80} },
+  {  2, {48, 96} },
+  {  3, {48, 80} },
+  {  4, { 0, 96} },
+  {  5, {16, 80} },
+  {  6, {16, 96} },
+  {  7, {32, 80} },
+  {  8, { 0, 32} },
+  {  9, { 0, 48} },
+  { 10, {48, 48} },
+  { 11, {48, 64} },
+  { 12, {16, 48} },
+  { 13, {16, 64} },
+  { 14, {32, 48} },
+  { 15, { 0,  0} },
+};
+
 // run method for the AutoTilingUpdateSystem class
 void AutoTilingSetupSystem::run() {
-    // Get the TilemapComponent from the scene
-    const auto& tilemapComponent = scene->world->get<TilemapComponent>();
+  auto& tilemapComponent = scene->world->get<TilemapComponent>();
+  int width = tilemapComponent.width;
+  int height = tilemapComponent.height;
+  int size = tilemapComponent.tileSize;
 
-    // Define the delta x and y for each of the eight directions (N, NE, E, SE, S, SW, W, NW)
-    const int dx[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
-    const int dy[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+  // Define the delta x and y for each of the eight directions (N, NE, E, SE, S, SW, W, NW)
+  // const int dx[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+  // const int dy[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+  const int dx[4] = { 0, -1, 1, 0 };
+  const int dy[4] = { -1, 0, 0, 1 };
 
-    // Loop through each tile in the tilemap
-    for (int y = 0; y < tilemapComponent.height; y++) {
-        for (int x = 0; x < tilemapComponent.width; x++) {
+  // Loop through each tile in the tilemap
+  for (int y = 0; y < tilemapComponent.height; y++) {
+    for (int x = 0; x < tilemapComponent.width; x++) {
+      int index = y * width + x;
+      Tile& tile = tilemapComponent.tilemap[index];
 
-            // Calculate the index of the current tile in the tileEntities vector
-            int index = y * tilemap.width + x;
+      if (!tile.needsAutoTiling)
+        continue;
 
-            // Get the Entity and AutoTilingInfo of the current tile
-            auto& entity = tilemap.tileEntities[index];
-            auto& info = entity.get<AutoTilingInfo>();
+      uint8_t surrounding = 0;
+      // Loop through each of the eight directions
+      for (int i = 0; i < 4; i++) {
 
-            // Reset the surrounding field of the AutoTilingInfo
-            info.surrounding = 0;
+        // Calculate the coordinates of the neighboring tile
+        int nx = x + dx[i];
+        int ny = y + dy[i];
 
-            // Loop through each of the eight directions
-            for (int i = 0; i < 8; i++) {
+        // Check if the coordinates are out of bounds
+        if (nx < 0 || nx >= width || ny < 0 || ny >= height) 
+          continue;  // If out of bounds, skip this iteration
 
-                // Calculate the coordinates of the neighboring tile
-                int nx = x + dx[i];
-                int ny = y + dy[i];
+          // Calculate the index of the neighboring tile in the tileEntities vector
+        int neighborIndex = ny * width + nx;
 
-                // Check if the coordinates are out of bounds
-                if (nx < 0 || nx >= tilemap.width || ny < 0 || ny >= tilemap.height) {
-                    continue;  // If out of bounds, skip this iteration
-                }
 
-                // Calculate the index of the neighboring tile in the tileEntities vector
-                int neighborIndex = ny * tilemap.width + nx;
-
-                // Get the Tile of the neighboring tile
-                auto& neighborTile = tilemap.tileEntities[neighborIndex].get<Tile>();
-
-                // Check if the neighboring tile is the same type as the current tile
-                if (neighborTile.isWater == entity.get<Tile>().isWater) {
-
-                    // If the neighboring tile is the same type, set the corresponding bit in the surrounding field
-                    info.surrounding |= (1 << i);
-                }
-            }
-
-            // TODO: update the entity's tile based on info.surrounding
+        // Get the Tile of the neighboring tile
+        const Tile& neighborTile = tilemapComponent.tilemap[neighborIndex];
+        
+        if (tile.up.texture == neighborTile.up.texture) { 
+          /* The line surrounding |= 1 << i; is using bit manipulation to set a specific bit in the surrounding variable to 1. Let's break it down piece by piece:
+          1 << i: This is a bit shift operation. It takes the binary number 1 (which is 00000001 in 8 bits) and shifts it to the left i times. For example, if i is 2, 1 << 2 would be 00000100. This gives us a binary number where only the i-th bit is set to 1.
+          surrounding |= ...: This is a bitwise OR assignment. It takes the current value of surrounding, performs a bitwise OR with the value on the right-hand side, and assigns the result back to surrounding. In a bitwise OR, each bit in the result is 1 if at least one of the corresponding bits in the operands is 1. So, surrounding |= 1 << i; has the effect of setting the i-th bit of surrounding to 1, while leaving all other bits unchanged.
+          */
+          surrounding |= 1 << i;          
         }
+      }
+
+      tile.up.x = m[surrounding].first;
+      tile.up.y = m[surrounding].second;
+
     }
+  }
 }
-*/
