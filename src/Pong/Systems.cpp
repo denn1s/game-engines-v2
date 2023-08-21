@@ -5,6 +5,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <sys/types.h>
+#include <bitset>
 #include "Systems.h"
 #include "Components.h"
 
@@ -180,23 +181,76 @@ void TilemapRenderSystem::run(SDL_Renderer* renderer) {
   }
 }
 
-std::map<u_int8_t, std::pair<int, int>> m = {
-  {  0, {16, 32} },
-  {  1, { 0, 80} },
-  {  2, {48, 96} },
-  {  3, {48, 80} },
-  {  4, { 0, 96} },
-  {  5, {16, 80} },
-  {  6, {16, 96} },
-  {  7, {32, 80} },
-  {  8, { 0, 32} },
-  {  9, { 0, 48} },
-  { 10, {48, 48} },
-  { 11, {48, 64} },
-  { 12, {16, 48} },
-  { 13, {16, 64} },
-  { 14, {32, 48} },
-  { 15, { 0,  0} },
+
+
+std::map<u_int8_t, std::vector<std::pair<int, int>>> m = {
+    {  2, {{   0,  80 }} },
+    {  8, {{  48,  96 }} },
+    { 10, {{  80, 112 }} },
+    { 11, {{  48,  80 }} },
+    { 16, {{   0,  96 }} },
+    { 18, {{  64, 112 }} },
+    { 22, {{  16,  80 }} },
+    { 24, {{  16,  96 }, {  32,  96 }} },
+    { 26, {{ 144,  32 }} },
+    { 27, {{ 144,  80 }} },
+    { 30, {{  96,  80 }} },
+    { 31, {{  32,  80 }} },
+    { 64, {{   0,  32 }} },
+    { 66, {{   0,  48 }, {   0,  64 }} },
+    { 72, {{  80,  96 }} },
+    { 74, {{ 128,  32 }} },
+    { 75, {{ 112,  80 }} },
+    { 80, {{  64,  96 }} },
+    { 82, {{ 144,  48 }} },
+    { 86, {{ 128,  80 }} },
+    { 88, {{ 128,  48 }} },
+    { 90, {{   0, 112 }, {  16, 112 }} },
+    { 91, {{  32, 112 }} },
+    { 94, {{  96,  48 }} },
+    { 95, {{  96, 112 }} },
+    {104, {{  48,  48 }} },
+    {106, {{ 144,  64 }} },
+    {107, {{  48,  64 }} },
+    {120, {{ 112,  64 }} },
+    {122, {{  48, 112 }} },
+    {123, {{ 112, 112 }} },
+    {126, {{  48, 112 }} },
+    {127, {{  64,  64 }} },
+    {208, {{  16,  48 }} },
+    {210, {{  96,  64 }} },
+    {214, {{  16,  64 }} },
+    {216, {{ 128,  64 }} },
+    {218, {{  96,  32 }} },
+    {219, {{  32, 112 }} },
+    {222, {{  96,  96 }} },
+    {223, {{  80,  64 }} },
+    {248, {{  32,  48 }} },
+    {250, {{ 112,  96 }} },
+    {251, {{  64,  80 }} },
+    {254, {{  80,  80 }} },
+    {255, {
+            {   0,   0 }, {  16,   0 }, {  32,   0 }, {  48,   0 }, {  64,   0 }, {  80,   0 },
+            {   0,  16 }, {  16,  16 }, {  32,  16 }, {  48,  16 }, {  64,  16 }, {  80,  16 },
+            {  32,  64 }
+          }
+    },
+    {  0, {
+            { 16,  32 }, {  32,  32 }, {  48,  32 },
+            { 64,  32 }, {  80,  32 }, {  64,  48 }, {  80,  48 }
+          }
+    }
+};
+
+
+const int dx[8] = { -1,  0,  1, -1, 1, -1, 0, 1 }; 
+const int dy[8] = { -1, -1, -1,  0, 0,  1, 1, 1 };
+
+std::map<u_int8_t, std::pair<int, int>> d_corner = {
+  {0, {  1,  1 }},
+  {2, { -1,  1 }},
+  {5, {  1, -1 }},
+  {7, { -1, -1 }},
 };
 
 // run method for the AutoTilingUpdateSystem class
@@ -205,13 +259,6 @@ void AutoTilingSetupSystem::run() {
   int width = tilemapComponent.width;
   int height = tilemapComponent.height;
   int size = tilemapComponent.tileSize;
-
-  // Define the delta x and y for each of the eight directions (N, NE, E, SE, S, SW, W, NW)
-  // const int dx[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
-  // const int dy[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
-  const int dx[4] = { 0, -1, 1, 0 };
-  const int dy[4] = { -1, 0, 0, 1 };
-
   // Loop through each tile in the tilemap
   for (int y = 0; y < tilemapComponent.height; y++) {
     for (int x = 0; x < tilemapComponent.width; x++) {
@@ -221,37 +268,66 @@ void AutoTilingSetupSystem::run() {
       if (!tile.needsAutoTiling)
         continue;
 
+
       uint8_t surrounding = 0;
       // Loop through each of the eight directions
-      for (int i = 0; i < 4; i++) {
-
+      for (int i = 0; i < 8; i++) {
         // Calculate the coordinates of the neighboring tile
         int nx = x + dx[i];
         int ny = y + dy[i];
 
         // Check if the coordinates are out of bounds
-        if (nx < 0 || nx >= width || ny < 0 || ny >= height) 
+        if (nx < 0 || nx >= width || ny < 0 || ny >= height) {
           continue;  // If out of bounds, skip this iteration
-
-          // Calculate the index of the neighboring tile in the tileEntities vector
-        int neighborIndex = ny * width + nx;
-
-
-        // Get the Tile of the neighboring tile
-        const Tile& neighborTile = tilemapComponent.tilemap[neighborIndex];
-        
-        if (tile.up.texture == neighborTile.up.texture) { 
-          /* The line surrounding |= 1 << i; is using bit manipulation to set a specific bit in the surrounding variable to 1. Let's break it down piece by piece:
-          1 << i: This is a bit shift operation. It takes the binary number 1 (which is 00000001 in 8 bits) and shifts it to the left i times. For example, if i is 2, 1 << 2 would be 00000100. This gives us a binary number where only the i-th bit is set to 1.
-          surrounding |= ...: This is a bitwise OR assignment. It takes the current value of surrounding, performs a bitwise OR with the value on the right-hand side, and assigns the result back to surrounding. In a bitwise OR, each bit in the result is 1 if at least one of the corresponding bits in the operands is 1. So, surrounding |= 1 << i; has the effect of setting the i-th bit of surrounding to 1, while leaving all other bits unchanged.
-          */
-          surrounding |= 1 << i;          
         }
+
+      // For corner tiles, check the two adjacent cardinal directions
+      if (i == 0 || i == 2 || i == 5 || i == 7) {  // i is 0, 2, 5, 7 for corner tiles
+          int nx1 = nx + d_corner[i].first; 
+          int ny1 = ny + 0;  // This is for legibility
+          int nx2 = nx + 0;
+          int ny2 = ny + d_corner[i].second;
+
+          // If either of the cardinal tiles are missing, skip this iteration
+          if (nx1 < 0 || nx1 >= width || ny1 < 0 || ny1 >= height || 
+              nx2 < 0 || nx2 >= width || ny2 < 0 || ny2 >= height) {
+              continue;
+          }
+
+          if (tilemapComponent.tilemap[ny1 * width + nx1].up.texture != tilemapComponent.tilemap[ny * width + nx].up.texture || 
+              tilemapComponent.tilemap[ny2 * width + nx2].up.texture != tilemapComponent.tilemap[ny * width + nx].up.texture)
+          {
+              continue;
+          }
       }
 
-      tile.up.x = m[surrounding].first;
-      tile.up.y = m[surrounding].second;
-
+        int neighborIndex = ny * width + nx;
+        // Get the Tile of the neighboring tile
+        const Tile& neighborTile = tilemapComponent.tilemap[neighborIndex];
+        if (tile.up.texture == neighborTile.up.texture) {
+            surrounding |= 1 << i;          
+        } 
+      }
+      auto iter = m.find(surrounding);
+      
+      if (iter == m.end()) {
+          tile.up.x = 0;
+          tile.up.y = 0;
+          print("Tile not found", static_cast<int>(surrounding));
+          exit(1);
+      } else {
+        auto& pairs = iter->second;
+        
+        if (pairs.size() == 1) {
+          tile.up.x = pairs[0].first;
+          tile.up.y = pairs[0].second;
+        } else {
+          int index = rand() % pairs.size();
+          tile.up.x = pairs[index].first;
+          tile.up.y = pairs[index].second;
+        }
+      }
     }
   }
 }
+
