@@ -414,4 +414,20 @@ void MovementUpdateSystem::run(double dT) {
   }
 }
 
+void CameraFollowUpdateSystem::run(double dT) {
+    const auto playerTransform = scene->player->get<TransformComponent>();
+    const auto cameraComponent = scene->mainCamera->get<CameraComponent>();
+    const auto worldComponent = scene->world->get<WorldComponent>();
+    auto& cameraTransform = scene->mainCamera->get<TransformComponent>();
+    const int spriteSize = scene->player->get<SpriteComponent>().size; 
+    int px = playerTransform.x - cameraComponent.vw / 2 + (spriteSize / 2) * cameraComponent.zoom;
+    int py = playerTransform.y - cameraComponent.vh / 2 + (spriteSize / 2) * cameraComponent.zoom;
 
+    if (px > 0 && px < worldComponent.width - cameraComponent.vw) {
+        cameraTransform.x = playerTransform.x - cameraComponent.vw / 2 + (spriteSize / 2) * cameraComponent.zoom;
+    }
+
+    if (py > 0 && py < worldComponent.height - cameraComponent.vh) {
+        cameraTransform.y = playerTransform.y - cameraComponent.vh / 2 + (spriteSize / 2) * cameraComponent.zoom;
+    }
+};
