@@ -28,6 +28,9 @@ Scene* Pong::createGameplayScene()
     PixelShader{nullptr, ""},
     SDL_GetTicks()
   );
+  scene->addEventSystem<PlayerInputEventSystem>();
+  scene->addUpdateSystem<PlayerSpriteUpdateSystem>();
+  scene->addUpdateSystem<MovementUpdateSystem>();
 
   scene->addSetupSystem<TilemapSetupSystem>(renderer);
   scene->addSetupSystem<AutoTilingSetupSystem>();
@@ -36,9 +39,6 @@ Scene* Pong::createGameplayScene()
   scene->addSetupSystem<SpriteSetupSystem>(renderer);
   scene->addRenderSystem<SpriteRenderSystem>();
   scene->addUpdateSystem<SpriteUpdateSystem>();
-
-  scene->addEventSystem<PlayerInputEventSystem>();
-  scene->addUpdateSystem<MovementUpdateSystem>();
 
   return scene;
 }

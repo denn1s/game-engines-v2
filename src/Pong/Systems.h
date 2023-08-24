@@ -78,3 +78,8 @@ class AutoTilingSetupSystem : public SetupSystem {
     void run() override;
 };
 
+class PlayerSpriteUpdateSystem : public UpdateSystem {
+  public:
+    void run(double dT) override;
+};
+
