@@ -41,7 +41,6 @@ void SpriteRenderSystem::run(SDL_Renderer* renderer) {
     int cx = cameraTransform.x;
     int cy = cameraTransform.y;
 
-
     for(auto entity : view) {
         const auto spriteComponent = view.get<SpriteComponent>(entity);
         const auto transformComponent = view.get<TransformComponent>(entity);
@@ -56,10 +55,10 @@ void SpriteRenderSystem::run(SDL_Renderer* renderer) {
         };
 
         texture->render(
-            transformComponent.x * c.zoom - cx,
-            transformComponent.y * c.zoom - cy,
-            48 * c.zoom,
-            48 * c.zoom,
+            transformComponent.x - cx,
+            transformComponent.y - cy,
+            spriteComponent.size * c.zoom,
+            spriteComponent.size * c.zoom,
             &clip
         );
     }
@@ -149,8 +148,15 @@ void TilemapRenderSystem::run(SDL_Renderer* renderer) {
   int cx = cameraTransform.x;
   int cy = cameraTransform.y;
 
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
+  // Calculate the range of tiles that should be visible
+  int startX = std::max(0, cx / (size * c.zoom));
+  int startY = std::max(0, cy / (size * c.zoom));
+  int endX = std::min(width, (cx + c.vw) / (size * c.zoom) + 1);
+  int endY = std::min(height, (cy + c.vh) / (size * c.zoom) + 1);
+
+
+  for (int y = startY; y < endY; y++) {
+    for (int x = startX; x < endX; x++) {
       Tile& tile = tilemapComponent.tilemap[y * width + x];
       if (tile.down.texture) {
         SDL_Rect downClip = {
@@ -339,7 +345,8 @@ void AutoTilingSetupSystem::run() {
 
 void PlayerInputEventSystem::run(SDL_Event event) {
     auto& playerMovement = scene->player->get<SpeedComponent>();
-    int speed = 80;
+    const auto cameraZoom = scene->mainCamera->get<CameraComponent>().zoom;
+    int speed = 200;
 
     if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
@@ -414,4 +421,22 @@ void MovementUpdateSystem::run(double dT) {
   }
 }
 
+void CameraFollowUpdateSystem::run(double dT) {
+    const int spriteSize = 48;
+    auto playerTransform = scene->player->get<TransformComponent>();
+    auto cameraComponent = scene->mainCamera->get<CameraComponent>();
+    auto& cameraTransform = scene->mainCamera->get<TransformComponent>();
+    auto worldComponent = scene->world->get<WorldComponent>();
+
+    int px = playerTransform.x - cameraComponent.vw / 2 + (spriteSize / 2) * cameraComponent.zoom;
+    int py = playerTransform.y - cameraComponent.vh / 2 + (spriteSize / 2) * cameraComponent.zoom;
+
+    if (px > 0 && px < worldComponent.width - cameraComponent.vw) {
+        cameraTransform.x = px;
+    }
+
+    if (py > 0 && py < worldComponent.height - cameraComponent.vh) {
+        cameraTransform.y = py;
+    }
+}
 

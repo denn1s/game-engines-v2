@@ -24,7 +24,8 @@ Scene::Scene(const std::string& name)
   mainCamera->addComponent<CameraComponent>(5, 800, 600);
 
   player = new Entity(r.create(), this);
-  player->addComponent<TransformComponent>(0, 0);
+  /* player->addComponent<TransformComponent>((800 * 5)/2 - 48/2, (600 * 5)/2 - 48/2); */
+  player->addComponent<TransformComponent>(500, 500);
   player->addComponent<SpeedComponent>(0, 0);
 }
 
