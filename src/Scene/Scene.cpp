@@ -17,6 +17,15 @@ Scene::Scene(const std::string& name)
 
   world = new Entity(r.create(), this);
   world->addComponent<TilemapComponent>();
+  world->addComponent<WorldComponent>(800 * 5, 600 * 5);
+
+  mainCamera = new Entity(r.create(), this);
+  mainCamera->addComponent<TransformComponent>(0, 0);
+  mainCamera->addComponent<CameraComponent>(5, 800, 600);
+
+  player = new Entity(r.create(), this);
+  player->addComponent<TransformComponent>(0, 0);
+  player->addComponent<SpeedComponent>(0, 0);
 }
 
 Scene::~Scene()
@@ -28,11 +37,7 @@ Entity Scene::createEntity(const std::string& name, int x, int y)
 {
   Entity entity = { r.create(), this };
   entity.addComponent<NameComponent>(name);
-  entity.addComponent<TransformComponent>(
-    glm::vec2(x, y)
-    // glm::vec2(1, 1),
-    // 0.0d
-  );
+  entity.addComponent<TransformComponent>(x, y);
 
   return entity;
 }
