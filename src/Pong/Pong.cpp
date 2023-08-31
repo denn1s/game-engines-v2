@@ -30,6 +30,7 @@ Scene* Pong::createGameplayScene()
   );
   scene->addEventSystem<PlayerInputEventSystem>();
   scene->addUpdateSystem<PlayerSpriteUpdateSystem>();
+  scene->addUpdateSystem<TileCollisionUpdateSystem>();
   scene->addUpdateSystem<MovementUpdateSystem>();
   scene->addUpdateSystem<CameraFollowUpdateSystem>();
 
@@ -40,7 +41,8 @@ Scene* Pong::createGameplayScene()
   scene->addSetupSystem<SpriteSetupSystem>(renderer);
   scene->addRenderSystem<SpriteRenderSystem>();
   scene->addUpdateSystem<SpriteUpdateSystem>();
-
+  scene->addRenderSystem<BoxColliderRenderSystem>();
+  /* scene->addRenderSystem<TileColliderRenderSystem>(); */
   return scene;
 }
 

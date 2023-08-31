@@ -88,3 +88,20 @@ class CameraFollowUpdateSystem : public UpdateSystem {
     void run(double dT) override;
 };
 
+class BoxColliderRenderSystem : public RenderSystem {
+  public:
+    void run(SDL_Renderer* renderer) override;
+};
+
+class TileCollisionUpdateSystem : public UpdateSystem {
+  public:
+    void run(double dT) override;
+};
+
+class TileColliderRenderSystem : public RenderSystem {
+  public:
+    void run(SDL_Renderer* renderer) override;
+};
+
+
+
