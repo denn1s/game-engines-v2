@@ -38,10 +38,13 @@ Scene* Pong::createGameplayScene()
   scene->addSetupSystem<AutoTilingSetupSystem>();
   scene->addRenderSystem<TilemapRenderSystem>();
 
+  scene->addSetupSystem<EnemySpawnSystem>();
   scene->addSetupSystem<SpriteSetupSystem>(renderer);
   scene->addRenderSystem<SpriteRenderSystem>();
   scene->addUpdateSystem<SpriteUpdateSystem>();
   scene->addRenderSystem<BoxColliderRenderSystem>();
+
+  scene->addUpdateSystem<EnemyMoveSystem>();
   /* scene->addRenderSystem<TileColliderRenderSystem>(); */
   return scene;
 }

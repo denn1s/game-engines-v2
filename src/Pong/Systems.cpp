@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <sys/types.h>
 #include <bitset>
+#include "Game/ScriptingManager.h"
 #include "Systems.h"
 #include "Components.h"
 
@@ -566,4 +567,51 @@ void TileCollisionUpdateSystem::run(double dT) {
         }
     }
 }
+
+void EnemySpawnSystem::run() {
+    ScriptingManager::init();
+
+    ScriptingManager::runScriptFile("Scripts/enemySpawn.lua");
+
+    sol::table enemies = ScriptingManager::lua["enemies"]; 
+
+    enemies.for_each([&](sol::object const& key, sol::object const& value) {
+        sol::table enemy = value.as<sol::table>();
+        float x = enemy["x"];
+        float y = enemy["y"];
+        int id = key.as<int>();
+
+        Entity* enemyEntity = new Entity(scene->r.create(), scene);
+        enemyEntity->addComponent<TransformComponent>(x, y);
+        enemyEntity->addComponent<SpriteComponent>("Sprites/Enemies/spider.png", 0, 0, 16, 3, 2000);
+        enemyEntity->addComponent<EnemyComponent>(id);
+    });
+
+    ScriptingManager::runScriptFile("Scripts/enemyMove.lua");
+}
+
+void EnemyMoveSystem::run(double dT) {
+    int speed = 100;
+    const auto playerPosition = scene->player->get<TransformComponent>();
+
+    ScriptingManager::lua["update_enemies"](speed * dT, playerPosition.x, playerPosition.y);
+
+    sol::table enemies = ScriptingManager::lua["enemies"]; 
+
+    auto view = scene->r.view<EnemyComponent, TransformComponent>();
+
+    for(auto entity : view) {
+        auto& transformComponent = view.get<TransformComponent>(entity);
+        const auto enemyComponent = view.get<EnemyComponent>(entity);
+
+        sol::table enemy = enemies[enemyComponent.id];
+
+        float x = enemy["x"];
+        float y = enemy["y"];
+
+        transformComponent.x = x;
+        transformComponent.y = y;
+    }
+}
+
 

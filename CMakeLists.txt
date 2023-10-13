@@ -17,6 +17,9 @@ include_directories(${SDL2_INCLUDE_DIRS})
 # include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
 set(SDL2_IMAGE_LIBRARIES "/usr/lib/libSDL2_image.so")
 
+find_package(Lua REQUIRED)
+
+
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${PROJECT_SOURCE_DIR}/src/*.cpp"
 )
@@ -35,4 +38,5 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     ${SDL2_LIBRARIES}
     ${SDL2_IMAGE_LIBRARIES}
+    ${LUA_LIBRARIES}
 )

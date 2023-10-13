@@ -103,5 +103,13 @@ class TileColliderRenderSystem : public RenderSystem {
     void run(SDL_Renderer* renderer) override;
 };
 
+class EnemySpawnSystem : public SetupSystem {
+public:
+  void run() override;
+};
 
+class EnemyMoveSystem : public UpdateSystem {
+public:
+  void run(double dT) override;
+};
 
