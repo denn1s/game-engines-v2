@@ -83,3 +83,33 @@ class PlayerSpriteUpdateSystem : public UpdateSystem {
     void run(double dT) override;
 };
 
+class CameraFollowUpdateSystem : public UpdateSystem {
+  public:
+    void run(double dT) override;
+};
+
+class BoxColliderRenderSystem : public RenderSystem {
+  public:
+    void run(SDL_Renderer* renderer) override;
+};
+
+class TileCollisionUpdateSystem : public UpdateSystem {
+  public:
+    void run(double dT) override;
+};
+
+class TileColliderRenderSystem : public RenderSystem {
+  public:
+    void run(SDL_Renderer* renderer) override;
+};
+
+class EnemySpawnSystem : public SetupSystem {
+public:
+  void run() override;
+};
+
+class EnemyMoveSystem : public UpdateSystem {
+public:
+  void run(double dT) override;
+};
+

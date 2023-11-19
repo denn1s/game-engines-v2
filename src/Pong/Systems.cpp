@@ -1,3 +1,4 @@
+#include <SDL_render.h>
 #include <cstdint>
 #include <print.h>
 #include <FastNoise.h>
@@ -6,6 +7,7 @@
 #include <cstdlib>
 #include <sys/types.h>
 #include <bitset>
+#include "Game/ScriptingManager.h"
 #include "Systems.h"
 #include "Components.h"
 
@@ -41,7 +43,6 @@ void SpriteRenderSystem::run(SDL_Renderer* renderer) {
     int cx = cameraTransform.x;
     int cy = cameraTransform.y;
 
-
     for(auto entity : view) {
         const auto spriteComponent = view.get<SpriteComponent>(entity);
         const auto transformComponent = view.get<TransformComponent>(entity);
@@ -56,10 +57,10 @@ void SpriteRenderSystem::run(SDL_Renderer* renderer) {
         };
 
         texture->render(
-            transformComponent.x * c.zoom - cx,
-            transformComponent.y * c.zoom - cy,
-            48 * c.zoom,
-            48 * c.zoom,
+            transformComponent.x - cx,
+            transformComponent.y - cy,
+            spriteComponent.size * c.zoom,
+            spriteComponent.size * c.zoom,
             &clip
         );
     }
@@ -97,45 +98,56 @@ TilemapSetupSystem::~TilemapSetupSystem() {
 }
 
 void TilemapSetupSystem::run() {
-  auto& tilemapComponent = scene->world->get<TilemapComponent>();
-  tilemapComponent.width = 50;
-  tilemapComponent.height = 38;
-  tilemapComponent.tileSize = 16;
-  tilemapComponent.tilemap.resize(tilemapComponent.width * tilemapComponent.height);
+    const auto player = scene->player->get<TransformComponent>();
+    const auto cameraZoom = scene->mainCamera->get<CameraComponent>().zoom;
+    auto& tilemapComponent = scene->world->get<TilemapComponent>();
+    tilemapComponent.width = 50;
+    tilemapComponent.height = 38;
+    tilemapComponent.tileSize = 16;
+    tilemapComponent.tilemap.resize(tilemapComponent.width * tilemapComponent.height);
 
-  Texture* waterTexture = TextureManager::LoadTexture("Tilesets/Water.png", renderer);
-  Texture* grassTexture = TextureManager::LoadTexture("Tilesets/Grass.png", renderer);
+    Texture* waterTexture = TextureManager::LoadTexture("Tilesets/Water.png", renderer);
+    Texture* grassTexture = TextureManager::LoadTexture("Tilesets/Grass.png", renderer);
 
-  FastNoiseLite noise;
-  noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    FastNoiseLite noise;
+    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 
-  std::srand(std::time(nullptr));
-  float offsetX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  float offsetY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  float zoom = 20.0f;
+    std::srand(std::time(nullptr));
+    float offsetX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    float offsetY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    float zoom = 20.0f;
 
-  Terrain grass{grassTexture};
-  Terrain water{waterTexture};  
+    Terrain grass{grassTexture};
+    Terrain water{waterTexture};  
 
-  for (int y = 0; y < tilemapComponent.height; y++) {
-      for (int x = 0; x < tilemapComponent.width; x++) {
-          float factor = noise.GetNoise(
-              static_cast<float>(x + offsetX) * zoom, 
-              static_cast<float>(y + offsetY) * zoom
-          );
+    int centerX = player.x / cameraZoom / tilemapComponent.tileSize;
+    int centerY = player.y / cameraZoom / tilemapComponent.tileSize;
 
-          int index = y * tilemapComponent.width + x;
-          Tile& tile = tilemapComponent.tilemap[index];
+    for (int y = 0; y < tilemapComponent.height; y++) {
+        for (int x = 0; x < tilemapComponent.width; x++) {
+            int index = y * tilemapComponent.width + x;
+            Tile& tile = tilemapComponent.tilemap[index];
+            if (std::abs(centerX - x) < 5  && std::abs(centerY - y) < 5) {
+                tile.up = grass;
+                tile.down = water;
+                tile.needsAutoTiling = true;
+            } else {
+                float factor = noise.GetNoise(
+                    static_cast<float>(x + offsetX) * zoom, 
+                    static_cast<float>(y + offsetY) * zoom
+                );
 
-          if (factor < 0.5) {
-            tile.up = grass;
-            tile.down = water;
-            tile.needsAutoTiling = true;
-          } else{
-            tile.up = water;
-            tile.needsAutoTiling = false;
-          }
-        }
+                if (factor < 0.5) {
+                    tile.up = grass;
+                    tile.down = water;
+                    tile.needsAutoTiling = true;
+                } else {
+                    tile.up = water;
+                    tile.needsAutoTiling = false;
+                    tile.isWalkable = false;
+                }
+            }
+        } 
     }
 }
 
@@ -149,8 +161,15 @@ void TilemapRenderSystem::run(SDL_Renderer* renderer) {
   int cx = cameraTransform.x;
   int cy = cameraTransform.y;
 
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
+  // Calculate the range of tiles that should be visible
+  int startX = std::max(0, cx / (size * c.zoom));
+  int startY = std::max(0, cy / (size * c.zoom));
+  int endX = std::min(width, (cx + c.vw) / (size * c.zoom) + 1);
+  int endY = std::min(height, (cy + c.vh) / (size * c.zoom) + 1);
+
+
+  for (int y = startY; y < endY; y++) {
+    for (int x = startX; x < endX; x++) {
       Tile& tile = tilemapComponent.tilemap[y * width + x];
       if (tile.down.texture) {
         SDL_Rect downClip = {
@@ -339,7 +358,8 @@ void AutoTilingSetupSystem::run() {
 
 void PlayerInputEventSystem::run(SDL_Event event) {
     auto& playerMovement = scene->player->get<SpeedComponent>();
-    int speed = 80;
+    const auto cameraZoom = scene->mainCamera->get<CameraComponent>().zoom;
+    int speed = 200;
 
     if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
@@ -412,6 +432,186 @@ void MovementUpdateSystem::run(double dT) {
     pos.x += vel.x * dT;
     pos.y += vel.y * dT;
   }
+}
+
+void CameraFollowUpdateSystem::run(double dT) {
+    const int spriteSize = 48;
+    auto playerTransform = scene->player->get<TransformComponent>();
+    auto cameraComponent = scene->mainCamera->get<CameraComponent>();
+    auto& cameraTransform = scene->mainCamera->get<TransformComponent>();
+    auto worldComponent = scene->world->get<WorldComponent>();
+
+    int px = playerTransform.x - cameraComponent.vw / 2 + (spriteSize / 2) * cameraComponent.zoom;
+    int py = playerTransform.y - cameraComponent.vh / 2 + (spriteSize / 2) * cameraComponent.zoom;
+
+    if (px > 0 && px < worldComponent.width - cameraComponent.vw) {
+        cameraTransform.x = px;
+    }
+
+    if (py > 0 && py < worldComponent.height - cameraComponent.vh) {
+        cameraTransform.y = py;
+    }
+}
+
+void BoxColliderRenderSystem::run(SDL_Renderer* r) {
+    const auto cameraZoom = scene->mainCamera->get<CameraComponent>().zoom;
+    const auto cameraTransform = scene->mainCamera->get<TransformComponent>();
+    const int cx = cameraTransform.x;
+    const int cy = cameraTransform.y;
+
+    const auto view = scene->r.view<TransformComponent, BoxColliderComponent>();
+
+    for (const entt::entity e : view) {
+        const auto box = view.get<BoxColliderComponent>(e);
+        const auto t = view.get<TransformComponent>(e);
+        const int xo = box.xo * cameraZoom;
+        const int yo = box.yo * cameraZoom;
+
+        SDL_SetRenderDrawColor(r, box.color.r, box.color.g, box.color.b, 255);
+
+        SDL_Rect rect = {
+            static_cast<int>(t.x - cx + xo), 
+            static_cast<int>(t.y - cy + yo),
+            box.w * cameraZoom,
+            box.h * cameraZoom
+        };
+
+        SDL_RenderDrawRect(r, &rect);
+    }
+}
+
+void TileColliderRenderSystem::run(SDL_Renderer* r) {
+    auto& tilemapComponent = scene->world->get<TilemapComponent>();
+    int width = tilemapComponent.width;
+    int height = tilemapComponent.height;
+    int size = tilemapComponent.tileSize;
+    const auto& c = scene->mainCamera->get<CameraComponent>();
+    const auto& cameraTransform = scene->mainCamera->get<TransformComponent>();
+    int cx = cameraTransform.x;
+    int cy = cameraTransform.y;
+
+    // Calculate the range of tiles that should be visible
+    int startX = std::max(0, cx / (size * c.zoom));
+    int startY = std::max(0, cy / (size * c.zoom));
+    int endX = std::min(width, (cx + c.vw) / (size * c.zoom) + 1);
+    int endY = std::min(height, (cy + c.vh) / (size * c.zoom) + 1);
+
+    for (int y = startY; y < endY; y++) {
+        for (int x = startX; x < endX; x++) {
+            Tile& tile = tilemapComponent.tilemap[y * width + x];
+
+            SDL_Rect rect = {
+                x * size * c.zoom - cx,
+                y * size * c.zoom - cy,
+                size * c.zoom,
+                size * c.zoom
+            };
+
+            if (tile.isWalkable) {
+                SDL_SetRenderDrawColor(r, 0, 0, 255, 255);
+                SDL_RenderDrawRect(r, &rect);
+            } else {
+                SDL_SetRenderDrawColor(r, 0, 0, 255, 55);
+                SDL_RenderFillRect(r, &rect);
+            }
+        }
+    }
+}
+
+void TileCollisionUpdateSystem::run(double dT) {
+    const auto playerPosition = scene->player->get<TransformComponent>();
+    const auto playerCollider = scene->player->get<BoxColliderComponent>();
+    const auto world = scene->world->get<WorldComponent>();
+    const auto cameraZoom = scene->mainCamera->get<CameraComponent>().zoom;
+    auto& playerMovement = scene->player->get<SpeedComponent>();
+    const auto tilemapComponent = scene->world->get<TilemapComponent>();
+
+    if (playerMovement.x == 0 && playerMovement.y == 0) {
+        return;
+    }
+    const int colliderPositionX = playerPosition.x + playerCollider.xo * cameraZoom;
+    const int colliderPositionY = playerPosition.y + playerCollider.yo * cameraZoom;
+    const int colliderSize = playerCollider.w * cameraZoom; // squared
+    const int tileSize = tilemapComponent.tileSize * cameraZoom;
+
+
+    // Calculate future position based on current position and speed.
+    int futureX = colliderPositionX + playerMovement.x * dT;
+    int futureY = colliderPositionY + playerMovement.y * dT;
+    int futureRightX = futureX + colliderSize;
+    int futureBottomY = futureY + colliderSize;
+
+    if (futureX <= 0 || futureY <= 0 || futureRightX >= world.width || futureBottomY >= world.height) {
+        playerMovement.x = 0;
+        playerMovement.y = 0;
+        return;
+    }
+
+    // Convert the future positions from pixels to tile coordinates.
+    std::vector<std::pair<int, int>> futureTiles = {
+        {futureX / tileSize, futureY / tileSize}, // top left corner
+        {futureRightX / tileSize, futureY / tileSize}, // top right corner
+        {futureX / tileSize, futureBottomY / tileSize}, // bottom left corner
+        {futureRightX / tileSize, futureBottomY / tileSize}  // bottom right corner
+    };
+
+    for (const auto& [tileX, tileY] : futureTiles) {
+        // Get the tile at the future position.
+        const Tile& tile = tilemapComponent.tilemap[tileY * tilemapComponent.width + tileX];
+
+        // If the tile is not walkable, set the speed to 0.
+        if (!tile.isWalkable) {
+            playerMovement.x = 0;
+            playerMovement.y = 0;
+            return;
+        }
+    }
+}
+
+void EnemySpawnSystem::run() {
+    ScriptingManager::init();
+
+    ScriptingManager::runScriptFile("Scripts/enemySpawn.lua");
+
+    sol::table enemies = ScriptingManager::lua["enemies"]; 
+
+    enemies.for_each([&](sol::object const& key, sol::object const& value) {
+        sol::table enemy = value.as<sol::table>();
+        float x = enemy["x"];
+        float y = enemy["y"];
+        int id = key.as<int>();
+
+        Entity* enemyEntity = new Entity(scene->r.create(), scene);
+        enemyEntity->addComponent<TransformComponent>(x, y);
+        enemyEntity->addComponent<SpriteComponent>("Sprites/Enemies/spider.png", 0, 0, 16, 3, 2000);
+        enemyEntity->addComponent<EnemyComponent>(id);
+    });
+
+    ScriptingManager::runScriptFile("Scripts/enemyMove.lua");
+}
+
+void EnemyMoveSystem::run(double dT) {
+    int speed = 100;
+    const auto playerPosition = scene->player->get<TransformComponent>();
+
+    ScriptingManager::lua["update_enemies"](speed * dT, playerPosition.x, playerPosition.y);
+
+    sol::table enemies = ScriptingManager::lua["enemies"]; 
+
+    auto view = scene->r.view<EnemyComponent, TransformComponent>();
+
+    for(auto entity : view) {
+        auto& transformComponent = view.get<TransformComponent>(entity);
+        const auto enemyComponent = view.get<EnemyComponent>(entity);
+
+        sol::table enemy = enemies[enemyComponent.id];
+
+        float x = enemy["x"];
+        float y = enemy["y"];
+
+        transformComponent.x = x;
+        transformComponent.y = y;
+    }
 }
 
 
