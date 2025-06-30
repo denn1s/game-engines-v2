@@ -1,116 +1,59 @@
-#include <iostream>
-#include <SDL2/SDL.h>
-#include "../print.h"
 #include "Game.h"
+#include <print>
 
-Game::Game()
-{
-  int maxFPS = 60;
-  frameDuration = (1.0f / maxFPS) * 1000.0f;  // how many mili seconds in one frame
+Game::Game() {}
 
-  // initial frame count variables
-  frameCount = 0;
-  lastFPSUpdateTime = 0;
-  FPS = 0;
-}
+Game::~Game() {}
 
-Game::~Game()
-{}
-
-void Game::init(const char* title, int width, int height)
-{
-  if(SDL_Init(SDL_INIT_EVERYTHING) == 0)
-  {
-    window = SDL_CreateWindow(title, 0, 0, width, height, 0);
-    renderer = SDL_CreateRenderer(window, -1, 0);
-    SDL_SetRenderDrawColor(renderer, 200, 255, 255, 1);
-    print("Game Start!");
-
+void Game::init(const char* title, int width, int height) {
+    InitWindow(width, height, title);
+    SetTargetFPS(60);
+    std::println("Game Start!");
     isRunning = true;
-  } else {
-    isRunning = false;
-  }
-  counter = 0;
+    counter = 0;
 }
 
-
-void Game::setup()
-{
+void Game::setup() {
+    // Any setup logic here
 }
 
-void Game::frameStart()
-{
-  print("---- Frame: ", counter, " ----");
-  frameStartTimestamp = SDL_GetTicks();
-  dT = frameEndTimestamp - frameStartTimestamp;
+void Game::frameStart() {
+    std::println("---- Frame: {} ----", counter);
+    dT = GetFrameTime(); // seconds
 }
 
-void Game::frameEnd()
-{
-  frameEndTimestamp = SDL_GetTicks();
-
-  float actualFrameDuration = frameEndTimestamp - frameStartTimestamp;
-
-  if (actualFrameDuration < frameDuration)
-  {
-    SDL_Delay(frameDuration - actualFrameDuration);
-  }
-
-  counter++;
-  
-  frameCount++;
-  // Update FPS counter every second
-  Uint32 currentTime = SDL_GetTicks();
-  if (currentTime - lastFPSUpdateTime > 1000) // 1000 milliseconds in 1 second
-  {
-    FPS = frameCount / ((currentTime - lastFPSUpdateTime) / 1000.0f);
-    lastFPSUpdateTime = currentTime;
-    frameCount = 0;
-  }
-
-  print();
+void Game::frameEnd() {
+    counter++;
+    FPS = static_cast<float>(GetFPS());
+    std::println();
 }
 
-void Game::handleEvents()
-{
-  print("Game Handling events...");
-
-  SDL_Event event;
-  while (SDL_PollEvent(&event) != 0)
-  {
-    if (event.type == SDL_QUIT)
-    {
-      isRunning = false;
+void Game::handleEvents() {
+    std::println("Game Handling events...");
+    if (WindowShouldClose()) {
+        isRunning = false;
     }
-  }
 }
 
-void Game::update()
-{
-  print("Game Updating...");
-
+void Game::update() {
+    std::println("Game Updating...");
+    // Game logic here
 }
 
-void Game::render()
-{
-  print("Game Rendering...");
-
-  SDL_RenderClear(renderer);
-  // actually render stuff
-  SDL_RenderPresent(renderer);
-
-  vprint(FPS);
+void Game::render() {
+    std::println("Game Rendering...");
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+    // Draw your game here
+    DrawText(std::format("FPS: {:.2f}", FPS).c_str(), 10, 10, 20, DARKGRAY);
+    EndDrawing();
 }
 
-void Game::clean()
-{
-  SDL_DestroyWindow(window);
-  SDL_DestroyRenderer(renderer);
-  SDL_Quit();
-  print("Game Over.");
+void Game::clean() {
+    CloseWindow();
+    std::println("Game Over.");
 }
 
-bool Game::running()
-{
-  return isRunning;
+bool Game::running() {
+    return isRunning;
 }

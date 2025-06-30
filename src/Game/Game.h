@@ -1,7 +1,8 @@
-#include <SDL2/SDL.h>
+#include <raylib.h>
+#include <print>
 
 class Game {
-  public:
+public:
     Game();
     ~Game();
 
@@ -15,18 +16,9 @@ class Game {
     void clean();
     bool running();
 
-  private:
-    int counter;
-    bool isRunning;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    // for frame management
-    Uint32 frameStartTimestamp;
-    Uint32 frameEndTimestamp;
-    float frameDuration;
-    float dT; // time in miliseconds since last frame
-    // for frame count
-    int frameCount;
-    Uint32 lastFPSUpdateTime;
-    float FPS;
+private:
+    int counter = 0;
+    bool isRunning = false;
+    float dT = 0.0f; // Delta time in seconds
+    float FPS = 0.0f;
 };
