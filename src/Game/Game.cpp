@@ -1,11 +1,7 @@
 #include "Game.h"
 #include <print>
 
-Game::Game() {}
-
-Game::~Game() {}
-
-void Game::init(const char* title, int width, int height) {
+Game::Game(const char* title, int width, int height) {
     InitWindow(width, height, title);
     SetTargetFPS(60);
     std::println("Game Start!");

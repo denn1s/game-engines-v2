@@ -1,12 +1,8 @@
 #include <raylib.h>
-#include <print>
 
 class Game {
 public:
-    Game();
-    ~Game();
-
-    void init(const char* title, int width, int height);
+    Game(const char* title, int width, int height);
     void setup();
     void frameStart();
     void frameEnd();
