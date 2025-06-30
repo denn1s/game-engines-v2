@@ -1,184 +1,110 @@
-#include <iostream>
-#include <SDL2/SDL.h>
-#include "print.h"
 #include "Game.h"
+#include <print>
+#include <format>
 
-SDL_Rect ball;
-SDL_Rect paddle;
+Rectangle ball;
+Rectangle paddle;
 
-Game::Game(const char* title, int width, int height)
-{
-  int maxFPS = 60;
-  frameDuration = (1.0f / maxFPS) * 1000.0f;  // how many mili seconds in one frame
+// Ball speed
+float sx = 2.0f;
+float sy = 2.0f;
 
-  // initial frame count variables
-  frameCount = 0;
-  lastFPSUpdateTime = 0;
-  FPS = 0;
-  frameStartTimestamp = 0;
-  frameEndTimestamp = 0;
-
-  SDL_Init(SDL_INIT_EVERYTHING);
-  
-  window = SDL_CreateWindow(title, 0, 0, width, height, 0);
-  renderer = SDL_CreateRenderer(window, -1, 0);
-  
-  SDL_SetRenderDrawColor(renderer, 200, 255, 255, 1);
-  print("Game Start!");
-
-  screen_width = width;
-  screen_height = height;
-
-  isRunning = true;
+Game::Game(const char* title, int width, int height) {
+    InitWindow(width, height, title);
+    SetTargetFPS(60);
+    std::println("Game Start!");
+    isRunning = true;
+    screen_width = width;
+    screen_height = height;
+    counter = 0;
 }
 
-Game::~Game()
-{}
-
-void Game::setup()
-{
-  ball.x = 20;
-  ball.y = 20;
-  ball.w = 15;
-  ball.h = 15;
-
-  paddle.x = (screen_width / 2) - 50;
-  paddle.y = screen_height - 20;
-  paddle.w = 100;
-  paddle.h = 20;
+void Game::setup() {
+    ball = Rectangle{20, 20, 15, 15};
+    paddle = Rectangle{
+        static_cast<float>(screen_width) / 2.0f - 50.0f,
+        static_cast<float>(screen_height) - 20.0f,
+        100.0f,
+        20.0f
+    };
 }
 
-void Game::frameStart()
-{
-  std::cout << "---- Frame: " << frameCount << " ----" << std::endl;
-  frameStartTimestamp = SDL_GetTicks();
-  if (frameEndTimestamp)
-  {
-    dT = (frameStartTimestamp - frameEndTimestamp) / 1000.0f;
-  }
-  else
-  {
-    dT = 0;
-  }
+void Game::frameStart() {
+    std::println("---- Frame: {} ----", counter);
+    dT = GetFrameTime(); // seconds
 }
 
-void Game::frameEnd()
-{
-  frameEndTimestamp = SDL_GetTicks();
-
-  float actualFrameDuration = frameEndTimestamp - frameStartTimestamp;
-
-  if (actualFrameDuration < frameDuration)
-  {
-    SDL_Delay(frameDuration - actualFrameDuration);
-  }
-  
-  frameCount++;
-  // Update FPS counter every second
-  Uint32 currentTime = SDL_GetTicks();
-  if (currentTime - lastFPSUpdateTime > 1000) // 1000 milliseconds in 1 second
-  {
-    FPS = frameCount / ((currentTime - lastFPSUpdateTime) / 1000.0f);
-    lastFPSUpdateTime = currentTime;
-    frameCount = 0;
-  }
-
-  print();
+void Game::frameEnd() {
+    counter++;
+    FPS = static_cast<float>(GetFPS());
+    std::println();
 }
 
-void Game::handleEvents()
-{
-  print("Game Handling events...");
-
-  SDL_Event event;
-  while (SDL_PollEvent(&event) != 0)
-  {
-    if (event.type == SDL_QUIT)
-    {
-      isRunning = false;
+void Game::handleEvents() {
+    std::println("Game Handling events...");
+    if (WindowShouldClose()) {
+        isRunning = false;
     }
 
-    if (event.type == SDL_KEYDOWN)
-    {
-      switch (event.key.keysym.sym)
-      {
-        case SDLK_LEFT:
-          paddle.x -= 10;
-          break;
-        case SDLK_RIGHT:
-          paddle.x += 10;
-          break;
-      }
+    // Paddle movement
+    if (IsKeyDown(KEY_LEFT)) {
+        paddle.x -= 10.0f;
     }
-  }
+    if (IsKeyDown(KEY_RIGHT)) {
+        paddle.x += 10.0f;
+    }
+    // Clamp paddle to screen
+    if (paddle.x < 0) paddle.x = 0;
+    if (paddle.x + paddle.width > screen_width)
+        paddle.x = screen_width - paddle.width;
 }
 
-int sx = 2;
-int sy = 2;
+void Game::update() {
+    std::println("Game Updating...");
 
-void Game::update()
-{
-  print("Game Updating...");
+    // Ball collision with walls
+    if (ball.x <= 0) sx *= -1.0f;
+    if (ball.x + ball.width >= screen_width) sx *= -1.0f;
+    if (ball.y <= 0) sy *= -1.0f;
 
-  // collisions 
-  if (ball.x <= 0)
-  {
-    sx *= -1;
-  }
+    // Ball falls below screen
+    if (ball.y + ball.height >= screen_height) {
+        isRunning = false;
+    }
 
-  if (ball.x + ball.w >= screen_width)
-  {
-    sx *= -1;
-  }
+    // Ball collision with paddle
+    if (ball.y + ball.height >= paddle.y &&
+        ball.x + ball.width >= paddle.x &&
+        ball.x <= paddle.x + paddle.width) {
+        sy *= -1.1f;
+        sx *= 1.1f;
+    }
 
-  if (ball.y <= 0)
-  {
-    sy *= -1;
-  }
-
-  if (ball.y + ball.h >= screen_height)
-  {
-    isRunning = false;
-  }
-
-  if (ball.y + ball.h >= paddle.y &&
-      ball.x + ball.w >= paddle.x &&
-      ball.x <= paddle.x + paddle.w)
-  {
-    sy *= -1.1;
-    sx *= 1.1;
-  }
-
-  ball.x += sx;
-  ball.y += sy;
+    // Move ball
+    ball.x += sx;
+    ball.y += sy;
 }
 
-void Game::render()
-{
-  print("Game Rendering...");
+void Game::render() {
+    std::println("Game Rendering...");
+    BeginDrawing();
+    ClearBackground(BLACK);
 
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
-  SDL_RenderClear(renderer);
-  // actually render stuff
-  SDL_SetRenderDrawColor(renderer, 255, 255 ,255, 1);
-  SDL_RenderFillRect(renderer, &ball);
-  SDL_RenderFillRect(renderer, &paddle);
+    // Draw ball and paddle
+    DrawRectangleRec(ball, WHITE);
+    DrawRectangleRec(paddle, WHITE);
 
+    // Draw FPS
+    DrawText(std::format("FPS: {:.2f}", FPS).c_str(), 10, 10, 20, DARKGRAY);
 
-  SDL_RenderPresent(renderer);
-
-  vprint(FPS);
+    EndDrawing();
 }
 
-void Game::clean()
-{
-  SDL_DestroyWindow(window);
-  SDL_DestroyRenderer(renderer);
-  SDL_Quit();
-  print("Game Over.");
+void Game::clean() {
+    CloseWindow();
+    std::println("Game Over.");
 }
 
-bool Game::running()
-{
-  return isRunning;
+bool Game::running() {
+    return isRunning;
 }
