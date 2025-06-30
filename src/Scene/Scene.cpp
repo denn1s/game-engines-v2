@@ -1,75 +1,54 @@
-#include <string>
-#include <glm/glm.hpp>
-#include <SDL2/SDL.h>
-#include "print.h"
-
 #include "Scene.h"
-
 #include "ECS/Entity.h"
-#include "ECS/Components.h"
 #include "ECS/System.h"
-
+#include <print>
 
 Scene::Scene(const std::string& name)
-  : name(name)
+    : name(name)
 {
-  print("Scene ", name, "constructed!");
+    std::println("Scene {} constructed!", name);
 }
 
 Scene::~Scene()
 {
-  print("Scene Destroyed!");
+    std::println("Scene Destroyed!");
+    // Do not delete systems; user manages their lifetime
 }
 
 Entity Scene::createEntity(const std::string& name, int x, int y)
 {
-  Entity entity = { r.create(), this };
-  entity.addComponent<NameComponent>(name);
-  entity.addComponent<TransformComponent>(
-    glm::vec2(x, y)
-    // glm::vec2(1, 1),
-    // 0.0d
-  );
+    Entity entity = { r.create(), this };
+    entity.addComponent<NameComponent>(name);
+    entity.addComponent<TransformComponent>(Vector2(x, y));
+    return entity;
+}
 
-  return entity;
+void Scene::addSystem(System* system)
+{
+    systems.push_back(system);
+    system->setScene(this);
 }
 
 void Scene::setup()
 {
-  print("Scene Setup");
-  
-  for (auto sys: setupSystems)
-  {
-    sys->run();
-  }
+    std::println("Scene Setup");
+    for (auto sys : systems) {
+        sys->setup();
+    }
 }
 
-void Scene::update(double dT)
+void Scene::update()
 {
-  print("Scene Update");
-  
-  for (auto sys: updateSystems)
-  {
-    sys->run(dT);
-  }
+    std::println("Scene Update");
+    for (auto sys : systems) {
+        sys->update();
+    }
 }
 
-void Scene::render(SDL_Renderer* renderer)
+void Scene::render()
 {
-  print("Scene Render");
-  
-  for (auto sys: renderSystems)
-  {
-    sys->run(renderer);
-  }
-}
-
-void Scene::processEvents(SDL_Event event)
-{
-  print("Scene Events");
-  
-  for (auto sys: eventSystems)
-  {
-    sys->run(event);
-  }
+    std::println("Scene Render");
+    for (auto sys : systems) {
+        sys->render();
+    }
 }

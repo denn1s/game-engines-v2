@@ -1,14 +1,14 @@
-#include "ECS/Components.h"
+#pragma once
+#include <raylib.h>
 
 struct SizeComponent {
-  int w;
-  int h;
-};
-
-struct ColliderComponent {
-  bool triggered;
+    float width, height;
 };
 
 struct PlayerComponent {
-  short moveSpeed;
+    float moveSpeed;
+};
+
+struct ColliderComponent {
+    bool triggered = false;
 };
