@@ -1,20 +1,21 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include "print.h"
+#include <print>
 #include "Scene/Scene.h"
 
 class Entity
 {
   public:
     Entity(entt::entity e, Scene* s) {
-      print("Entity Created");
+      std::println("Entity Created");
 
       handle = e;
       scene = s;
     }
+
     ~Entity() {
-      print("Entity Destroyed");
+      std::println("Entity Destroyed");
     }
 
     template<typename T>

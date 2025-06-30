@@ -1,130 +1,107 @@
-#include "print.h"
-#include "Systems.h"
-#include "Components.h"
+#include "ECS/System.h"
+#include "ECS/Components.h"
+#include "Pong/Components.h"
+#include "Scene/Scene.h"
+#include <print>
 
-HelloSystem::HelloSystem() {
-  std::cout << "Hello System Constructor" << std::endl;
-}
-
-HelloSystem::HelloSystem(const HelloSystem& other) {
-  std::cout << "Hello System Copy Constructor" << std::endl;
-}
-
-HelloSystem::~HelloSystem() {
-    std::cout << "Hello System Destructor" << std::endl;
-}
-
-void HelloSystem::run() {
-    std::cout << "Hello System!" << std::endl;
-}
-
-void RectRenderSystem::run(SDL_Renderer* renderer) {
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 1);
-
-  const auto view = scene->r.view<TransformComponent, SizeComponent>();
-  for (const entt::entity e : view) {
-    const TransformComponent& t = view.get<TransformComponent>(e);
-    const SizeComponent& c = view.get<SizeComponent>(e);
-    const int x = t.position.x;
-    const int y = t.position.y;
-    const int w = c.w;
-    const int h = c.h;
-
-    SDL_Rect rect = { x, y, w, h };    
-    SDL_RenderFillRect(renderer, &rect);
-  }
-}
-
-MovementUpdateSystem::MovementUpdateSystem(int screen_width, int screen_height)
-  : screen_width(screen_width), screen_height(screen_height) { }
-
-void MovementUpdateSystem::run(double dT) {
-  const auto view = scene->r.view<TransformComponent, SpeedComponent>();
-  for (const entt::entity e : view) {
-    TransformComponent& t = view.get<TransformComponent>(e);
-    SpeedComponent& m = view.get<SpeedComponent>(e);
-
-    if (m.x == 0 && m.y == 0) {
-      continue;
+class HelloSystem : public System {
+public:
+    void setup() override {
+        std::println("Hello, Pong ECS World!");
     }
+};
 
-    if (t.position.x <= 0)
-    {
-      m.x *= -1;
-    }
-    if (t.position.x >= screen_width - 20)
-    {
-      m.x *= -1;
-    }
-    if (t.position.y <= 0)
-    {
-      m.y *= -1;
-    }
-    if (t.position.y > screen_height - 20)
-    {
-      print("You lose.");
-      exit(1);
-    }
-  
-    t.position.x += m.x * dT;
-    t.position.y += m.y * dT;
-  }
-}
+class InputSystem : public System {
+public:
+    void update() override {
+        auto view = scene->r.view<PlayerComponent, VelocityComponent>();
+        for (auto entity : view) {
+            auto& player = view.get<PlayerComponent>(entity);
+            auto& vel = view.get<VelocityComponent>(entity);
 
-void PlayerInputEventSystem::run(SDL_Event event) {
-  scene->r.view<PlayerComponent, SpeedComponent>().each(
-    [&](const auto& entity, PlayerComponent& player, SpeedComponent& speed) {
-      if (event.type == SDL_KEYDOWN)
-      {
-        switch (event.key.keysym.sym) {
-          case SDLK_LEFT:
-            speed.x = -player.moveSpeed;
-            break;
-          case SDLK_RIGHT:
-            speed.x = player.moveSpeed;
-            break;
+            vel.velocity.x = 0.0f;
+            if (IsKeyDown(KEY_LEFT))  vel.velocity.x = -player.moveSpeed;
+            if (IsKeyDown(KEY_RIGHT)) vel.velocity.x =  player.moveSpeed;
         }
-      }
-      if (event.type == SDL_KEYUP)
-      {
-        speed.x = 0;
-      }
     }
-  );
-}
+};
 
+class MovementSystem : public System {
+public:
+    void update() override {
+        float dT = GetFrameTime();
+        auto view = scene->r.view<TransformComponent, VelocityComponent>();
+        for (auto entity : view) {
+            auto& pos = view.get<TransformComponent>(entity);
+            auto& vel = view.get<VelocityComponent>(entity);
+            pos.position.x += vel.velocity.x * dT;
+            pos.position.y += vel.velocity.y * dT;
+        }
+    }
+};
 
-void CollisionDetectionUpdateSystem::run(double dT) {
-    const auto view = scene->r.view<TransformComponent, SizeComponent, ColliderComponent>();
-    const auto view2 = scene->r.view<TransformComponent, SizeComponent>();
+class CollisionSystem : public System {
+public:
+    void update() override {
+        auto ballView = scene->r.view<NameComponent, TransformComponent, SizeComponent, VelocityComponent, ColliderComponent>();
+        auto paddleView = scene->r.view<PlayerComponent, TransformComponent, SizeComponent>();
 
-    view.each([&](auto e1, TransformComponent& t1, SizeComponent& s1, ColliderComponent& c1) {
-        // Create a bounding box for the first entity
-        SDL_Rect box1 = { t1.position.x, t1.position.y, s1.w, s1.h };
+        for (auto ball : ballView) {
+            auto& ballPos = ballView.get<TransformComponent>(ball).position;
+            auto& ballSize = ballView.get<SizeComponent>(ball);
+            auto& ballVel  = ballView.get<VelocityComponent>(ball).velocity;
+            auto& ballCol  = ballView.get<ColliderComponent>(ball);
 
-        // Check against all other entities
-        view2.each([&](auto e2, TransformComponent& t2, SizeComponent& s2) {
-            if (e1 == e2) return;  // Skip self
-
-            // Create a bounding box for the second entity
-            SDL_Rect box2 = { t2.position.x, t2.position.y, s2.w, s2.h };
-
-            // Check for intersection
-            if (SDL_HasIntersection(&box1, &box2)) {
-              c1.triggered = true;
+            // Wall collision (left/right)
+            if (ballPos.x <= 0 || ballPos.x + ballSize.width >= GetScreenWidth()) {
+                ballVel.x *= -1.0f;
             }
-        });
-    });
-}
+            // Ceiling collision
+            if (ballPos.y <= 0) {
+                ballVel.y *= -1.0f;
+            }
+            // Floor (lose)
+            if (ballPos.y + ballSize.height >= GetScreenHeight()) {
+                std::println("Game Over!");
+                ballVel = {0, 0};
+            }
+
+            // Paddle collision
+            for (auto paddle : paddleView) {
+                auto& padPos = paddleView.get<TransformComponent>(paddle).position;
+                auto& padSize = paddleView.get<SizeComponent>(paddle);
+
+                bool overlapX = ballPos.x < padPos.x + padSize.width && ballPos.x + ballSize.width > padPos.x;
+                bool overlapY = ballPos.y + ballSize.height > padPos.y && ballPos.y < padPos.y + padSize.height;
+
+                if (overlapX && overlapY) {
+                    ballVel.y *= -1.1f; // bounce and speed up
+                    ballVel.x *= 1.05f;
+                    ballCol.triggered = true;
+                }
+            }
+        }
+    }
+};
 
 
-void BounceUpdateSystem::run(double dT) {
-    const auto view = scene->r.view<ColliderComponent, SpeedComponent>();
+class RenderSystem : public System {
+public:
+    void render() override {
+        auto view = scene->r.view<TransformComponent, SizeComponent, NameComponent>();
+        for (auto entity : view) {
+            const auto& pos = view.get<TransformComponent>(entity).position;
+            const auto& size = view.get<SizeComponent>(entity);
+            const auto& name = view.get<NameComponent>(entity).tag;
 
-    view.each([&](auto e, ColliderComponent& c, SpeedComponent& s) {
-      if (c.triggered) {
-        c.triggered = false;
-        s.y *= -1.2;
-      }
-    });
-}
+            Color color = (name == "ball") ? RED : BLUE;
+            DrawRectangle(
+                static_cast<int>(pos.x),
+                static_cast<int>(pos.y),
+                static_cast<int>(size.width),
+                static_cast<int>(size.height),
+                color
+            );
+        }
+    }
+};

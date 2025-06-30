@@ -1,19 +1,18 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <string>
+#include <raylib.h>
 
 struct NameComponent {
-  std::string tag;
+    std::string tag;
 };
 
 struct TransformComponent {
-  glm::ivec2 position;
-  // glm::vec2 scale;
-  // double rotation;
+    Vector2 position;
+    // Vector2 scale;
+    // float rotation;
 };
 
-struct SpeedComponent {
-  int x;
-  int y;
+struct VelocityComponent {
+    Vector2 velocity;
 };
