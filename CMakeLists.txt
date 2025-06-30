@@ -1,27 +1,30 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.27)
 
-project(GAME VERSION 1.0)
+project(GAME VERSION 1.0 LANGUAGES CXX)
 
-# Enable C++20 features
-set(CMAKE_CXX_STANDARD 20)
+# Enable C++23 features
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+# Find Raylib
+find_package(raylib REQUIRED)
 
-add_subdirectory(src/Game)
-
-target_include_directories(${PROJECT_NAME}
-  PUBLIC
-    ${PROJECT_SOURCE_DIR}/src/Game
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
+    "${PROJECT_SOURCE_DIR}/src/*.cpp"
 )
 
-target_link_directories(${PROJECT_NAME}
-  PRIVATE src/Game
+add_executable(${PROJECT_NAME}
+    src/main.cpp
+    ${SOURCES}
+)
+
+target_include_directories(${PROJECT_NAME}
+    PRIVATE ${PROJECT_SOURCE_DIR}/include
+    PUBLIC ${PROJECT_SOURCE_DIR}/src
 )
 
 target_link_libraries(${PROJECT_NAME}
-  SDL2main
-  SDL2
-  Game
+    raylib
 )
