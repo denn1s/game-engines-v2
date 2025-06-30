@@ -20,7 +20,7 @@ class Entity
 
     template<typename T>
     auto& addComponent(auto&&... args) {
-      return scene->r.emplace<T>(handle, std::forward<decltype(args)>(args)...);
+      return scene->r.emplace_or_replace<T>(handle, std::forward<decltype(args)>(args)...);
     }
 
     template<typename T>
