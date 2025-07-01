@@ -1,36 +1,62 @@
-## Pong
+# Simple ECS Game Engine
 
-In this exercise, you will create a simple Pong game by modifying the given Game class. You will need to update the initialization, setup, event handling, game state update, rendering, and cleanup methods to support the Pong game mechanics. The game should consist of two paddles and a ball that bounces between them. When a player scores a point by getting the ball past their opponent's paddle, the game should print the name of the player who scored and exit the game. This exercise will help you understand the different stages of the game loop and how they work together to create a functional game. Remember to focus on the core mechanics and not to worry about implementing a scoring system or other advanced features at this point, as this is just an introductory exercise.
+This project is a simple game engine that uses the Entity-Component-System (ECS) architecture. It is intended as a teaching tool for a game engine architecture course. The goal of this project is to provide a clear and easy-to-understand implementation of an ECS, prioritizing clarity for students over advanced features or optimizations.
 
-1. Your task is to modify the Game class to create a Pong game.
+## Project Structure
 
-2. Initialize the game window:
-   - Update the 'init' method in the Game class.
-   - Set up the game window with a title, width, and height.
+The project is organized into the following directories:
 
-3. Set up game objects and variables:
-   - Update the 'setup' method in the Game class.
-   - Create and initialize two paddle objects for the players.
-   - Create and initialize a ball object.
-   - Define variables for player names, ball speed, and paddle speed.
+*   `src/ECS`: This directory contains the core ECS implementation.
+    *   `Components.h`: Defines the basic components used by the engine.
+    *   `Entity.h`: Provides an abstraction for entities in the game world.
+    *   `System.h`: Defines the base class for all systems.
+*   `src/Game`: This directory contains the core game loop and scene management.
+    *   `Game.h` and `Game.cpp`: Implement the main game loop.
+    *   `Scene.h` and `Scene.cpp`: Manage the entities and systems in a scene.
+*   `src/Pong`: This directory contains the implementation of a simple Pong game.
+    *   `Components.h`: Defines the components specific to the Pong game.
+    *   `Pong.h` and `Pong.cpp`: Set up the Pong game scene.
+    *   `Systems.cpp`: Implements the systems that control the Pong game.
+*   `scripts`: This directory contains the build and run scripts.
+    *   `build.sh`: Compiles the project.
+    *   `configure.sh`: Configures the project using CMake.
+    *   `run.sh`: Builds and runs the project.
+    *   `clean.sh`: Removes the build artifacts.
 
-4. Handle user input and events:
-   - Update the 'handleEvents' method in the Game class.
-   - Process keyboard input for moving the paddles up and down.
-   - Ensure that the paddles do not move outside the game window.
+## Building and Running
 
-5. Update the game state:
-   - Update the 'update' method in the Game class.
-   - Update the position of the ball according to its speed and direction.
-   - Check for collisions between the ball and the paddles.
-   - Check for collisions between the ball and the top and bottom edges of the game window.
-   - Check if the ball goes past a paddle, indicating a point has been scored. If so, print the name of the player who scored and exit the game.
+This project uses CMake to generate the build files. The following instructions assume you are on a Linux system with `gcc`, `g++`, and `cmake` installed.
 
-6. Render the game objects:
-   - Update the 'render' method in the Game class.
-   - Clear the screen.
-   - Draw the paddles and ball on the screen.
+### 1. Configure the Project
 
-7. Cleanup:
-   - Update the 'clean' method in the Game class.
-   - Release any resources used by the game, such as textures.
+First, you need to configure the project using CMake. This will generate the necessary build files in the `build` directory.
+
+```bash
+./configure.sh
+```
+
+### 2. Build the Project
+
+Next, you can build the project using the `build.sh` script. This will compile the code and create an executable in the `build` directory.
+
+```bash
+./build.sh
+```
+
+### 3. Run the Game
+
+Finally, you can run the game using the `run.sh` script. This will build the project (if necessary) and then run the game.
+
+```bash
+./run.sh
+```
+
+## Understanding the Code
+
+The main goal of this project is to teach the basics of the ECS architecture. Here are some key concepts to keep in mind as you explore the code:
+
+*   **Entities:** Entities are lightweight objects that represent things in your game world. In this project, entities are just simple IDs managed by the `entt` library.
+*   **Components:** Components are simple data structures that hold the data for your entities. For example, the `TransformComponent` holds the position of an entity.
+*   **Systems:** Systems are where the logic of your game lives. Each system is responsible for updating a specific aspect of the game. For example, the `MovementSystem` is responsible for updating the position of entities based on their velocity.
+
+By studying the code in this project, you will gain a better understanding of how to use the ECS architecture to create a simple game engine.
