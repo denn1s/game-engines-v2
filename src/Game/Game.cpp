@@ -3,13 +3,13 @@
 
 Game::Game(const char* title, int width, int height) {
     InitWindow(width, height, title);
-    SetTargetFPS(60);
     std::println("Game Start!");
     isRunning = true;
     counter = 0;
 }
 
 void Game::setup() {
+    SetTargetFPS(60);
     // Any setup logic here
 }
 
