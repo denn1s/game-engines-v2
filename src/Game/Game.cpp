@@ -1,7 +1,6 @@
 #include "Game.h"
 #include <print>
 #include <format>
-#include "rlImGui.h"
 
 Game::Game(const char* title, int width, int height)
     : screen_width(width), screen_height(height)
@@ -58,15 +57,10 @@ void Game::render() {
 
     DrawText(std::format("FPS: {:.2f}", FPS).c_str(), 10, 10, 20, DARKGRAY);
 
-    rlImGuiBegin();
-    // render ImGui stuff here
-    rlImGuiEnd();
-
     EndDrawing();
 }
 
 void Game::clean() {
-    rlImGuiShutdown();
     if (!WindowShouldClose()) {
         CloseWindow();
     }
