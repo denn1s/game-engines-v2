@@ -1,7 +1,7 @@
 #include "ECS/System.h"
 #include "ECS/Components.h"
 #include "Pong/Components.h"
-#include "Scene/Scene.h"
+#include "Game/Scene/Scene.h"
 #include <print>
 
 class HelloSystem : public System {

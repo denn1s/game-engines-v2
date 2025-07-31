@@ -2,7 +2,7 @@
 
 #include <entt/entt.hpp>
 #include <print>
-#include "Scene/Scene.h"
+#include "Game/Scene/Scene.h"
 
 class Entity
 {

@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <print>
 #include <format>
+#include "Game/Scene/Scene.h"
 
 Game::Game(const char* title, int width, int height)
     : screen_width(width), screen_height(height)

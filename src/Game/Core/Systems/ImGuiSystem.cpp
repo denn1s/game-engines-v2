@@ -1,5 +1,5 @@
 #include "ImGuiSystem.h"
-#include "Scene/Scene.h"
+#include "Game/Scene/Scene.h"
 #include "rlImGui.h"
 #include "imgui.h"
 #include "ECS/Components.h"
