@@ -2,6 +2,7 @@
 #include "Components.h"
 #include "ECS/Entity.h"
 #include "Systems.cpp"
+#include "ImGui/ImGuiSystem.h"
 
 Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
     Scene* gameplayScene = createGameplayScene();
@@ -41,6 +42,7 @@ Entity ball = gameplayScene->createEntity("ball", 100, 100);
     gameplayScene->addSystem(new MovementSystem());
     gameplayScene->addSystem(new CollisionSystem());
     gameplayScene->addSystem(new RenderSystem());
+    gameplayScene->addSystem(new ImGuiSystem());
 
     return gameplayScene;
 }
