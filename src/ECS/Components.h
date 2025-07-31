@@ -9,8 +9,6 @@ struct NameComponent {
 
 struct TransformComponent {
     Vector2 position;
-    // Vector2 scale;
-    // float rotation;
 };
 
 struct VelocityComponent {

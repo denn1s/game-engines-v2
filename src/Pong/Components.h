@@ -12,3 +12,7 @@ struct PlayerComponent {
 struct ColliderComponent {
     bool triggered = false;
 };
+
+struct ColorComponent {
+    Color color;
+};
