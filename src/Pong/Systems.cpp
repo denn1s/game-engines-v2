@@ -88,13 +88,12 @@ public:
 class RenderSystem : public System {
 public:
     void render() override {
-        auto view = scene->r.view<TransformComponent, SizeComponent, NameComponent>();
+        auto view = scene->r.view<TransformComponent, SizeComponent, ColorComponent>();
         for (auto entity : view) {
             const auto& pos = view.get<TransformComponent>(entity).position;
             const auto& size = view.get<SizeComponent>(entity);
-            const auto& name = view.get<NameComponent>(entity).tag;
+            const auto& color = view.get<ColorComponent>(entity).color;
 
-            Color color = (name == "ball") ? RED : BLUE;
             DrawRectangle(
                 static_cast<int>(pos.x),
                 static_cast<int>(pos.y),

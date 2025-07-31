@@ -21,3 +21,5 @@ public:
     // Set by the Scene when the system is added
     virtual void setScene(Scene* s) { scene = s; }
 };
+
+
