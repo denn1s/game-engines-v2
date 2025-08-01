@@ -62,8 +62,7 @@ public:
             }
             // Floor (lose)
             if (ballPos.y + ballSize.height >= GetScreenHeight()) {
-                std::println("Game Over!");
-                ballVel = {0, 0};
+                ballVel = {-20.0f, -20.0f};
             }
 
             // Paddle collision

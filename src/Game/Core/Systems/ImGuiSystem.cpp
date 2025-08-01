@@ -31,7 +31,7 @@ void ImGuiSystem::render() {
             ImGui::TreePop();
         }
     }
-
+   
     ImGui::End();
 
     rlImGuiEnd();
@@ -40,13 +40,13 @@ void ImGuiSystem::render() {
 void ShowComponentProperties(entt::registry& registry, entt::entity entity) {
     if (registry.all_of<TransformComponent>(entity)) {
         auto& transform = registry.get<TransformComponent>(entity);
-        ImGui::Text("TransformComponent");
-        ImGui::Text("  Position: %.2f, %.2f", transform.position.x, transform.position.y);
-    }
+    
+        ImGui::SliderFloat("pX", &transform.position.x, 0.0f, 1300.0f);
+        ImGui::SliderFloat("pY", &transform.position.y, 0.0f, 800.0f);}
 
     if (registry.all_of<VelocityComponent>(entity)) {
         auto& velocity = registry.get<VelocityComponent>(entity);
-        ImGui::Text("VelocityComponent");
-        ImGui::Text("  Velocity: %.2f, %.2f", velocity.velocity.x, velocity.velocity.y);
+        ImGui::SliderFloat("vX", &velocity.velocity.x, -100.0f, 100.0f);
+        ImGui::SliderFloat("vY", &velocity.velocity.y, -100.0f, 100.0f);
     }
 }
