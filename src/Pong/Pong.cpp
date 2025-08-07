@@ -32,10 +32,10 @@ Scene* Pong::createGameplayScene() {
     // Add systems
     gameplayScene->addSystem(new HelloSystem());
     gameplayScene->addSystem(new InputSystem());
+    gameplayScene->addSystem(new PlayerActionSystem());
     gameplayScene->addSystem(new MovementSystem());
     gameplayScene->addSystem(new RenderSystem());
     gameplayScene->addSystem(new ImGuiSystem());
-    gameplayScene->addSystem(new PlayerActionSystem());
     gameplayScene->addSystem(new SpriteSetupSystem());
     gameplayScene->addSystem(new SpriteRenderSystem());
     gameplayScene->addSystem(new SpriteUpdateSystem());

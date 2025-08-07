@@ -84,6 +84,7 @@ void SpriteAnimationSystem::update() {
         auto& player = view.get<PlayerComponent>(entity);
 
         if (player.isAttacking) {
+            std::println("Animation: Attacking with tool {}", (int)player.currentTool);
             sprite.animationDuration = 500;
             switch (player.currentTool) {
                 case SHOVEL:
@@ -105,9 +106,11 @@ void SpriteAnimationSystem::update() {
                     else if (player.lastDirection.x > 0) sprite.yIndex = 23;
                     break;
                 case NONE:
+                    std::println("Animation: Attacking with no tool");
                     break;
             }
         } else if (vel.velocity.x != 0 || vel.velocity.y != 0) {
+            std::println("Animation: Moving");
             sprite.animationDuration = 1000;
             player.lastDirection = vel.velocity;
 
@@ -123,6 +126,7 @@ void SpriteAnimationSystem::update() {
                 else if (vel.velocity.x < 0) sprite.yIndex = 7;
             }
         } else {
+            std::println("Animation: Idle");
             sprite.animationDuration = 1000;
             if (player.lastDirection.y > 0) sprite.yIndex = 0;
             else if (player.lastDirection.y < 0) sprite.yIndex = 1;
@@ -140,14 +144,27 @@ void PlayerActionSystem::update() {
 
         player.isRunning = IsKeyDown(KEY_LEFT_SHIFT);
 
-        if (IsKeyPressed(KEY_ONE)) player.currentTool = SHOVEL;
-        if (IsKeyPressed(KEY_TWO)) player.currentTool = AXE;
-        if (IsKeyPressed(KEY_THREE)) player.currentTool = WATER_CAN;
-        if (IsKeyPressed(KEY_ZERO)) player.currentTool = NONE;
+        if (IsKeyPressed(KEY_ONE)) {
+            player.currentTool = SHOVEL;
+            std::println("Action: Switched to SHOVEL");
+        }
+        if (IsKeyPressed(KEY_TWO)) {
+            player.currentTool = AXE;
+            std::println("Action: Switched to AXE");
+        }
+        if (IsKeyPressed(KEY_THREE)) {
+            player.currentTool = WATER_CAN;
+            std::println("Action: Switched to WATER_CAN");
+        }
+        if (IsKeyPressed(KEY_ZERO)) {
+            player.currentTool = NONE;
+            std::println("Action: Switched to NONE");
+        }
 
         if (IsKeyPressed(KEY_SPACE) && !player.isAttacking) {
             player.isAttacking = true;
             sprite.xIndex = 0;
+            std::println("Action: Attack started");
         }
     }
 }
