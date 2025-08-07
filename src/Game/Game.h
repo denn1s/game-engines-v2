@@ -1,10 +1,10 @@
-#include <SDL2/SDL.h>
-#include <memory>
-#include "Scene/Scene.h"
+#pragma once
 
+#include <raylib.h>
+#include "Game/Scene/Scene.h"
 
 class Game {
-  public:
+public:
     Game(const char* title, int width, int height);
     ~Game();
 
@@ -15,31 +15,21 @@ class Game {
     void update();
     void render();
     void clean();
-    bool running();
+    bool running() const;
 
     void run();
 
     void setScene(Scene* newScene);
     Scene* getCurrentScene() const;
 
-  protected:
-    bool isRunning;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
+protected:
+    bool isRunning = false;
+    int screen_width = 0;
+    int screen_height = 0;
 
-    int screen_width;
-    int screen_height;
+    float dT = 0.0f;
+    float FPS = 0.0f;
+    int frameCount = 0;
 
-    // for frame management
-    Uint32 frameStartTimestamp;
-    Uint32 frameEndTimestamp;
-    float frameDuration;
-    float dT; // time in miliseconds since last frame
-    // for frame count
-    int frameCount;
-    Uint32 lastFPSUpdateTime;
-    float FPS;
-
-    // scene logic
     Scene* currentScene;
 };
