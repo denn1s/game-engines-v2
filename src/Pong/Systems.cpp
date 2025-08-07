@@ -70,21 +70,58 @@ void SpriteUpdateSystem::update() {
     }
 }
 
+void SpriteAnimationSystem::update() {
+    auto view = scene->r.view<SpriteComponent, VelocityComponent>();
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        auto& vel = view.get<VelocityComponent>(entity);
+
+        if (vel.velocity.x == 0 && vel.velocity.y == 0) {
+            sprite.yIndex = 0; // Idle
+        } else if (vel.velocity.y < 0) {
+            sprite.yIndex = 5; // Walking up
+        } else if (vel.velocity.y > 0) {
+            sprite.yIndex = 4; // Walking down
+        } else if (vel.velocity.x > 0) {
+            sprite.yIndex = 6; // Walking right
+        } else if (vel.velocity.x < 0) {
+            sprite.yIndex = 7; // Walking left
+        }
+    }
+}
+
 void HelloSystem::setup() {
     std::println("Hello, Pong ECS World!");
 }
 
-void InputSystem::update() {
-    auto view = scene->r.view<PlayerComponent, VelocityComponent>();
-    for (auto entity : view) {
-        auto& player = view.get<PlayerComponent>(entity);
-        auto& vel = view.get<VelocityComponent>(entity);
+class InputSystem : public System {
+public:
+    void update() override {
+        // Paddle movement
+        auto paddleView = scene->r.view<PlayerComponent, VelocityComponent>();
+        for (auto entity : paddleView) {
+            auto& player = paddleView.get<PlayerComponent>(entity);
+            auto& vel = paddleView.get<VelocityComponent>(entity);
 
-        vel.velocity.x = 0.0f;
-        if (IsKeyDown(KEY_LEFT))  vel.velocity.x = -player.moveSpeed;
-        if (IsKeyDown(KEY_RIGHT)) vel.velocity.x =  player.moveSpeed;
+            vel.velocity.x = 0.0f;
+            if (IsKeyDown(KEY_LEFT))  vel.velocity.x = -player.moveSpeed;
+            if (IsKeyDown(KEY_RIGHT)) vel.velocity.x =  player.moveSpeed;
+        }
+
+        // Cat movement
+        auto catView = scene->r.view<SpriteComponent, VelocityComponent>();
+        for (auto entity : catView) {
+            auto& vel = catView.get<VelocityComponent>(entity);
+            vel.velocity = {0, 0};
+            float speed = 100.0f;
+
+            if (IsKeyDown(KEY_W)) vel.velocity.y = -speed;
+            if (IsKeyDown(KEY_S)) vel.velocity.y =  speed;
+            if (IsKeyDown(KEY_A)) vel.velocity.x = -speed;
+            if (IsKeyDown(KEY_D)) vel.velocity.x =  speed;
+        }
     }
-}
+};
 
 void MovementSystem::update() {
     float dT = GetFrameTime();

@@ -38,6 +38,7 @@ Scene* Pong::createGameplayScene() {
     paddle.addComponent<ColorComponent>(GREEN);
 
     Entity white = gameplayScene->createEntity("cat1", 0, 0);
+    white.addComponent<VelocityComponent>(Vector2{0, 0});
     auto& s = white.addComponent<SpriteComponent>();
     s.name = "assets/Sprites/Cat/SpriteSheet.png";
     s.xIndex = 0;
@@ -58,6 +59,7 @@ Scene* Pong::createGameplayScene() {
     gameplayScene->addSystem(new SpriteSetupSystem());
     gameplayScene->addSystem(new SpriteRenderSystem());
     gameplayScene->addSystem(new SpriteUpdateSystem());
+    gameplayScene->addSystem(new SpriteAnimationSystem());
 
 
     return gameplayScene;
