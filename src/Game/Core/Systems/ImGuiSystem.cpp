@@ -42,7 +42,10 @@ void DisplayComponentDetails(entt::registry& registry, entt::entity entity, cons
     } else if (componentName == "PlayerComponent") {
         if (registry.all_of<PlayerComponent>(entity)) {
             auto& comp = registry.get<PlayerComponent>(entity);
-            ImGui::InputFloat("Move Speed", &comp.moveSpeed);
+            ImGui::Checkbox("Running", &comp.isRunning);
+            ImGui::Checkbox("Attacking", &comp.isAttacking);
+            const char* tool_names[] = { "NONE", "SHOVEL", "AXE", "WATER_CAN" };
+            ImGui::Combo("Tool", (int*)&comp.currentTool, tool_names, IM_ARRAYSIZE(tool_names));
         }
     } else if (componentName == "ColliderComponent") {
         if (registry.all_of<ColliderComponent>(entity)) {
