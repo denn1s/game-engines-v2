@@ -39,7 +39,7 @@ Scene* Pong::createGameplayScene() {
 
     Entity white = gameplayScene->createEntity("cat1", 0, 0);
     auto& s = white.addComponent<SpriteComponent>();
-    s.name = "assets/sprites/cat.png";
+    s.name = "assets/Sprites/Cat/SpriteSheet.png";
     s.xIndex = 0;
     s.yIndex = 0;
     s.size = 48;
