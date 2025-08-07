@@ -18,6 +18,11 @@ public:
     void update() override;
 };
 
+class SpriteAnimationSystem : public System {
+public:
+    void update() override;
+};
+
 class HelloSystem : public System {
 public:
     void setup() override;
