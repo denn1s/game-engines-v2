@@ -2,7 +2,7 @@
 #include "Components.h"
 
 #include "ECS/Entity.h"
-#include "Systems.cpp"
+#include "Systems.h"
 #include "Game/Core/Systems/ImGuiSystem.h"
 
 Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
