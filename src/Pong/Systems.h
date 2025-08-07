@@ -23,6 +23,11 @@ public:
     void update() override;
 };
 
+class PlayerActionSystem : public System {
+public:
+    void update() override;
+};
+
 class HelloSystem : public System {
 public:
     void setup() override;
@@ -34,11 +39,6 @@ public:
 };
 
 class MovementSystem : public System {
-public:
-    void update() override;
-};
-
-class CollisionSystem : public System {
 public:
     void update() override;
 };
