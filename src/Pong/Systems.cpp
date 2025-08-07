@@ -128,10 +128,42 @@ void SpriteAnimationSystem::update() {
     }
 }
 
+void SpriteUpdateSystem::update() {
+    auto view = scene->r.view<SpriteComponent, PlayerComponent>();
+    long now = GetTime() * 1000;
+
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        auto& player = view.get<PlayerComponent>(entity);
+
+        if (sprite.animationFrames > 0) {
+            float timeSinceLastUpdate = now - sprite.lastUpdate;
+
+            int framesToUpdate = static_cast<int>(
+                timeSinceLastUpdate /
+                sprite.animationDuration * sprite.animationFrames
+            );
+
+            if (framesToUpdate > 0) {
+                int oldXIndex = sprite.xIndex;
+                sprite.xIndex += framesToUpdate;
+                sprite.xIndex %= sprite.animationFrames;
+
+                // If animation looped and we were attacking, stop attacking
+                if (player.isAttacking && sprite.xIndex < oldXIndex) {
+                    player.isAttacking = false;
+                }
+                sprite.lastUpdate = now;
+            }
+        }
+    }
+}
+
 void PlayerActionSystem::update() {
-    auto view = scene->r.view<PlayerComponent>();
+    auto view = scene->r.view<PlayerComponent, SpriteComponent>();
     for (auto entity : view) {
         auto& player = view.get<PlayerComponent>(entity);
+        auto& sprite = view.get<SpriteComponent>(entity);
 
         // Running
         player.isRunning = IsKeyDown(KEY_LEFT_SHIFT);
@@ -143,15 +175,26 @@ void PlayerActionSystem::update() {
         if (IsKeyPressed(KEY_ZERO)) player.currentTool = NONE;
 
         // Attacking
-        if (IsKeyPressed(KEY_SPACE)) {
+        if (IsKeyPressed(KEY_SPACE) && !player.isAttacking) {
             player.isAttacking = true;
-            // A simple timer or animation event would be needed to set this back to false.
-            // For now, we'll just let the animation play out. A more robust system
-            // would reset this flag when the animation completes.
-        } else {
-            // This is a simplification. In a real game, you'd check if the animation is finished.
-            player.isAttacking = false;
+            sprite.xIndex = 0; // Reset animation to the first frame
         }
+    }
+}
+
+void InputSystem::update() {
+    auto view = scene->r.view<PlayerComponent, VelocityComponent>();
+    for (auto entity : view) {
+        auto& player = view.get<PlayerComponent>(entity);
+        auto& vel = view.get<VelocityComponent>(entity);
+        vel.velocity = {0, 0};
+        
+        float currentSpeed = player.isRunning ? 200.0f : 100.0f;
+
+        if (IsKeyDown(KEY_W)) vel.velocity.y = -currentSpeed;
+        if (IsKeyDown(KEY_S)) vel.velocity.y =  currentSpeed;
+        if (IsKeyDown(KEY_A)) vel.velocity.x = -currentSpeed;
+        if (IsKeyDown(KEY_D)) vel.velocity.x =  currentSpeed;
     }
 }
 
