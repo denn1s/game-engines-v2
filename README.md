@@ -9,6 +9,17 @@ This is a simple game engine built with C++23, CMake, and Raylib.
 - **ImGui Integration:** The engine is integrated with ImGui for debugging and UI purposes.
 - **Sprite Loading:** The engine supports loading and rendering sprites with animations.
 
+## Controls
+
+- **Movement:** WASD
+- **Run:** Hold Left Shift while moving.
+- **Select Tool:**
+    - `1`: Shovel
+    - `2`: Axe
+    - `3`: Water Can
+    - `0`: Unequip
+- **Use Tool/Attack:** Spacebar
+
 ## Sprite Loading
 
 The sprite loading system is implemented using a `SpriteComponent` and a few systems.
