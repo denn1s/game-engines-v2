@@ -32,4 +32,5 @@ protected:
     int frameCount = 0;
 
     Scene* currentScene;
+    Camera2D camera;
 };

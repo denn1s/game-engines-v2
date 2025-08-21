@@ -2,6 +2,7 @@
 #include <print>
 #include <format>
 #include "Game/Scene/Scene.h"
+#include "ECS/Components.h"
 
 Game::Game(const char* title, int width, int height)
     : screen_width(width), screen_height(height)
@@ -13,6 +14,11 @@ Game::Game(const char* title, int width, int height)
     frameCount = 0;
     dT = 0.0f;
     FPS = 0.0f;
+
+    camera.target = { 0.0f, 0.0f };
+    camera.offset = { (float)screen_width / 2.0f, (float)screen_height / 2.0f };
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f;
 }
 
 Game::~Game() {
@@ -45,6 +51,14 @@ void Game::handleEvents() {
 void Game::update() {
     if (currentScene) {
         currentScene->update();
+
+        auto cameraView = currentScene->r.view<CameraComponent, TransformComponent>();
+        for (auto entity : cameraView) {
+            auto& cam = cameraView.get<CameraComponent>(entity);
+            auto& trans = cameraView.get<TransformComponent>(entity);
+            camera.target = trans.position;
+            camera.zoom = cam.zoom;
+        }
     }
 }
 
@@ -53,7 +67,9 @@ void Game::render() {
     ClearBackground(BLACK);
 
     if (currentScene) {
+        BeginMode2D(camera);
         currentScene->render();
+        EndMode2D();
     }
 
     DrawText(std::format("FPS: {:.2f}", FPS).c_str(), 10, 10, 20, DARKGRAY);

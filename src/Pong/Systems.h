@@ -17,21 +17,6 @@ class MovementSystem : public System {
     void update() override;
 };
 
-class PlayerInputEventSystem : public System {
-  public:
-    void update() override;
-};
-
-class CollisionDetectionUpdateSystem : public System {
-  public:
-    void update() override;
-};
-
-class BounceUpdateSystem : public System {
-  public:
-    void update() override;
-};
-
 class SpriteSetupSystem : public System {
   public:
     void setup() override;
