@@ -30,6 +30,8 @@ Scene* Pong::createGameplayScene() {
 
 
     // Add systems
+    gameplayScene->addSystem(new TilemapSetupSystem());
+    gameplayScene->addSystem(new TilemapRenderSystem());
     gameplayScene->addSystem(new HelloSystem());
     gameplayScene->addSystem(new InputSystem());
     gameplayScene->addSystem(new PlayerActionSystem());

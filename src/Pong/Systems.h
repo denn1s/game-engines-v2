@@ -2,6 +2,16 @@
 
 #include "ECS/System.h"
 
+class TilemapSetupSystem : public System {
+public:
+    void setup() override;
+};
+
+class TilemapRenderSystem : public System {
+public:
+    void render() override;
+};
+
 class SpriteSetupSystem : public System {
 public:
     void setup() override;
