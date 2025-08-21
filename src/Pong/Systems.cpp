@@ -1,6 +1,6 @@
 #include "Systems.h"
 #include "ECS/Components.h"
-#include "Pong/Components.hh"
+#include "Pong/Components.h"
 #include "Game/Scene/Scene.h"
 #include "ECS/Entity.h"
 #include "Game/Graphics/TextureManager.h"
