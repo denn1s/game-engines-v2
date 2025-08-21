@@ -1,201 +1,74 @@
-#include <cstdint>
-#include <print.h>
-#include <FastNoise.h>
-#include <SDL2/SDL.h>
-#include <ctime>
-#include <cstdlib>
-#include <sys/types.h>
-#include <bitset>
 #include "Systems.h"
-#include "Components.h"
-
-#include "ECS/Entity.h"
 #include "ECS/Components.h"
+#include "Pong/Components.h"
+#include "Game/Scene/Scene.h"
+#include "ECS/Entity.h"
 #include "Game/Graphics/TextureManager.h"
+#include "tilemap.h"
+#include <print>
+#include <raylib.h>
+#include <vector>
+#include <map>
+#include <bitset>
 
-SpriteSetupSystem::SpriteSetupSystem(SDL_Renderer* renderer)
-    : renderer(renderer) { }
+void TilemapSetupSystem::setup() {
+    Entity tilemapEntity = scene->createEntity("tilemap");
+    auto& tilemap = tilemapEntity.addComponent<TilemapComponent>();
+    tilemap.width = TILEMAP_WIDTH;
+    tilemap.height = TILEMAP_HEIGHT;
+    tilemap.tileSize = 16;
 
-SpriteSetupSystem::~SpriteSetupSystem() {
-    auto view = scene->r.view<SpriteComponent>();
+    Texture2D waterTexture = TextureManager::LoadTexture("assets/Tilesets/Water.png");
+    Texture2D grassTexture = TextureManager::LoadTexture("assets/Tilesets/Grass.png");
 
-    for(auto entity : view) {
-        const auto spriteComponent = view.get<SpriteComponent>(entity);
-        TextureManager::UnloadTexture(spriteComponent.name, spriteComponent.shader.name);
-    }
-}
-
-void SpriteSetupSystem::run() {
-    auto view = scene->r.view<SpriteComponent>();
-
-    for(auto entity : view) {
-        const auto spriteComponent = view.get<SpriteComponent>(entity);
-        TextureManager::LoadTexture(spriteComponent.name, renderer, spriteComponent.shader);
-    }
-}
-
-void SpriteRenderSystem::run(SDL_Renderer* renderer) {
-    auto view = scene->r.view<TransformComponent, SpriteComponent>();
-    const auto& c = scene->mainCamera->get<CameraComponent>();
-    const auto& cameraTransform = scene->mainCamera->get<TransformComponent>();
-    int cx = cameraTransform.x;
-    int cy = cameraTransform.y;
-
-    for(auto entity : view) {
-        const auto spriteComponent = view.get<SpriteComponent>(entity);
-        const auto transformComponent = view.get<TransformComponent>(entity);
-  
-        Texture* texture = TextureManager::GetTexture(spriteComponent.name, spriteComponent.shader.name);
-  
-        SDL_Rect clip = {
-            spriteComponent.xIndex * spriteComponent.size,
-            spriteComponent.yIndex * spriteComponent.size,
-            spriteComponent.size,
-            spriteComponent.size
-        };
-
-        texture->render(
-            transformComponent.x - cx,
-            transformComponent.y - cy,
-            spriteComponent.size * c.zoom,
-            spriteComponent.size * c.zoom,
-            &clip
-        );
-    }
-}
-
-void SpriteUpdateSystem::run(double dT) {
-    auto view = scene->r.view<SpriteComponent>();
-
-    Uint32 now = SDL_GetTicks();
-
-    for(auto entity : view) {
-        auto& spriteComponent = view.get<SpriteComponent>(entity);
-
-        if (spriteComponent.animationFrames > 0) {
-            float timeSinceLastUpdate = now - spriteComponent.lastUpdate;
-
-            int framesToUpdate = static_cast<int>(
-                timeSinceLastUpdate / 
-                spriteComponent.animationDuration * spriteComponent.animationFrames
-            );
-
-            if (framesToUpdate > 0) {
-                spriteComponent.xIndex += framesToUpdate;
-                spriteComponent.xIndex %= spriteComponent.animationFrames;
-                spriteComponent.lastUpdate = now;            
+    for (int y = 0; y < tilemap.height; y++) {
+        for (int x = 0; x < tilemap.width; x++) {
+            TileComponent tile;
+            tile.x = x;
+            tile.y = y;
+            
+            switch (TILEMAP_DATA[y][x]) {
+                case 0:
+                    tile.upTexture = grassTexture;
+                    tile.downTexture = waterTexture;
+                    tile.needsAutoTiling = true;
+                    break;
+                case 1:
+                    tile.upTexture = waterTexture;
+                    break;
             }
+
+            tilemap.tiles.push_back(tile);
         }
     }
 }
 
-TilemapSetupSystem::TilemapSetupSystem(SDL_Renderer* renderer)
-    : renderer(renderer) { }
-
-TilemapSetupSystem::~TilemapSetupSystem() {
-}
-
-void TilemapSetupSystem::run() {
-  auto& tilemapComponent = scene->world->get<TilemapComponent>();
-  tilemapComponent.width = 50;
-  tilemapComponent.height = 38;
-  tilemapComponent.tileSize = 16;
-  tilemapComponent.tilemap.resize(tilemapComponent.width * tilemapComponent.height);
-
-  Texture* waterTexture = TextureManager::LoadTexture("Tilesets/Water.png", renderer);
-  Texture* grassTexture = TextureManager::LoadTexture("Tilesets/Grass.png", renderer);
-
-  FastNoiseLite noise;
-  noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-
-  std::srand(std::time(nullptr));
-  float offsetX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  float offsetY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  float zoom = 20.0f;
-
-  Terrain grass{grassTexture};
-  Terrain water{waterTexture};  
-
-  for (int y = 0; y < tilemapComponent.height; y++) {
-      for (int x = 0; x < tilemapComponent.width; x++) {
-          float factor = noise.GetNoise(
-              static_cast<float>(x + offsetX) * zoom, 
-              static_cast<float>(y + offsetY) * zoom
-          );
-
-          int index = y * tilemapComponent.width + x;
-          Tile& tile = tilemapComponent.tilemap[index];
-
-          if (factor < 0.5) {
-            tile.up = grass;
-            tile.down = water;
-            tile.needsAutoTiling = true;
-          } else{
-            tile.up = water;
-            tile.needsAutoTiling = false;
-          }
+void TilemapRenderSystem::render() {
+    auto view = scene->r.view<TilemapComponent>();
+    for (auto entity : view) {
+        auto& tilemap = view.get<TilemapComponent>(entity);
+        for (auto& tile : tilemap.tiles) {
+            if (tile.downTexture.id > 0) {
+                DrawTextureEx(tile.downTexture, {(float)tile.x * tilemap.tileSize * tile.scale, (float)tile.y * tilemap.tileSize * tile.scale}, 0, tile.scale, WHITE);
+            }
+            Rectangle sourceRec = {
+                (float)tile.tileX,
+                (float)tile.tileY,
+                (float)tilemap.tileSize,
+                (float)tilemap.tileSize
+            };
+            Rectangle destRec = {
+                (float)tile.x * tilemap.tileSize * tile.scale,
+                (float)tile.y * tilemap.tileSize * tile.scale,
+                (float)tilemap.tileSize * tile.scale,
+                (float)tilemap.tileSize * tile.scale
+            };
+            DrawTexturePro(tile.upTexture, sourceRec, destRec, {0, 0}, 0, WHITE);
         }
     }
 }
 
-void TilemapRenderSystem::run(SDL_Renderer* renderer) {
-  auto& tilemapComponent = scene->world->get<TilemapComponent>();
-  int width = tilemapComponent.width;
-  int height = tilemapComponent.height;
-  int size = tilemapComponent.tileSize;
-  const auto& c = scene->mainCamera->get<CameraComponent>();
-  const auto& cameraTransform = scene->mainCamera->get<TransformComponent>();
-  int cx = cameraTransform.x;
-  int cy = cameraTransform.y;
-
-  // Calculate the range of tiles that should be visible
-  int startX = std::max(0, cx / (size * c.zoom));
-  int startY = std::max(0, cy / (size * c.zoom));
-  int endX = std::min(width, (cx + c.vw) / (size * c.zoom) + 1);
-  int endY = std::min(height, (cy + c.vh) / (size * c.zoom) + 1);
-
-
-  for (int y = startY; y < endY; y++) {
-    for (int x = startX; x < endX; x++) {
-      Tile& tile = tilemapComponent.tilemap[y * width + x];
-      if (tile.down.texture) {
-        SDL_Rect downClip = {
-          tile.down.x,
-          tile.down.y,
-          size,
-          size
-        };
-
-        tile.down.texture->render(
-          x * size * c.zoom - cx,
-          y * size * c.zoom - cy,
-          size * c.zoom,
-          size * c.zoom,
-          &downClip
-        );
-      }
-
-      SDL_Rect upClip = {
-        tile.up.x,
-        tile.up.y,
-        size,
-        size
-      };
-
-      tile.up.texture->render(
-        x * size * c.zoom - cx,
-        y * size * c.zoom - cy,
-        size * c.zoom,
-        size * c.zoom,
-        &upClip
-      );
-    }
-  }
-}
-
-
-
-std::map<u_int8_t, std::vector<std::pair<int, int>>> m = {
+std::map<uint8_t, std::vector<std::pair<int, int>>> m = {
     {  2, {{   0,  80 }} },
     {  8, {{  48,  96 }} },
     { 10, {{  80, 112 }} },
@@ -258,185 +131,374 @@ std::map<u_int8_t, std::vector<std::pair<int, int>>> m = {
 const int dx[8] = { -1,  0,  1, -1, 1, -1, 0, 1 }; 
 const int dy[8] = { -1, -1, -1,  0, 0,  1, 1, 1 };
 
-std::map<u_int8_t, std::pair<int, int>> d_corner = {
+std::map<uint8_t, std::pair<int, int>> d_corner = {
   {0, {  1,  1 }},
   {2, { -1,  1 }},
   {5, {  1, -1 }},
   {7, { -1, -1 }},
 };
 
-// run method for the AutoTilingUpdateSystem class
-void AutoTilingSetupSystem::run() {
-  auto& tilemapComponent = scene->world->get<TilemapComponent>();
-  int width = tilemapComponent.width;
-  int height = tilemapComponent.height;
-  int size = tilemapComponent.tileSize;
-  // Loop through each tile in the tilemap
-  for (int y = 0; y < tilemapComponent.height; y++) {
-    for (int x = 0; x < tilemapComponent.width; x++) {
-      int index = y * width + x;
-      Tile& tile = tilemapComponent.tilemap[index];
+void AutoTilingSetupSystem::setup() {
+    auto view = scene->r.view<TilemapComponent>();
+    for (auto entity : view) {
+        auto& tilemap = view.get<TilemapComponent>(entity);
+        int width = tilemap.width;
+        int height = tilemap.height;
 
-      if (!tile.needsAutoTiling)
-        continue;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int index = y * width + x;
+                TileComponent& tile = tilemap.tiles[index];
 
+                if (!tile.needsAutoTiling)
+                    continue;
 
-      uint8_t surrounding = 0;
-      // Loop through each of the eight directions
-      for (int i = 0; i < 8; i++) {
-        // Calculate the coordinates of the neighboring tile
-        int nx = x + dx[i];
-        int ny = y + dy[i];
+                uint8_t surrounding = 0;
+                for (int i = 0; i < 8; i++) {
+                    int nx = x + dx[i];
+                    int ny = y + dy[i];
 
-        // Check if the coordinates are out of bounds
-        if (nx < 0 || nx >= width || ny < 0 || ny >= height) {
-          continue;  // If out of bounds, skip this iteration
+                    if (nx < 0 || nx >= width || ny < 0 || ny >= height) {
+                        continue;
+                    }
+
+                    if (i == 0 || i == 2 || i == 5 || i == 7) {
+                        int nx1 = nx + d_corner[i].first; 
+                        int ny1 = ny + 0;
+                        int nx2 = nx + 0;
+                        int ny2 = ny + d_corner[i].second;
+
+                        if (nx1 < 0 || nx1 >= width || ny1 < 0 || ny1 >= height || 
+                            nx2 < 0 || nx2 >= width || ny2 < 0 || ny2 >= height) {
+                            continue;
+                        }
+
+                        if (tilemap.tiles[ny1 * width + nx1].upTexture.id != tilemap.tiles[ny * width + nx].upTexture.id || 
+                            tilemap.tiles[ny2 * width + nx2].upTexture.id != tilemap.tiles[ny * width + nx].upTexture.id)
+                        {
+                            continue;
+                        }
+                    }
+
+                    int neighborIndex = ny * width + nx;
+                    const TileComponent& neighborTile = tilemap.tiles[neighborIndex];
+                    if (tile.upTexture.id == neighborTile.upTexture.id) {
+                        surrounding |= 1 << i;          
+                    } 
+                }
+                auto iter = m.find(surrounding);
+                
+                if (iter == m.end()) {
+                    tile.tileX = 0;
+                    tile.tileY = 0;
+                    std::print("Tile not found", static_cast<int>(surrounding));
+                    exit(1);
+                } else {
+                    auto& pairs = iter->second;
+                    
+                    if (pairs.size() == 1) {
+                        tile.tileX = pairs[0].first;
+                        tile.tileY = pairs[0].second;
+                    } else {
+                        int index = rand() % pairs.size();
+                        tile.tileX = pairs[index].first;
+                        tile.tileY = pairs[index].second;
+                    }
+                }
+            }
         }
+    }
+}
 
-      // For corner tiles, check the two adjacent cardinal directions
-      if (i == 0 || i == 2 || i == 5 || i == 7) {  // i is 0, 2, 5, 7 for corner tiles
-          int nx1 = nx + d_corner[i].first; 
-          int ny1 = ny + 0;  // This is for legibility
-          int nx2 = nx + 0;
-          int ny2 = ny + d_corner[i].second;
+void SpriteSetupSystem::setup() {
+    auto view = scene->r.view<SpriteComponent>();
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        sprite.texture = TextureManager::LoadTexture(sprite.name);
+    }
+}
 
-          // If either of the cardinal tiles are missing, skip this iteration
-          if (nx1 < 0 || nx1 >= width || ny1 < 0 || ny1 >= height || 
-              nx2 < 0 || nx2 >= width || ny2 < 0 || ny2 >= height) {
-              continue;
-          }
+SpriteSetupSystem::~SpriteSetupSystem() {
+    auto view = scene->r.view<SpriteComponent>();
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        TextureManager::UnloadTexture(sprite.name);
+    }
+}
 
-          if (tilemapComponent.tilemap[ny1 * width + nx1].up.texture != tilemapComponent.tilemap[ny * width + nx].up.texture || 
-              tilemapComponent.tilemap[ny2 * width + nx2].up.texture != tilemapComponent.tilemap[ny * width + nx].up.texture)
-          {
-              continue;
-          }
-      }
+void SpriteRenderSystem::render() {
+    auto view = scene->r.view<TransformComponent, SpriteComponent>();
+    for (auto entity : view) {
+        const auto& transform = view.get<TransformComponent>(entity);
+        const auto& sprite = view.get<SpriteComponent>(entity);
 
-        int neighborIndex = ny * width + nx;
-        // Get the Tile of the neighboring tile
-        const Tile& neighborTile = tilemapComponent.tilemap[neighborIndex];
-        if (tile.up.texture == neighborTile.up.texture) {
-            surrounding |= 1 << i;          
-        } 
-      }
-      auto iter = m.find(surrounding);
-      
-      if (iter == m.end()) {
-          tile.up.x = 0;
-          tile.up.y = 0;
-          print("Tile not found", static_cast<int>(surrounding));
-          exit(1);
-      } else {
-        auto& pairs = iter->second;
-        
-        if (pairs.size() == 1) {
-          tile.up.x = pairs[0].first;
-          tile.up.y = pairs[0].second;
+        Rectangle sourceRec = {
+            (float)sprite.xIndex * sprite.size,
+            (float)sprite.yIndex * sprite.size,
+            (float)sprite.size,
+            (float)sprite.size
+        };
+
+        Rectangle destRec = {
+            transform.position.x,
+            transform.position.y,
+            (float)sprite.size * 5,
+            (float)sprite.size * 5
+        };
+
+        DrawTexturePro(sprite.texture, sourceRec, destRec, {0, 0}, 0, WHITE);
+    }
+}
+
+void SpriteUpdateSystem::update() {
+    auto view = scene->r.view<SpriteComponent, PlayerComponent>();
+    long now = GetTime() * 1000;
+
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        auto& player = view.get<PlayerComponent>(entity);
+
+        if (sprite.animationFrames > 0) {
+            float timeSinceLastUpdate = now - sprite.lastUpdate;
+
+            int framesToUpdate = static_cast<int>(
+                timeSinceLastUpdate /
+                sprite.animationDuration * sprite.animationFrames
+            );
+
+            if (framesToUpdate > 0) {
+                int oldXIndex = sprite.xIndex;
+                sprite.xIndex += framesToUpdate;
+                sprite.xIndex %= sprite.animationFrames;
+
+                if (player.isAttacking && sprite.xIndex < oldXIndex) {
+                    player.isAttacking = false;
+                }
+                sprite.lastUpdate = now;
+            }
+        }
+    }
+}
+
+void SpriteAnimationSystem::update() {
+    auto view = scene->r.view<SpriteComponent, VelocityComponent, PlayerComponent>();
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        auto& vel = view.get<VelocityComponent>(entity);
+        auto& player = view.get<PlayerComponent>(entity);
+
+        if (player.isAttacking) {
+            std::println("Animation: Attacking with tool {}", (int)player.currentTool);
+            sprite.animationDuration = 500;
+            switch (player.currentTool) {
+                case SHOVEL:
+                    if (player.lastDirection.y > 0) sprite.yIndex = 12;
+                    else if (player.lastDirection.y < 0) sprite.yIndex = 13;
+                    else if (player.lastDirection.x < 0) sprite.yIndex = 14;
+                    else if (player.lastDirection.x > 0) sprite.yIndex = 15;
+                    break;
+                case AXE:
+                    if (player.lastDirection.y > 0) sprite.yIndex = 16;
+                    else if (player.lastDirection.y < 0) sprite.yIndex = 17;
+                    else if (player.lastDirection.x < 0) sprite.yIndex = 18;
+                    else if (player.lastDirection.x > 0) sprite.yIndex = 19;
+                    break;
+                case WATER_CAN:
+                    if (player.lastDirection.y > 0) sprite.yIndex = 20;
+                    else if (player.lastDirection.y < 0) sprite.yIndex = 21;
+                    else if (player.lastDirection.x < 0) sprite.yIndex = 22;
+                    else if (player.lastDirection.x > 0) sprite.yIndex = 23;
+                    break;
+                case NONE:
+                    std::println("Animation: Attacking with no tool");
+                    break;
+            }
+        } else if (vel.velocity.x != 0 || vel.velocity.y != 0) {
+            std::println("Animation: Moving");
+            sprite.animationDuration = 1000;
+            player.lastDirection = vel.velocity;
+
+            if (player.isRunning) {
+                if (vel.velocity.y > 0) sprite.yIndex = 8;
+                else if (vel.velocity.y < 0) sprite.yIndex = 9;
+                else if (vel.velocity.x > 0) sprite.yIndex = 10;
+                else if (vel.velocity.x < 0) sprite.yIndex = 11;
+            } else {
+                if (vel.velocity.y > 0) sprite.yIndex = 4;
+                else if (vel.velocity.y < 0) sprite.yIndex = 5;
+                else if (vel.velocity.x > 0) sprite.yIndex = 6;
+                else if (vel.velocity.x < 0) sprite.yIndex = 7;
+            }
         } else {
-          int index = rand() % pairs.size();
-          tile.up.x = pairs[index].first;
-          tile.up.y = pairs[index].second;
-        }
-      }
-    }
-  }
-}
-
-void PlayerInputEventSystem::run(SDL_Event event) {
-    auto& playerMovement = scene->player->get<SpeedComponent>();
-    const auto cameraZoom = scene->mainCamera->get<CameraComponent>().zoom;
-    int speed = 200;
-
-    if (event.type == SDL_KEYDOWN) {
-        switch (event.key.keysym.sym) {
-            case SDLK_LEFT:
-                playerMovement.x = -speed;
-                break;
-            case SDLK_RIGHT:
-                playerMovement.x = speed;
-                break;
-            case SDLK_UP:
-                playerMovement.y = -speed;
-                break;
-            case SDLK_DOWN:
-                playerMovement.y = speed;
-                break;
-        }
-   }
-    else if (event.type == SDL_KEYUP) {
-        switch (event.key.keysym.sym) {
-            case SDLK_LEFT:
-            case SDLK_RIGHT:
-                playerMovement.x = 0;
-                break;
-            case SDLK_UP:
-            case SDLK_DOWN:
-                playerMovement.y = 0;
-                break;
+            std::println("Animation: Idle");
+            sprite.animationDuration = 1000;
+            if (player.lastDirection.y > 0) sprite.yIndex = 0;
+            else if (player.lastDirection.y < 0) sprite.yIndex = 1;
+            else if (player.lastDirection.x < 0) sprite.yIndex = 2;
+            else if (player.lastDirection.x > 0) sprite.yIndex = 3;
         }
     }
 }
 
-void PlayerSpriteUpdateSystem::run(double dT) {
-    auto& playerMovement = scene->player->get<SpeedComponent>();
-    auto& playerSprite = scene->player->get<SpriteComponent>();
+void PlayerActionSystem::update() {
+    auto view = scene->r.view<PlayerComponent, SpriteComponent>();
+    for (auto entity : view) {
+        auto& player = view.get<PlayerComponent>(entity);
+        auto& sprite = view.get<SpriteComponent>(entity);
 
-    if (playerMovement.x < 0) {
-        playerSprite.yIndex = 7;
-    }
-    else if (playerMovement.x > 0) {
-        playerSprite.yIndex = 6;
-    }
-    else if (playerMovement.y < 0) {
-        playerSprite.yIndex = 5;
-    }
-    else if (playerMovement.y > 0) {
-        playerSprite.yIndex = 4;
-    }
-    else {
-        if (playerSprite.yIndex == 7) {
-            playerSprite.yIndex = 2;
+        player.isRunning = IsKeyDown(KEY_LEFT_SHIFT);
+
+        if (IsKeyPressed(KEY_ONE)) {
+            player.currentTool = SHOVEL;
+            std::println("Action: Switched to SHOVEL");
         }
-        else if (playerSprite.yIndex == 6) {
-            playerSprite.yIndex = 3;
+        if (IsKeyPressed(KEY_TWO)) {
+            player.currentTool = AXE;
+            std::println("Action: Switched to AXE");
         }
-        else if (playerSprite.yIndex == 5) {
-            playerSprite.yIndex = 1;
+        if (IsKeyPressed(KEY_THREE)) {
+            player.currentTool = WATER_CAN;
+            std::println("Action: Switched to WATER_CAN");
         }
-        else if (playerSprite.yIndex == 4) {
-            playerSprite.yIndex = 0;
+        if (IsKeyPressed(KEY_ZERO)) {
+            player.currentTool = NONE;
+            std::println("Action: Switched to NONE");
+        }
+
+        if (IsKeyPressed(KEY_SPACE) && !player.isAttacking) {
+            player.isAttacking = true;
+            sprite.xIndex = 0;
+            std::println("Action: Attack started");
         }
     }
 }
 
-void MovementUpdateSystem::run(double dT) {
-  const auto view = scene->r.view<TransformComponent, SpeedComponent>();
-  for (const entt::entity e : view) {
-    auto& pos = view.get<TransformComponent>(e);
-    const auto vel = view.get<SpeedComponent>(e);
-
-    pos.x += vel.x * dT;
-    pos.y += vel.y * dT;
-  }
+void HelloSystem::setup() {
+    std::println("Hello, Pong ECS World!");
 }
 
-void CameraFollowUpdateSystem::run(double dT) {
-    const int spriteSize = 48;
-    auto playerTransform = scene->player->get<TransformComponent>();
-    auto cameraComponent = scene->mainCamera->get<CameraComponent>();
-    auto& cameraTransform = scene->mainCamera->get<TransformComponent>();
-    auto worldComponent = scene->world->get<WorldComponent>();
+void InputSystem::update() {
+    auto view = scene->r.view<PlayerComponent, VelocityComponent>();
+    for (auto entity : view) {
+        auto& player = view.get<PlayerComponent>(entity);
+        auto& vel = view.get<VelocityComponent>(entity);
+        vel.velocity = {0, 0};
+        
+        float currentSpeed = player.isRunning ? 200.0f : 100.0f;
 
-    int px = playerTransform.x - cameraComponent.vw / 2 + (spriteSize / 2) * cameraComponent.zoom;
-    int py = playerTransform.y - cameraComponent.vh / 2 + (spriteSize / 2) * cameraComponent.zoom;
-
-    if (px > 0 && px < worldComponent.width - cameraComponent.vw) {
-        cameraTransform.x = px;
+        if (IsKeyDown(KEY_W)) vel.velocity.y = -currentSpeed;
+        if (IsKeyDown(KEY_S)) vel.velocity.y =  currentSpeed;
+        if (IsKeyDown(KEY_A)) vel.velocity.x = -currentSpeed;
+        if (IsKeyDown(KEY_D)) vel.velocity.x =  currentSpeed;
     }
+}
 
-    if (py > 0 && py < worldComponent.height - cameraComponent.vh) {
-        cameraTransform.y = py;
+void MovementSystem::update() {
+    float dT = GetFrameTime();
+    auto view = scene->r.view<TransformComponent, VelocityComponent>();
+    for (auto entity : view) {
+        auto& pos = view.get<TransformComponent>(entity);
+        auto& vel = view.get<VelocityComponent>(entity);
+        pos.position.x += vel.velocity.x * dT;
+        pos.position.y += vel.velocity.y * dT;
+    }
+}
+
+void RenderSystem::render() {
+    auto view = scene->r.view<TransformComponent, SizeComponent, ColorComponent>();
+    for (auto entity : view) {
+        const auto& pos = view.get<TransformComponent>(entity).position;
+        const auto& size = view.get<SizeComponent>(entity);
+        const auto& color = view.get<ColorComponent>(entity).color;
+
+        DrawRectangle(
+            static_cast<int>(pos.x),
+            static_cast<int>(pos.y),
+            static_cast<int>(size.width),
+            static_cast<int>(size.height),
+            color
+        );
+    }
+}
+
+void PlayerInputEventSystem::update() {
+    auto view = scene->r.view<PlayerComponent, VelocityComponent>();
+    for (auto entity : view) {
+        auto& vel = view.get<VelocityComponent>(entity);
+        int speed = 200;
+
+        if (IsKeyDown(KEY_LEFT)) vel.velocity.x = -speed;
+        if (IsKeyDown(KEY_RIGHT)) vel.velocity.x = speed;
+        if (IsKeyDown(KEY_UP)) vel.velocity.y = -speed;
+        if (IsKeyDown(KEY_DOWN)) vel.velocity.y = speed;
+
+        if (IsKeyUp(KEY_LEFT) && IsKeyUp(KEY_RIGHT)) vel.velocity.x = 0;
+        if (IsKeyUp(KEY_UP) && IsKeyUp(KEY_DOWN)) vel.velocity.y = 0;
+    }
+}
+
+void PlayerSpriteUpdateSystem::update() {
+    auto view = scene->r.view<PlayerComponent, SpriteComponent, VelocityComponent>();
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        auto& vel = view.get<VelocityComponent>(entity);
+
+        if (vel.velocity.x < 0) {
+            sprite.yIndex = 7;
+        }
+        else if (vel.velocity.x > 0) {
+            sprite.yIndex = 6;
+        }
+        else if (vel.velocity.y < 0) {
+            sprite.yIndex = 5;
+        }
+        else if (vel.velocity.y > 0) {
+            sprite.yIndex = 4;
+        }
+        else {
+            if (sprite.yIndex == 7) {
+                sprite.yIndex = 2;
+            }
+            else if (sprite.yIndex == 6) {
+                sprite.yIndex = 3;
+            }
+            else if (sprite.yIndex == 5) {
+                sprite.yIndex = 1;
+            }
+            else if (sprite.yIndex == 4) {
+                sprite.yIndex = 0;
+            }
+        }
+    }
+}
+
+void CameraFollowUpdateSystem::update() {
+    auto cameraView = scene->r.view<CameraComponent, TransformComponent>();
+    auto playerView = scene->r.view<PlayerComponent, TransformComponent>();
+    auto worldView = scene->r.view<WorldComponent>();
+
+    for (auto cameraEntity : cameraView) {
+        auto& camera = cameraView.get<CameraComponent>(cameraEntity);
+        auto& cameraTransform = cameraView.get<TransformComponent>(cameraEntity);
+
+        for (auto playerEntity : playerView) {
+            auto& playerTransform = playerView.get<TransformComponent>(playerEntity);
+
+            for (auto worldEntity : worldView) {
+                auto& world = worldView.get<WorldComponent>(worldEntity);
+
+                int px = playerTransform.position.x - camera.vw / 2 + (48 / 2) * camera.zoom;
+                int py = playerTransform.position.y - camera.vh / 2 + (48 / 2) * camera.zoom;
+
+                if (px > 0 && px < world.width - camera.vw) {
+                    cameraTransform.position.x = px;
+                }
+
+                if (py > 0 && py < world.height - camera.vh) {
+                    cameraTransform.position.y = py;
+                }
+            }
+        }
     }
 }
 

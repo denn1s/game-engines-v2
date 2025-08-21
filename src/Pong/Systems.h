@@ -1,90 +1,89 @@
 #pragma once
 
-#include <iostream>
 #include "ECS/System.h"
 
-class HelloSystem : public SetupSystem {
-  public:
-    HelloSystem();
-    HelloSystem(const HelloSystem& other);
-    ~HelloSystem();
-
-    void run() override;
+class TilemapSetupSystem : public System {
+public:
+    void setup() override;
 };
 
-class RectRenderSystem : public RenderSystem {
-  public:
-    void run(SDL_Renderer* renderer) override;
+class TilemapRenderSystem : public System {
+public:
+    void render() override;
 };
 
-class MovementUpdateSystem : public UpdateSystem {
+class MovementSystem : public System {
   public:
-    void run(double dT) override;
+    void update() override;
 };
 
-class PlayerInputEventSystem : public EventSystem {
+class PlayerInputEventSystem : public System {
   public:
-    void run(SDL_Event event) override;
+    void update() override;
 };
 
-class CollisionDetectionUpdateSystem : public UpdateSystem {
+class CollisionDetectionUpdateSystem : public System {
   public:
-    void run(double dT) override;
+    void update() override;
 };
 
-class BounceUpdateSystem : public UpdateSystem {
+class BounceUpdateSystem : public System {
   public:
-    void run(double dT) override;
+    void update() override;
 };
 
-class SpriteSetupSystem : public SetupSystem {
+class SpriteSetupSystem : public System {
   public:
-    SpriteSetupSystem(SDL_Renderer* renderer);
+    void setup() override;
     ~SpriteSetupSystem();
-
-    void run() override;
-
-  private:
-    SDL_Renderer* renderer;
 };
 
-class SpriteUpdateSystem : public UpdateSystem {
+class SpriteRenderSystem : public System {
+public:
+    void render() override;
+};
+
+class SpriteUpdateSystem : public System {
+public:
+    void update() override;
+};
+
+class SpriteAnimationSystem : public System {
+public:
+    void update() override;
+};
+
+class PlayerActionSystem : public System {
+public:
+    void update() override;
+};
+
+class AutoTilingSetupSystem : public System {
   public:
-    void run(double dT) override;
+    void setup() override;
 };
 
-class SpriteRenderSystem : public RenderSystem {
+class HelloSystem : public System {
+public:
+    void setup() override;
+};
+
+class InputSystem : public System {
+public:
+    void update() override;
+};
+
+class RenderSystem : public System {
+public:
+    void render() override;
+};
+
+class PlayerSpriteUpdateSystem : public System {
   public:
-    void run(SDL_Renderer* renderer) override;
+    void update() override;
 };
 
-class TilemapSetupSystem : public SetupSystem {
+class CameraFollowUpdateSystem : public System {
   public:
-    TilemapSetupSystem(SDL_Renderer* renderer);
-    ~TilemapSetupSystem();
-    void run() override;
-
-  private:
-    SDL_Renderer* renderer;
+    void update() override;
 };
-
-class TilemapRenderSystem : public RenderSystem {
-  public:
-    void run(SDL_Renderer* renderer) override;
-};
-
-class AutoTilingSetupSystem : public SetupSystem {
-  public:
-    void run() override;
-};
-
-class PlayerSpriteUpdateSystem : public UpdateSystem {
-  public:
-    void run(double dT) override;
-};
-
-class CameraFollowUpdateSystem : public UpdateSystem {
-  public:
-    void run(double dT) override;
-};
-

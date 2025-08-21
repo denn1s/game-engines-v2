@@ -1,14 +1,15 @@
 #pragma once
-#include "Texture.h"
-#include "PixelShader.h"
-#include <map>
+
+#include <raylib.h>
 #include <string>
+#include <map>
 
 class TextureManager {
-  public:
-    static Texture* LoadTexture(const std::string& fileName, SDL_Renderer* renderer, PixelShader shader = {nullptr, ""});
-    static void UnloadTexture(const std::string& fileName, const std::string& shaderName = "");
-    static Texture* GetTexture(const std::string& fileName, const std::string& shaderName = "");
-  private:
-    static std::map<std::string, Texture*> textures;
+public:
+    static Texture2D LoadTexture(const std::string& path);
+    static void UnloadTexture(const std::string& path);
+    static Texture2D GetTexture(const std::string& path);
+
+private:
+    static std::map<std::string, Texture2D> textures;
 };
