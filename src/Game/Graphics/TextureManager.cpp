@@ -1,32 +1,21 @@
 #include "TextureManager.h"
-#include <iostream>
-#include <print.h>
 
-std::map<std::string, Texture*> TextureManager::textures;
+std::map<std::string, Texture2D> TextureManager::textures;
 
-Texture* TextureManager::LoadTexture(const std::string& fileName, SDL_Renderer* renderer, PixelShader shader) {
-    if (textures.count(fileName + shader.name) > 0) {
-        return textures[fileName + shader.name];
+Texture2D TextureManager::LoadTexture(const std::string& path) {
+    if (textures.find(path) == textures.end()) {
+        textures[path] = ::LoadTexture(path.c_str());
     }
-    
-    Texture* tex = new Texture(renderer);
-    tex->load("assets/" + fileName, shader);
-    
-    textures[fileName + shader.name] = tex;    
-    return tex;
+    return textures[path];
 }
 
-void TextureManager::UnloadTexture(const std::string& fileName, const std::string& shaderName) {
-    if (textures.count(fileName + shaderName) > 0) {
-        delete textures[fileName + shaderName];
-        textures.erase(fileName + shaderName);
+void TextureManager::UnloadTexture(const std::string& path) {
+    if (textures.find(path) != textures.end()) {
+        ::UnloadTexture(textures[path]);
+        textures.erase(path);
     }
 }
 
-Texture* TextureManager::GetTexture(const std::string& fileName, const std::string& shaderName) {
-    if(textures.count(fileName + shaderName) > 0) {
-        return textures[fileName + shaderName];
-    }
-    
-    return nullptr;
+Texture2D TextureManager::GetTexture(const std::string& path) {
+    return textures[path];
 }

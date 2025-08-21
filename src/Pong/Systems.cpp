@@ -1,149 +1,218 @@
-#include <print.h>
-#include <FastNoise.h>
-#include <SDL2/SDL.h>
-#include <ctime>
-#include <cstdlib>
 #include "Systems.h"
-#include "Components.h"
-
-#include "ECS/Entity.h"
 #include "ECS/Components.h"
+#include "Pong/Components.h"
+#include "Game/Scene/Scene.h"
 #include "Game/Graphics/TextureManager.h"
+#include <print>
+#include <raylib.h>
 
-SpriteSetupSystem::SpriteSetupSystem(SDL_Renderer* renderer)
-    : renderer(renderer) { }
+void SpriteSetupSystem::setup() {
+    auto view = scene->r.view<SpriteComponent>();
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        sprite.texture = TextureManager::LoadTexture(sprite.name);
+    }
+}
 
 SpriteSetupSystem::~SpriteSetupSystem() {
     auto view = scene->r.view<SpriteComponent>();
-
-    for(auto entity : view) {
-        const auto spriteComponent = view.get<SpriteComponent>(entity);
-        TextureManager::UnloadTexture(spriteComponent.name, spriteComponent.shader.name);
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        TextureManager::UnloadTexture(sprite.name);
     }
 }
 
-void SpriteSetupSystem::run() {
-    auto view = scene->r.view<SpriteComponent>();
-
-    for(auto entity : view) {
-        const auto spriteComponent = view.get<SpriteComponent>(entity);
-        TextureManager::LoadTexture(spriteComponent.name, renderer, spriteComponent.shader);
-    }
-}
-
-void SpriteRenderSystem::run(SDL_Renderer* renderer) {
+void SpriteRenderSystem::render() {
     auto view = scene->r.view<TransformComponent, SpriteComponent>();
+    for (auto entity : view) {
+        const auto& transform = view.get<TransformComponent>(entity);
+        const auto& sprite = view.get<SpriteComponent>(entity);
 
-    for(auto entity : view) {
-        const auto spriteComponent = view.get<SpriteComponent>(entity);
-        const auto transformComponent = view.get<TransformComponent>(entity);
-  
-        Texture* texture = TextureManager::GetTexture(spriteComponent.name, spriteComponent.shader.name);
-  
-        SDL_Rect clip = {
-            spriteComponent.xIndex * spriteComponent.size,
-            spriteComponent.yIndex * spriteComponent.size,
-            spriteComponent.size,
-            spriteComponent.size
+        Rectangle sourceRec = {
+            (float)sprite.xIndex * sprite.size,
+            (float)sprite.yIndex * sprite.size,
+            (float)sprite.size,
+            (float)sprite.size
         };
 
-        int scale = 5;
+        Rectangle destRec = {
+            transform.position.x,
+            transform.position.y,
+            (float)sprite.size * 5,
+            (float)sprite.size * 5
+        };
 
-        texture->render(
-            transformComponent.position.x * scale,
-            transformComponent.position.y * scale,
-            48 * scale,
-            48 * scale,
-            &clip
-        );
+        DrawTexturePro(sprite.texture, sourceRec, destRec, {0, 0}, 0, WHITE);
     }
 }
 
-void SpriteUpdateSystem::run(double dT) {
-    auto view = scene->r.view<SpriteComponent>();
+void SpriteUpdateSystem::update() {
+    auto view = scene->r.view<SpriteComponent, PlayerComponent>();
+    long now = GetTime() * 1000;
 
-    Uint32 now = SDL_GetTicks();
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        auto& player = view.get<PlayerComponent>(entity);
 
-    for(auto entity : view) {
-        auto& spriteComponent = view.get<SpriteComponent>(entity);
-
-        if (spriteComponent.animationFrames > 0) {
-            float timeSinceLastUpdate = now - spriteComponent.lastUpdate;
+        if (sprite.animationFrames > 0) {
+            float timeSinceLastUpdate = now - sprite.lastUpdate;
 
             int framesToUpdate = static_cast<int>(
-                timeSinceLastUpdate / 
-                spriteComponent.animationDuration * spriteComponent.animationFrames
+                timeSinceLastUpdate /
+                sprite.animationDuration * sprite.animationFrames
             );
 
             if (framesToUpdate > 0) {
-                spriteComponent.xIndex += framesToUpdate;
-                spriteComponent.xIndex %= spriteComponent.animationFrames;
-                spriteComponent.lastUpdate = now;            
+                int oldXIndex = sprite.xIndex;
+                sprite.xIndex += framesToUpdate;
+                sprite.xIndex %= sprite.animationFrames;
+
+                if (player.isAttacking && sprite.xIndex < oldXIndex) {
+                    player.isAttacking = false;
+                }
+                sprite.lastUpdate = now;
             }
         }
     }
 }
 
-TilemapSetupSystem::TilemapSetupSystem(SDL_Renderer* renderer)
-    : renderer(renderer) { }
+void SpriteAnimationSystem::update() {
+    auto view = scene->r.view<SpriteComponent, VelocityComponent, PlayerComponent>();
+    for (auto entity : view) {
+        auto& sprite = view.get<SpriteComponent>(entity);
+        auto& vel = view.get<VelocityComponent>(entity);
+        auto& player = view.get<PlayerComponent>(entity);
 
-TilemapSetupSystem::~TilemapSetupSystem() {
-}
+        if (player.isAttacking) {
+            std::println("Animation: Attacking with tool {}", (int)player.currentTool);
+            sprite.animationDuration = 500;
+            switch (player.currentTool) {
+                case SHOVEL:
+                    if (player.lastDirection.y > 0) sprite.yIndex = 12;
+                    else if (player.lastDirection.y < 0) sprite.yIndex = 13;
+                    else if (player.lastDirection.x < 0) sprite.yIndex = 14;
+                    else if (player.lastDirection.x > 0) sprite.yIndex = 15;
+                    break;
+                case AXE:
+                    if (player.lastDirection.y > 0) sprite.yIndex = 16;
+                    else if (player.lastDirection.y < 0) sprite.yIndex = 17;
+                    else if (player.lastDirection.x < 0) sprite.yIndex = 18;
+                    else if (player.lastDirection.x > 0) sprite.yIndex = 19;
+                    break;
+                case WATER_CAN:
+                    if (player.lastDirection.y > 0) sprite.yIndex = 20;
+                    else if (player.lastDirection.y < 0) sprite.yIndex = 21;
+                    else if (player.lastDirection.x < 0) sprite.yIndex = 22;
+                    else if (player.lastDirection.x > 0) sprite.yIndex = 23;
+                    break;
+                case NONE:
+                    std::println("Animation: Attacking with no tool");
+                    break;
+            }
+        } else if (vel.velocity.x != 0 || vel.velocity.y != 0) {
+            std::println("Animation: Moving");
+            sprite.animationDuration = 1000;
+            player.lastDirection = vel.velocity;
 
-void TilemapSetupSystem::run() {
-  auto& tilemapComponent = scene->world->get<TilemapComponent>();
-  tilemapComponent.width = 50;
-  tilemapComponent.height = 38;
-  tilemapComponent.tileSize = 16;
-  tilemapComponent.tilemap.resize(tilemapComponent.width * tilemapComponent.height);
-
-  Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer);
-  Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer);
-
-  FastNoiseLite noise;
-  noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-
-  std::srand(std::time(nullptr));
-  float offsetX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  float offsetY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  float zoom = 20.0f;
-
-  for (int y = 0; y < tilemapComponent.height; y++) {
-      for (int x = 0; x < tilemapComponent.width; x++) {
-          float factor = noise.GetNoise(
-              static_cast<float>(x + offsetX) * zoom, 
-              static_cast<float>(y + offsetY) * zoom
-          );
-
-          int index = y * tilemapComponent.width + x;
-          Tile& tile = tilemapComponent.tilemap[index];
-
-          if (factor < 0.5) {
-            tile.texture = grassTexture;
-          } else {
-            tile.texture = waterTexture;
-          }
+            if (player.isRunning) {
+                if (vel.velocity.y > 0) sprite.yIndex = 8;
+                else if (vel.velocity.y < 0) sprite.yIndex = 9;
+                else if (vel.velocity.x > 0) sprite.yIndex = 10;
+                else if (vel.velocity.x < 0) sprite.yIndex = 11;
+            } else {
+                if (vel.velocity.y > 0) sprite.yIndex = 4;
+                else if (vel.velocity.y < 0) sprite.yIndex = 5;
+                else if (vel.velocity.x > 0) sprite.yIndex = 6;
+                else if (vel.velocity.x < 0) sprite.yIndex = 7;
+            }
+        } else {
+            std::println("Animation: Idle");
+            sprite.animationDuration = 1000;
+            if (player.lastDirection.y > 0) sprite.yIndex = 0;
+            else if (player.lastDirection.y < 0) sprite.yIndex = 1;
+            else if (player.lastDirection.x < 0) sprite.yIndex = 2;
+            else if (player.lastDirection.x > 0) sprite.yIndex = 3;
         }
     }
 }
 
-void TilemapRenderSystem::run(SDL_Renderer* renderer) {
-  auto& tilemapComponent = scene->world->get<TilemapComponent>();
-  int width = tilemapComponent.width;
-  int height = tilemapComponent.height;
-  int size = tilemapComponent.tileSize;
-  int scale = 5;
+void PlayerActionSystem::update() {
+    auto view = scene->r.view<PlayerComponent, SpriteComponent>();
+    for (auto entity : view) {
+        auto& player = view.get<PlayerComponent>(entity);
+        auto& sprite = view.get<SpriteComponent>(entity);
 
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      Tile& tile = tilemapComponent.tilemap[y * width + x];
-      tile.texture->render(
-          x * size * scale,
-          y * size * scale,
-          size * scale,
-          size * scale
-      );
+        player.isRunning = IsKeyDown(KEY_LEFT_SHIFT);
+
+        if (IsKeyPressed(KEY_ONE)) {
+            player.currentTool = SHOVEL;
+            std::println("Action: Switched to SHOVEL");
+        }
+        if (IsKeyPressed(KEY_TWO)) {
+            player.currentTool = AXE;
+            std::println("Action: Switched to AXE");
+        }
+        if (IsKeyPressed(KEY_THREE)) {
+            player.currentTool = WATER_CAN;
+            std::println("Action: Switched to WATER_CAN");
+        }
+        if (IsKeyPressed(KEY_ZERO)) {
+            player.currentTool = NONE;
+            std::println("Action: Switched to NONE");
+        }
+
+        if (IsKeyPressed(KEY_SPACE) && !player.isAttacking) {
+            player.isAttacking = true;
+            sprite.xIndex = 0;
+            std::println("Action: Attack started");
+        }
     }
-  }
 }
 
+void HelloSystem::setup() {
+    std::println("Hello, Pong ECS World!");
+}
+
+void InputSystem::update() {
+    auto view = scene->r.view<PlayerComponent, VelocityComponent>();
+    for (auto entity : view) {
+        auto& player = view.get<PlayerComponent>(entity);
+        auto& vel = view.get<VelocityComponent>(entity);
+        vel.velocity = {0, 0};
+        
+        float currentSpeed = player.isRunning ? 200.0f : 100.0f;
+
+        if (IsKeyDown(KEY_W)) vel.velocity.y = -currentSpeed;
+        if (IsKeyDown(KEY_S)) vel.velocity.y =  currentSpeed;
+        if (IsKeyDown(KEY_A)) vel.velocity.x = -currentSpeed;
+        if (IsKeyDown(KEY_D)) vel.velocity.x =  currentSpeed;
+    }
+}
+
+void MovementSystem::update() {
+    float dT = GetFrameTime();
+    auto view = scene->r.view<TransformComponent, VelocityComponent>();
+    for (auto entity : view) {
+        auto& pos = view.get<TransformComponent>(entity);
+        auto& vel = view.get<VelocityComponent>(entity);
+        pos.position.x += vel.velocity.x * dT;
+        pos.position.y += vel.velocity.y * dT;
+    }
+}
+
+void RenderSystem::render() {
+    auto view = scene->r.view<TransformComponent, SizeComponent, ColorComponent>();
+    for (auto entity : view) {
+        const auto& pos = view.get<TransformComponent>(entity).position;
+        const auto& size = view.get<SizeComponent>(entity);
+        const auto& color = view.get<ColorComponent>(entity).color;
+
+        DrawRectangle(
+            static_cast<int>(pos.x),
+            static_cast<int>(pos.y),
+            static_cast<int>(size.width),
+            static_cast<int>(size.height),
+            color
+        );
+    }
+}

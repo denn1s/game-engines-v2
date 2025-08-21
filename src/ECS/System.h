@@ -1,32 +1,25 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include "Scene/Scene.h"
+class Scene;
 
 class System {
-  protected:
-    Scene* scene;
+protected:
+    Scene* scene = nullptr;
 
-  public:
-    void setScene(Scene* s) { scene = s; };
+public:
+    virtual ~System() = default;
+
+   // Called once when the scene is set up
+    virtual void setup() {}
+
+    // Called every frame for logic updates
+    virtual void update() {}
+
+    // Called every frame for rendering
+    virtual void render() {}
+
+    // Set by the Scene when the system is added
+    virtual void setScene(Scene* s) { scene = s; }
 };
 
-class SetupSystem : public System {
-  public:
-    virtual void run() = 0;
-};
 
-class EventSystem : public System {
-  public:
-    virtual void run(SDL_Event event) = 0;
-};
-
-class UpdateSystem : public System {
-  public:
-    virtual void run(double dT) = 0;
-};
-
-class RenderSystem : public System {
-  public:
-    virtual void run(SDL_Renderer* renderer) = 0;
-};

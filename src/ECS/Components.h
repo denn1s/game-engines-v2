@@ -1,26 +1,18 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <string>
-#include <vector>
-#include "ECS/Entity.h"
-#include "Game/Graphics/PixelShader.h"
-#include "Game/Graphics/Texture.h"
-#include "Game/Graphics/Tile.h"
+#include <raylib.h>
 
 struct NameComponent {
-  std::string tag;
+    std::string tag;
 };
 
 struct TransformComponent {
-  glm::ivec2 position;
-  // glm::vec2 scale;
-  // double rotation;
+    Vector2 position;
 };
 
-struct SpeedComponent {
-  int x;
-  int y;
+struct VelocityComponent {
+    Vector2 velocity;
 };
 
 struct SpriteComponent {
@@ -30,15 +22,8 @@ struct SpriteComponent {
   int size = 48;
   int animationFrames = 0;
   int animationDuration = 0;
-  PixelShader shader = { nullptr, "" };
+  Texture2D texture;
 
-  Uint32 lastUpdate = 0;
-};
-
-struct TilemapComponent {
-  std::vector<Tile> tilemap;
-  int width;
-  int height;
-  int tileSize;
+  long lastUpdate = 0;
 };
 
