@@ -28,11 +28,12 @@ void TilemapSetupSystem::setup() {
             
             switch (TILEMAP_DATA[y][x]) {
                 case 0:
-                    tile.texture = grassTexture;
+                    tile.upTexture = grassTexture;
+                    tile.downTexture = waterTexture;
                     tile.needsAutoTiling = true;
                     break;
                 case 1:
-                    tile.texture = waterTexture;
+                    tile.upTexture = waterTexture;
                     break;
             }
 
@@ -46,6 +47,9 @@ void TilemapRenderSystem::render() {
     for (auto entity : view) {
         auto& tilemap = view.get<TilemapComponent>(entity);
         for (auto& tile : tilemap.tiles) {
+            if (tile.downTexture.id > 0) {
+                DrawTextureEx(tile.downTexture, {(float)tile.x * tilemap.tileSize * tile.scale, (float)tile.y * tilemap.tileSize * tile.scale}, 0, tile.scale, WHITE);
+            }
             Rectangle sourceRec = {
                 (float)tile.tileX,
                 (float)tile.tileY,
@@ -58,7 +62,7 @@ void TilemapRenderSystem::render() {
                 (float)tilemap.tileSize * tile.scale,
                 (float)tilemap.tileSize * tile.scale
             };
-            DrawTexturePro(tile.texture, sourceRec, destRec, {0, 0}, 0, WHITE);
+            DrawTexturePro(tile.upTexture, sourceRec, destRec, {0, 0}, 0, WHITE);
         }
     }
 }
@@ -111,7 +115,7 @@ void AutoTilingSetupSystem::setup() {
                     int neighborIndex = ny * width + nx;
                     const TileComponent& neighborTile = tilemap.tiles[neighborIndex];
                     
-                    if (tile.texture.id == neighborTile.texture.id) { 
+                    if (tile.upTexture.id == neighborTile.upTexture.id) { 
                         // The line `surrounding |= 1 << i;` is using bit manipulation to set a specific bit in the surrounding variable to 1.
                         // Let's break it down piece by piece:
                         // 1 << i: This is a bit shift operation. It takes the binary number 1 (which is 00000001 in 8 bits) and shifts it to the left i times.
