@@ -21,6 +21,21 @@ This is a simple game engine built with C++23, CMake, and Raylib.
     - `0`: Unequip
 - **Use Tool/Attack:** Spacebar
 
+## Camera
+
+The engine now features a camera system that follows the player.
+
+### `CameraComponent`
+
+The `CameraComponent` stores the following information about the camera:
+
+- `zoom`: The zoom level of the camera.
+- `vw`, `vh`: The width and height of the camera's viewport.
+
+### `CameraFollowUpdateSystem`
+
+The `CameraFollowUpdateSystem` is responsible for updating the camera's position to follow the player. It runs every frame.
+
 ## Tilemaps
 
 A tilemap is a grid of tiles used to create the game world. In this engine, tilemaps are implemented using a `TilemapComponent` and a few systems.
