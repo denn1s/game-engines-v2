@@ -2,9 +2,46 @@
 #include "ECS/Components.h"
 #include "Pong/Components.h"
 #include "Game/Scene/Scene.h"
+#include "ECS/Entity.h"
 #include "Game/Graphics/TextureManager.h"
 #include <print>
 #include <raylib.h>
+#include <vector>
+
+void TilemapSetupSystem::setup() {
+    Entity tilemapEntity = scene->createEntity("tilemap");
+    auto& tilemap = tilemapEntity.addComponent<TilemapComponent>();
+    tilemap.width = 50;
+    tilemap.height = 38;
+    tilemap.tileSize = 16;
+
+    Texture2D waterTexture = TextureManager::LoadTexture("assets/Tiles/Water.png");
+    Texture2D grassTexture = TextureManager::LoadTexture("assets/Tiles/Grass.png");
+
+    for (int y = 0; y < tilemap.height; y++) {
+        for (int x = 0; x < tilemap.width; x++) {
+            TileComponent tile;
+            tile.x = x;
+            tile.y = y;
+            if ((x + y) % 2 == 0) {
+                tile.texture = grassTexture;
+            } else {
+                tile.texture = waterTexture;
+            }
+            tilemap.tiles.push_back(tile);
+        }
+    }
+}
+
+void TilemapRenderSystem::render() {
+    auto view = scene->r.view<TilemapComponent>();
+    for (auto entity : view) {
+        auto& tilemap = view.get<TilemapComponent>(entity);
+        for (auto& tile : tilemap.tiles) {
+            DrawTexture(tile.texture, tile.x * tilemap.tileSize, tile.y * tilemap.tileSize, WHITE);
+        }
+    }
+}
 
 void SpriteSetupSystem::setup() {
     auto view = scene->r.view<SpriteComponent>();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <raylib.h>
 
 struct NameComponent {
@@ -25,5 +26,18 @@ struct SpriteComponent {
   Texture2D texture;
 
   long lastUpdate = 0;
+};
+
+struct TileComponent {
+    int x;
+    int y;
+    Texture2D texture;
+};
+
+struct TilemapComponent {
+  std::vector<TileComponent> tiles;
+  int width;
+  int height;
+  int tileSize;
 };
 

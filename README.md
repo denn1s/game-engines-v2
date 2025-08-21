@@ -8,6 +8,7 @@ This is a simple game engine built with C++23, CMake, and Raylib.
 - **2D Rendering:** The engine uses Raylib for 2D rendering.
 - **ImGui Integration:** The engine is integrated with ImGui for debugging and UI purposes.
 - **Sprite Loading:** The engine supports loading and rendering sprites with animations.
+- **Tilemaps:** The engine supports loading and rendering tilemaps.
 
 ## Controls
 
@@ -19,6 +20,33 @@ This is a simple game engine built with C++23, CMake, and Raylib.
     - `3`: Water Can
     - `0`: Unequip
 - **Use Tool/Attack:** Spacebar
+
+## Tilemaps
+
+A tilemap is a grid of tiles used to create the game world. In this engine, tilemaps are implemented using a `TilemapComponent` and a few systems.
+
+### `TileComponent`
+
+The `TileComponent` stores the following information about a tile:
+
+- `x`, `y`: The position of the tile in the tilemap grid.
+- `texture`: The Raylib `Texture2D` object.
+
+### `TilemapComponent`
+
+The `TilemapComponent` stores the following information about a tilemap:
+
+- `tiles`: A vector of `TileComponent`s.
+- `width`, `height`: The dimensions of the tilemap in tiles.
+- `tileSize`: The size of a single tile in pixels.
+
+### `TilemapSetupSystem`
+
+The `TilemapSetupSystem` is responsible for creating the tilemap. It runs once when the scene is loaded. In this example, it creates a simple checkerboard pattern of grass and water tiles.
+
+### `TilemapRenderSystem`
+
+The `TilemapRenderSystem` is responsible for rendering the tilemap. It runs every frame.
 
 ## Sprite Loading
 
