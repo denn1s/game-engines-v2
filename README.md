@@ -51,7 +51,7 @@ The `TilemapSetupSystem` is responsible for creating the tilemap. It runs once w
 
 The `AutoTilingSetupSystem` is responsible for auto-tiling the tilemap. It runs once after the `TilemapSetupSystem`. It checks the neighbors of each tile and updates the `tileX` and `tileY` properties of the tile to use the correct sprite from the tileset.
 
-The auto-tiling system uses a bitmask to determine which tile to use. The bitmask is an 8-bit integer where each bit represents a neighbor of the tile. The neighbors are checked in the following order: top, left, right, bottom. If a neighbor is of the same type as the current tile, the corresponding bit is set to 1. The resulting integer is then used as a key in a map to get the correct x and y coordinates of the tile in the tileset.
+The auto-tiling system uses an 8-way bitmask to determine which tile to use. The bitmask is an 8-bit integer where each bit represents a neighbor of the tile. The neighbors are checked in the following order: top-left, top, top-right, left, right, bottom-left, bottom, bottom-right. If a neighbor is of the same type as the current tile, the corresponding bit is set to 1. The resulting integer is then used as a key in a map to get the correct x and y coordinates of the tile in the tileset. This allows for more complex tile transitions, including diagonal connections.
 
 ### `TilemapRenderSystem`
 

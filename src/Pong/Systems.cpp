@@ -194,7 +194,7 @@ void AutoTilingSetupSystem::setup() {
                 if (iter == m.end()) {
                     tile.tileX = 0;
                     tile.tileY = 0;
-                    print("Tile not found", static_cast<int>(surrounding));
+                    std::print("Tile not found", static_cast<int>(surrounding));
                     exit(1);
                 } else {
                     auto& pairs = iter->second;
