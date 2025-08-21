@@ -32,6 +32,7 @@ struct TileComponent {
     int x;
     int y;
     Texture2D texture;
+    float scale = 5.0f;
 };
 
 struct TilemapComponent {
