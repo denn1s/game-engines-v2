@@ -4,6 +4,7 @@
 #include "Game/Scene/Scene.h"
 #include "ECS/Entity.h"
 #include "Game/Graphics/TextureManager.h"
+#include "tilemap.h"
 #include <print>
 #include <raylib.h>
 #include <vector>
@@ -11,8 +12,8 @@
 void TilemapSetupSystem::setup() {
     Entity tilemapEntity = scene->createEntity("tilemap");
     auto& tilemap = tilemapEntity.addComponent<TilemapComponent>();
-    tilemap.width = 50;
-    tilemap.height = 38;
+    tilemap.width = TILEMAP_WIDTH;
+    tilemap.height = TILEMAP_HEIGHT;
     tilemap.tileSize = 16;
 
     Texture2D waterTexture = TextureManager::LoadTexture("assets/Tiles/Water.png");
@@ -23,11 +24,16 @@ void TilemapSetupSystem::setup() {
             TileComponent tile;
             tile.x = x;
             tile.y = y;
-            if ((x + y) % 2 == 0) {
-                tile.texture = grassTexture;
-            } else {
-                tile.texture = waterTexture;
+            
+            switch (TILEMAP_DATA[y][x]) {
+                case 0:
+                    tile.texture = grassTexture;
+                    break;
+                case 1:
+                    tile.texture = waterTexture;
+                    break;
             }
+
             tilemap.tiles.push_back(tile);
         }
     }
@@ -38,7 +44,7 @@ void TilemapRenderSystem::render() {
     for (auto entity : view) {
         auto& tilemap = view.get<TilemapComponent>(entity);
         for (auto& tile : tilemap.tiles) {
-            DrawTexture(tile.texture, tile.x * tilemap.tileSize, tile.y * tilemap.tileSize, WHITE);
+            DrawTextureEx(tile.texture, {(float)tile.x * tilemap.tileSize * tile.scale, (float)tile.y * tilemap.tileSize * tile.scale}, 0, tile.scale, WHITE);
         }
     }
 }
