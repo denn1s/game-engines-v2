@@ -31,6 +31,9 @@ The `TileComponent` stores the following information about a tile:
 
 - `x`, `y`: The position of the tile in the tilemap grid.
 - `texture`: The Raylib `Texture2D` object.
+- `scale`: The scale of the tile.
+- `needsAutoTiling`: A boolean that indicates if the tile needs to be auto-tiled.
+- `tileX`, `tileY`: The x and y position of the tile in the texture.
 
 ### `TilemapComponent`
 
@@ -42,7 +45,13 @@ The `TilemapComponent` stores the following information about a tilemap:
 
 ### `TilemapSetupSystem`
 
-The `TilemapSetupSystem` is responsible for creating the tilemap. It runs once when the scene is loaded. In this example, it creates a simple checkerboard pattern of grass and water tiles.
+The `TilemapSetupSystem` is responsible for creating the tilemap. It runs once when the scene is loaded. It loads the tilemap data from `src/Pong/tilemap.h` and creates the tiles.
+
+### `AutoTilingSetupSystem`
+
+The `AutoTilingSetupSystem` is responsible for auto-tiling the tilemap. It runs once after the `TilemapSetupSystem`. It checks the neighbors of each tile and updates the `tileX` and `tileY` properties of the tile to use the correct sprite from the tileset.
+
+The auto-tiling system uses a bitmask to determine which tile to use. The bitmask is an 8-bit integer where each bit represents a neighbor of the tile. The neighbors are checked in the following order: top, left, right, bottom. If a neighbor is of the same type as the current tile, the corresponding bit is set to 1. The resulting integer is then used as a key in a map to get the correct x and y coordinates of the tile in the tileset.
 
 ### `TilemapRenderSystem`
 
