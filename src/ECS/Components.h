@@ -31,7 +31,8 @@ struct SpriteComponent {
 struct TileComponent {
     int x;
     int y;
-    Texture2D texture;
+    Texture2D upTexture;
+    Texture2D downTexture;
     float scale = 5.0f;
     bool needsAutoTiling = false;
     int tileX = 0;
