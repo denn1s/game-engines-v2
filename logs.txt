@@ -1,0 +1,4481 @@
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/dennis/Dev/UVG/game-engine-v2/build
+[100%] Built target GAME
+INFO: Initializing raylib 5.5
+INFO: Platform backend: DESKTOP (GLFW)
+INFO: Supported raylib modules:
+INFO:     > rcore:..... loaded (mandatory)
+INFO:     > rlgl:...... loaded (mandatory)
+INFO:     > rshapes:... loaded (optional)
+INFO:     > rtextures:. loaded (optional)
+INFO:     > rtext:..... loaded (optional)
+INFO:     > rmodels:... loaded (optional)
+INFO:     > raudio:.... loaded (optional)
+INFO: DISPLAY: Device initialized successfully
+INFO:     > Display size: 2560 x 1440
+INFO:     > Screen size:  640 x 480
+INFO:     > Render size:  640 x 480
+INFO:     > Viewport offsets: 0, 0
+INFO: GLAD: OpenGL extensions loaded successfully
+INFO: GL: Supported extensions count: 232
+INFO: GL: OpenGL device information:
+INFO:     > Vendor:   Intel
+INFO:     > Renderer: Mesa Intel(R) Iris(R) Xe Graphics (ADL GT2)
+INFO:     > Version:  4.6 (Core Profile) Mesa 25.1.7-arch1.1
+INFO:     > GLSL:     4.60
+INFO: GL: VAO extension detected, VAO functions loaded successfully
+INFO: GL: NPOT textures extension detected, full NPOT textures supported
+INFO: GL: DXT compressed textures supported
+INFO: GL: ETC2/EAC compressed textures supported
+INFO: PLATFORM: DESKTOP (GLFW - X11): Initialized successfully
+INFO: TEXTURE: [ID 1] Texture loaded successfully (1x1 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 1] Default texture loaded successfully
+INFO: SHADER: [ID 1] Vertex shader compiled successfully
+INFO: SHADER: [ID 2] Fragment shader compiled successfully
+INFO: SHADER: [ID 3] Program shader loaded successfully
+INFO: SHADER: [ID 3] Default shader loaded successfully
+INFO: RLGL: Render batch vertex buffers loaded successfully in RAM (CPU)
+INFO: RLGL: Render batch vertex buffers loaded successfully in VRAM (GPU)
+INFO: RLGL: Default OpenGL state initialized successfully
+INFO: TEXTURE: [ID 2] Texture loaded successfully (128x128 | GRAY_ALPHA | 1 mipmaps)
+INFO: FONT: Default font loaded successfully (224 glyphs)
+INFO: SYSTEM: Working Directory: /home/dennis/Dev/UVG/game-engine-v2
+INFO: TIMER: Target time per frame: 16.667 milliseconds
+Game Start!
+Scene Gameplay constructed!
+Entity Created
+Entity Destroyed
+Scene Setup
+Hello, Pong ECS World!
+INFO: FILEIO: [assets/Sprites/Cat/SpriteSheet.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (432x1152 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 3] Texture loaded successfully (432x1152 | R8G8B8A8 | 1 mipmaps)
+---- Frame: 0 ----
+Scene Update
+Animation: Idle
+Scene Render
+INFO: TEXTURE: [ID 4] Texture loaded successfully (512x128 | R8G8B8A8 | 1 mipmaps)
+
+---- Frame: 1 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 2 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 3 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 4 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 5 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 6 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 7 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 8 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 9 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 10 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 11 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 12 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 13 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 14 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 15 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 16 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 17 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 18 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 19 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 20 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 21 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 22 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 23 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 24 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 25 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 26 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 27 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 28 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 29 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 30 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 31 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 32 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 33 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 34 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 35 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 36 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 37 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 38 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 39 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 40 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 41 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 42 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 43 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 44 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 45 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 46 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 47 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 48 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 49 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 50 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 51 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 52 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 53 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 54 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 55 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 56 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 57 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 58 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 59 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 60 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 61 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 62 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 63 ----
+Scene Update
+Action: Switched to SHOVEL
+Animation: Idle
+Scene Render
+
+---- Frame: 64 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 65 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 66 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 67 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 68 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 69 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 70 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 71 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 72 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 73 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 74 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 75 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 76 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 77 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 78 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 79 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 80 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 81 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 82 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 83 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 84 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 85 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 86 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 87 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 88 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 89 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 90 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 91 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 92 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 93 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 94 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 95 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 96 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 97 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 98 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 99 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 100 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 101 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 102 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 103 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 104 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 105 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 106 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 107 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 108 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 109 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 110 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 111 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 112 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 113 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 114 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 115 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 116 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 117 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 118 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 119 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 120 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 121 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 122 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 123 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 124 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 125 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 126 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 127 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 128 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 129 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 130 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 131 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 132 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 133 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 134 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 135 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 136 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 137 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 138 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 139 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 140 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 141 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 142 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 143 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 144 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 145 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 146 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 147 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 148 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 149 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 150 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 151 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 152 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 153 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 154 ----
+Scene Update
+Action: Switched to AXE
+Animation: Idle
+Scene Render
+
+---- Frame: 155 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 156 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 157 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 158 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 159 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 160 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 161 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 162 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 163 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 164 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 165 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 166 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 167 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 168 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 169 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 170 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 171 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 172 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 173 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 174 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 175 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 176 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 177 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 178 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 179 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 180 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 181 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 182 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 183 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 184 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 185 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 186 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 187 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 188 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 189 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 190 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 191 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 192 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 193 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 194 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 195 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 196 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 197 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 198 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 199 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 200 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 201 ----
+Scene Update
+Animation: Attacking with tool 2
+Scene Render
+
+---- Frame: 202 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 203 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 204 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 205 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 206 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 207 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 208 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 209 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 210 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 211 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 212 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 213 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 214 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 215 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 216 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 217 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 218 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 219 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 220 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 221 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 222 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 223 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 224 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 225 ----
+Scene Update
+Action: Switched to WATER_CAN
+Animation: Idle
+Scene Render
+
+---- Frame: 226 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 227 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 228 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 229 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 230 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 231 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 232 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 233 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 234 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 235 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 236 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 237 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 238 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 239 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 240 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 241 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 242 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 243 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 244 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 245 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 246 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 247 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 248 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 249 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 250 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 251 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 252 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 253 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 254 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 255 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 256 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 257 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 258 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 259 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 260 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 261 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 262 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 263 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 264 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 265 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 266 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 267 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 268 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 269 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 270 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 271 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 272 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 273 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 274 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 275 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 276 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 277 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 278 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 279 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 280 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 281 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 282 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 283 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 284 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 285 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 286 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 287 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 288 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 289 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 290 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 291 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 292 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 293 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 294 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 295 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 296 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 297 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 298 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 299 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 300 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 301 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 302 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 303 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 304 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 305 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 306 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 307 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 308 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 309 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 310 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 311 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 312 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 313 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 314 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 315 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 316 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 317 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 318 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 319 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 320 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 321 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 322 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 323 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 324 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 325 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 326 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 327 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 328 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 329 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 330 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 331 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 332 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 333 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 334 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 335 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 336 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 337 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 338 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 339 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 340 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 341 ----
+Scene Update
+Animation: Attacking with tool 3
+Scene Render
+
+---- Frame: 342 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 343 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 344 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 345 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 346 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 347 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 348 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 349 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 350 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 351 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 352 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 353 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 354 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 355 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 356 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 357 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 358 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 359 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 360 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 361 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 362 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 363 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 364 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 365 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 366 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 367 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 368 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 369 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 370 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 371 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 372 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 373 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 374 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 375 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 376 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 377 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 378 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 379 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 380 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 381 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 382 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 383 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 384 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 385 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 386 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 387 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 388 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 389 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 390 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 391 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 392 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 393 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 394 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 395 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 396 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 397 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 398 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 399 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 400 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 401 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 402 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 403 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 404 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 405 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 406 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 407 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 408 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 409 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 410 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 411 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 412 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 413 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 414 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 415 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 416 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 417 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 418 ----
+Scene Update
+Action: Switched to SHOVEL
+Animation: Idle
+Scene Render
+
+---- Frame: 419 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 420 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 421 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 422 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 423 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 424 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 425 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 426 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 427 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 428 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 429 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 430 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 431 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 432 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 433 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 434 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 435 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 436 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 437 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 438 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 439 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 440 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 441 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 442 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 443 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 444 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 445 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 446 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 447 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 448 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 449 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 450 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 451 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 452 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 453 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 454 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 455 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 456 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 457 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 458 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 459 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 460 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 461 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 462 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 463 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 464 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 465 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 466 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 467 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 468 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 469 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 470 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 471 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 472 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 473 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 474 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 475 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 476 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 477 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 478 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 479 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 480 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 481 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 482 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 483 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 484 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 485 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 486 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 487 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 488 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 489 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 490 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 491 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 492 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 493 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 494 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 495 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 496 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 497 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 498 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 499 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 500 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 501 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 502 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 503 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 504 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 505 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 506 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 507 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 508 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 509 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 510 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 511 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 512 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 513 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 514 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 515 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 516 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 517 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 518 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 519 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 520 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 521 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 522 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 523 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 524 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 525 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 526 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 527 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 528 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 529 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 530 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 531 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 532 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 533 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 534 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 535 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 536 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 537 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 538 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 539 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 540 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 541 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 542 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 543 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 544 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 545 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 546 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 547 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 548 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 549 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 550 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 551 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 552 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 553 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 554 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 555 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 556 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 557 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 558 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 559 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 560 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 561 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 562 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 563 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 564 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 565 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 566 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 567 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 568 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 569 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 570 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 571 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 572 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 573 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 574 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 575 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 576 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 577 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 578 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 579 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 580 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 581 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 582 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 583 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 584 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 585 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 586 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 587 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 588 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 589 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 590 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 591 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 592 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 593 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 594 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 595 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 596 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 597 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 598 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 599 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 600 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 601 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 602 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 603 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 604 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 605 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 606 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 607 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 608 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 609 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 610 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 611 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 612 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 613 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 614 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 615 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 616 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 617 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 618 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 619 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 620 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 621 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 622 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 623 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 624 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 625 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 626 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 627 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 628 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 629 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 630 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 631 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 632 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 633 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 634 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 635 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 636 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 637 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 638 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 639 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 640 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 641 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 642 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 643 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 644 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 645 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 646 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 647 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 648 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 649 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 650 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 651 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 652 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 653 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 654 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 655 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 656 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 657 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 658 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 659 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 660 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 661 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 662 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 663 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 664 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 665 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 666 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 667 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 668 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 669 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 670 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 671 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 672 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 673 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 674 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 675 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 676 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 677 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 678 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 679 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 680 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 681 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 682 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 683 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 684 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 685 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 686 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 687 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 688 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 689 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 690 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 691 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 692 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 693 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 694 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 695 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 696 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 697 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 698 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 699 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 700 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 701 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 702 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 703 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 704 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 705 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 706 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 707 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 708 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 709 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 710 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 711 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 712 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 713 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 714 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 715 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 716 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 717 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 718 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 719 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 720 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 721 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 722 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 723 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 724 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 725 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 726 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 727 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 728 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 729 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 730 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 731 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 732 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 733 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 734 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 735 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 736 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 737 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 738 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 739 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 740 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 741 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 742 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 743 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 744 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 745 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 746 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 747 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 748 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 749 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 750 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 751 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 752 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 753 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 754 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 755 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 756 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 757 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 758 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 759 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 760 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 761 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 762 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 763 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 764 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 765 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 766 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 767 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 768 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 769 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 770 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 771 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 772 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 773 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 774 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 775 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 776 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 777 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 778 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 779 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 780 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 781 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 782 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 783 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 784 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 785 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 786 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 787 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 788 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 789 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 790 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 791 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 792 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 793 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 794 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 795 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 796 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 797 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 798 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 799 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 800 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 801 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 802 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 803 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 804 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 805 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 806 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 807 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 808 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 809 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 810 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 811 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 812 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 813 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 814 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 815 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 816 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 817 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 818 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 819 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 820 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 821 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 822 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 823 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 824 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 825 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 826 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 827 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 828 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 829 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 830 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 831 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 832 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 833 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 834 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 835 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 836 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 837 ----
+Scene Update
+Animation: Moving
+Scene Render
+
+---- Frame: 838 ----
+Scene Update
+Action: Attack started
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 839 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 840 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 841 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 842 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 843 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 844 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 845 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 846 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 847 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 848 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 849 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 850 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 851 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 852 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 853 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 854 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 855 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 856 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 857 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 858 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 859 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 860 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 861 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 862 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 863 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 864 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 865 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 866 ----
+Scene Update
+Animation: Attacking with tool 1
+Scene Render
+
+---- Frame: 867 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 868 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 869 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 870 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 871 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 872 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 873 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 874 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 875 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 876 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 877 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 878 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 879 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+---- Frame: 880 ----
+Scene Update
+Animation: Idle
+Scene Render
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+Game Over.
+Game Over.
