@@ -1,25 +1,26 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include "print.h"
-#include "Scene/Scene.h"
+#include <print>
+#include "Game/Scene/Scene.h"
 
 class Entity
 {
   public:
     Entity(entt::entity e, Scene* s) {
-      print("Entity Created");
+      std::println("Entity Created");
 
       handle = e;
       scene = s;
     }
+
     ~Entity() {
-      print("Entity Destroyed");
+      std::println("Entity Destroyed");
     }
 
     template<typename T>
     auto& addComponent(auto&&... args) {
-      return scene->r.emplace<T>(handle, std::forward<decltype(args)>(args)...);
+      return scene->r.emplace_or_replace<T>(handle, std::forward<decltype(args)>(args)...);
     }
 
     template<typename T>
