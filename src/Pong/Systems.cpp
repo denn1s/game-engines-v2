@@ -17,8 +17,8 @@ void TilemapSetupSystem::setup() {
     tilemap.height = TILEMAP_HEIGHT;
     tilemap.tileSize = 16;
 
-    Texture2D waterTexture = TextureManager::LoadTexture("assets/Tiles/Water.png");
-    Texture2D grassTexture = TextureManager::LoadTexture("assets/Tiles/Grass.png");
+    Texture2D waterTexture = TextureManager::LoadTexture("assets/Tilesets/Water.png");
+    Texture2D grassTexture = TextureManager::LoadTexture("assets/Tilesets/Grass.png");
 
     for (int y = 0; y < tilemap.height; y++) {
         for (int x = 0; x < tilemap.width; x++) {
