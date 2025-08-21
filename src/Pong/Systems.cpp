@@ -421,61 +421,9 @@ void RenderSystem::render() {
     }
 }
 
-void PlayerInputEventSystem::update() {
-    auto view = scene->r.view<PlayerComponent, VelocityComponent>();
-    for (auto entity : view) {
-        auto& vel = view.get<VelocityComponent>(entity);
-        int speed = 200;
-
-        if (IsKeyDown(KEY_LEFT)) vel.velocity.x = -speed;
-        if (IsKeyDown(KEY_RIGHT)) vel.velocity.x = speed;
-        if (IsKeyDown(KEY_UP)) vel.velocity.y = -speed;
-        if (IsKeyDown(KEY_DOWN)) vel.velocity.y = speed;
-
-        if (IsKeyUp(KEY_LEFT) && IsKeyUp(KEY_RIGHT)) vel.velocity.x = 0;
-        if (IsKeyUp(KEY_UP) && IsKeyUp(KEY_DOWN)) vel.velocity.y = 0;
-    }
-}
-
-void PlayerSpriteUpdateSystem::update() {
-    auto view = scene->r.view<PlayerComponent, SpriteComponent, VelocityComponent>();
-    for (auto entity : view) {
-        auto& sprite = view.get<SpriteComponent>(entity);
-        auto& vel = view.get<VelocityComponent>(entity);
-
-        if (vel.velocity.x < 0) {
-            sprite.yIndex = 7;
-        }
-        else if (vel.velocity.x > 0) {
-            sprite.yIndex = 6;
-        }
-        else if (vel.velocity.y < 0) {
-            sprite.yIndex = 5;
-        }
-        else if (vel.velocity.y > 0) {
-            sprite.yIndex = 4;
-        }
-        else {
-            if (sprite.yIndex == 7) {
-                sprite.yIndex = 2;
-            }
-            else if (sprite.yIndex == 6) {
-                sprite.yIndex = 3;
-            }
-            else if (sprite.yIndex == 5) {
-                sprite.yIndex = 1;
-            }
-            else if (sprite.yIndex == 4) {
-                sprite.yIndex = 0;
-            }
-        }
-    }
-}
-
 void CameraFollowUpdateSystem::update() {
     auto cameraView = scene->r.view<CameraComponent, TransformComponent>();
     auto playerView = scene->r.view<PlayerComponent, TransformComponent>();
-    auto worldView = scene->r.view<WorldComponent>();
 
     for (auto cameraEntity : cameraView) {
         auto& camera = cameraView.get<CameraComponent>(cameraEntity);
@@ -484,20 +432,8 @@ void CameraFollowUpdateSystem::update() {
         for (auto playerEntity : playerView) {
             auto& playerTransform = playerView.get<TransformComponent>(playerEntity);
 
-            for (auto worldEntity : worldView) {
-                auto& world = worldView.get<WorldComponent>(worldEntity);
-
-                int px = playerTransform.position.x - camera.vw / 2 + (48 / 2) * camera.zoom;
-                int py = playerTransform.position.y - camera.vh / 2 + (48 / 2) * camera.zoom;
-
-                if (px > 0 && px < world.width - camera.vw) {
-                    cameraTransform.position.x = px;
-                }
-
-                if (py > 0 && py < world.height - camera.vh) {
-                    cameraTransform.position.y = py;
-                }
-            }
+            cameraTransform.position.x = playerTransform.position.x;
+            cameraTransform.position.y = playerTransform.position.y;
         }
     }
 }
