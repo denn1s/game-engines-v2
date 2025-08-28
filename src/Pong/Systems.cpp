@@ -162,6 +162,11 @@ void AutoTilingSetupSystem::setup() {
                         continue;
                     }
 
+                    // This is the special handling for diagonal tiles.
+                    // Before considering a diagonal tile, we must ensure that its two adjacent cardinal tiles are of the same type.
+                    // This prevents incorrect tiling against single diagonal tiles and handles inner corners correctly.
+                    // For example, for the top-left neighbor (i=0), we check the tiles at (x-1, y) and (x, y-1).
+                    // If both of those are not the same as the current tile, we ignore the diagonal neighbor.
                     if (i == 0 || i == 2 || i == 5 || i == 7) {
                         int nx1 = nx + d_corner[i].first; 
                         int ny1 = ny + 0;
