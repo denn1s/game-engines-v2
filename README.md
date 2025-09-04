@@ -23,18 +23,30 @@ This is a simple game engine built with C++23, CMake, and Raylib.
 
 ## Camera
 
-The engine now features a camera system that follows the player.
+The engine features a system-driven, entity-based camera that follows the player while staying within the boundaries of the game world.
 
-### `CameraComponent`
+### Core Components
 
-The `CameraComponent` stores the following information about the camera:
+-   **`CameraComponent`**: Attached to the camera entity, this component defines the camera's viewport dimensions (`vw`, `vh`) and zoom level.
+-   **`WorldComponent`**: Attached to a dedicated "world" entity, this component defines the total width and height of the game world, setting the boundaries for the camera.
+-   **`TransformComponent`**: Both the camera and player entities have a `TransformComponent` to manage their position.
 
-- `zoom`: The zoom level of the camera.
-- `vw`, `vh`: The width and height of the camera's viewport.
+### `CameraSystem`
 
-### `CameraFollowUpdateSystem`
+This system orchestrates the camera's behavior. Its responsibilities are:
 
-The `CameraFollowUpdateSystem` is responsible for updating the camera's position to follow the player. It runs every frame.
+1.  **Setup**:
+    -   Creates a `world` entity and attaches a `WorldComponent` to it, defining the game's boundaries.
+    -   Creates a `camera` entity and attaches `CameraComponent` and `TransformComponent`.
+
+2.  **Update**:
+    -   It runs every frame to update the camera's position.
+    -   It centers the camera on the player's entity, with an offset to account for the player's sprite size, ensuring the player is truly in the center of the screen.
+    -   It clamps the camera's position to the dimensions defined in the `WorldComponent`, preventing it from moving outside the game map.
+
+### Rendering Integration
+
+The rendering systems (`TilemapRenderSystem` and `SpriteRenderSystem`) use the camera's final position to correctly transform all rendered objects. During their `render` calls, they subtract the camera's `x` and `y` coordinates from the position of each tile and sprite. This creates the illusion that the world is moving relative to a static camera, which is how 2D camera systems work.
 
 ## Tilemaps
 

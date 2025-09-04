@@ -68,7 +68,4 @@ class PlayerSpriteUpdateSystem : public System {
     void update() override;
 };
 
-class CameraFollowUpdateSystem : public System {
-  public:
-    void update() override;
-};
+
