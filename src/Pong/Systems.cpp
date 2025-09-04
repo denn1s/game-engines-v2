@@ -45,11 +45,12 @@ void TilemapSetupSystem::setup() {
 
 void TilemapRenderSystem::render() {
     auto view = scene->r.view<TilemapComponent>();
+    auto& cameraTransform = scene->camera->get<TransformComponent>();
     for (auto entity : view) {
         auto& tilemap = view.get<TilemapComponent>(entity);
         for (auto& tile : tilemap.tiles) {
             if (tile.downTexture.id > 0) {
-                DrawTextureEx(tile.downTexture, {(float)tile.x * tilemap.tileSize * tile.scale, (float)tile.y * tilemap.tileSize * tile.scale}, 0, tile.scale, WHITE);
+                DrawTextureEx(tile.downTexture, Vector2{(float)tile.x * tilemap.tileSize * tile.scale - cameraTransform.position.x, (float)tile.y * tilemap.tileSize * tile.scale - cameraTransform.position.y}, 0, tile.scale, WHITE);
             }
             Rectangle sourceRec = {
                 (float)tile.tileX,
@@ -58,8 +59,8 @@ void TilemapRenderSystem::render() {
                 (float)tilemap.tileSize
             };
             Rectangle destRec = {
-                (float)tile.x * tilemap.tileSize * tile.scale,
-                (float)tile.y * tilemap.tileSize * tile.scale,
+                (float)tile.x * tilemap.tileSize * tile.scale - cameraTransform.position.x,
+                (float)tile.y * tilemap.tileSize * tile.scale - cameraTransform.position.y,
                 (float)tilemap.tileSize * tile.scale,
                 (float)tilemap.tileSize * tile.scale
             };
@@ -228,6 +229,7 @@ SpriteSetupSystem::~SpriteSetupSystem() {
 
 void SpriteRenderSystem::render() {
     auto view = scene->r.view<TransformComponent, SpriteComponent>();
+    auto& cameraTransform = scene->camera->get<TransformComponent>();
     for (auto entity : view) {
         const auto& transform = view.get<TransformComponent>(entity);
         const auto& sprite = view.get<SpriteComponent>(entity);
@@ -240,8 +242,8 @@ void SpriteRenderSystem::render() {
         };
 
         Rectangle destRec = {
-            transform.position.x,
-            transform.position.y,
+            transform.position.x - cameraTransform.position.x,
+            transform.position.y - cameraTransform.position.y,
             (float)sprite.size * 5,
             (float)sprite.size * 5
         };
@@ -421,20 +423,5 @@ void RenderSystem::render() {
     }
 }
 
-void CameraFollowUpdateSystem::update() {
-    auto cameraView = scene->r.view<CameraComponent, TransformComponent>();
-    auto playerView = scene->r.view<PlayerComponent, TransformComponent>();
 
-    for (auto cameraEntity : cameraView) {
-        auto& camera = cameraView.get<CameraComponent>(cameraEntity);
-        auto& cameraTransform = cameraView.get<TransformComponent>(cameraEntity);
-
-        for (auto playerEntity : playerView) {
-            auto& playerTransform = playerView.get<TransformComponent>(playerEntity);
-
-            cameraTransform.position.x = playerTransform.position.x;
-            cameraTransform.position.y = playerTransform.position.y;
-        }
-    }
-}
 

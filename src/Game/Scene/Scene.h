@@ -18,6 +18,8 @@ public:
     ~Scene();
 
     entt::registry r;
+    Entity* camera;
+    Entity* world;
 
     Entity createEntity(
         const std::string& name = "NO NAME",

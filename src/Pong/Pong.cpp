@@ -4,6 +4,7 @@
 #include "ECS/Entity.h"
 #include "Systems.h"
 #include "Game/Core/Systems/ImGuiSystem.h"
+#include "Game/Core/Systems/CameraSystem.h"
 
 Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
     Scene* gameplayScene = createGameplayScene();
@@ -29,6 +30,7 @@ Scene* Pong::createGameplayScene() {
     s.lastUpdate = GetTime() * 1000;
 
     // Add systems
+    gameplayScene->addSystem(new CameraSystem());
     gameplayScene->addSystem(new TilemapSetupSystem());
     gameplayScene->addSystem(new AutoTilingSetupSystem());
     gameplayScene->addSystem(new TilemapRenderSystem());
@@ -42,7 +44,6 @@ Scene* Pong::createGameplayScene() {
     gameplayScene->addSystem(new SpriteRenderSystem());
     gameplayScene->addSystem(new SpriteUpdateSystem());
     gameplayScene->addSystem(new SpriteAnimationSystem());
-    gameplayScene->addSystem(new CameraFollowUpdateSystem());
 
 
     return gameplayScene;
