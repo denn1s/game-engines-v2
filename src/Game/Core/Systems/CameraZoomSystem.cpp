@@ -18,6 +18,14 @@ void CameraZoomSystem::update() {
         cameraComponent.zoom -= 0.1f;
     }
 
+    if (IsKeyPressed(KEY_M)) {
+        if (cameraComponent.zoom > 0.1f) {
+            cameraComponent.zoom = 0.1f;
+        } else {
+            cameraComponent.zoom = 1.0f;
+        }
+    }
+
     if (cameraComponent.zoom < 0.1f) {
         cameraComponent.zoom = 0.1f;
     }
