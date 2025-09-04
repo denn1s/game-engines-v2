@@ -5,11 +5,13 @@
 #include "Systems.h"
 #include "Game/Core/Systems/ImGuiSystem.h"
 #include "Game/Core/Systems/CameraSystem.h"
+#include "Game/Core/Systems/CameraZoomSystem.h"
 
 Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
     Scene* gameplayScene = createGameplayScene();
     setScene(gameplayScene);
 }
+
 
 Pong::~Pong() {
 }
@@ -44,6 +46,7 @@ Scene* Pong::createGameplayScene() {
     gameplayScene->addSystem(new SpriteRenderSystem());
     gameplayScene->addSystem(new SpriteUpdateSystem());
     gameplayScene->addSystem(new SpriteAnimationSystem());
+    gameplayScene->addSystem(new CameraZoomSystem());
 
 
     return gameplayScene;
