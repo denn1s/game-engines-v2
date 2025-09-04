@@ -46,11 +46,27 @@ void TilemapSetupSystem::setup() {
 void TilemapRenderSystem::render() {
     auto view = scene->r.view<TilemapComponent>();
     auto& cameraTransform = scene->camera->get<TransformComponent>();
+    auto& cameraComponent = scene->camera->get<CameraComponent>();
+    float cam_vw = (float)cameraComponent.vw;
+    float cam_vh = (float)cameraComponent.vh;
+    float zoom = cameraComponent.zoom;
+
     for (auto entity : view) {
         auto& tilemap = view.get<TilemapComponent>(entity);
         for (auto& tile : tilemap.tiles) {
+            float worldX = (float)tile.x * tilemap.tileSize * tile.scale;
+            float worldY = (float)tile.y * tilemap.tileSize * tile.scale;
+            float worldW = (float)tilemap.tileSize * tile.scale;
+            float worldH = (float)tilemap.tileSize * tile.scale;
+
+            float screenX = worldX - cameraTransform.position.x;
+            float screenY = worldY - cameraTransform.position.y;
+
+            float newScreenX = cam_vw / 2.0f + (screenX - cam_vw / 2.0f) * zoom;
+            float newScreenY = cam_vh / 2.0f + (screenY - cam_vh / 2.0f) * zoom;
+
             if (tile.downTexture.id > 0) {
-                DrawTextureEx(tile.downTexture, Vector2{(float)tile.x * tilemap.tileSize * tile.scale - cameraTransform.position.x, (float)tile.y * tilemap.tileSize * tile.scale - cameraTransform.position.y}, 0, tile.scale, WHITE);
+                DrawTextureEx(tile.downTexture, Vector2{newScreenX, newScreenY}, 0, tile.scale * zoom, WHITE);
             }
             Rectangle sourceRec = {
                 (float)tile.tileX,
@@ -59,10 +75,10 @@ void TilemapRenderSystem::render() {
                 (float)tilemap.tileSize
             };
             Rectangle destRec = {
-                (float)tile.x * tilemap.tileSize * tile.scale - cameraTransform.position.x,
-                (float)tile.y * tilemap.tileSize * tile.scale - cameraTransform.position.y,
-                (float)tilemap.tileSize * tile.scale,
-                (float)tilemap.tileSize * tile.scale
+                newScreenX,
+                newScreenY,
+                worldW * zoom,
+                worldH * zoom
             };
             DrawTexturePro(tile.upTexture, sourceRec, destRec, {0, 0}, 0, WHITE);
         }
@@ -230,9 +246,25 @@ SpriteSetupSystem::~SpriteSetupSystem() {
 void SpriteRenderSystem::render() {
     auto view = scene->r.view<TransformComponent, SpriteComponent>();
     auto& cameraTransform = scene->camera->get<TransformComponent>();
+    auto& cameraComponent = scene->camera->get<CameraComponent>();
+    float cam_vw = (float)cameraComponent.vw;
+    float cam_vh = (float)cameraComponent.vh;
+    float zoom = cameraComponent.zoom;
+
     for (auto entity : view) {
         const auto& transform = view.get<TransformComponent>(entity);
         const auto& sprite = view.get<SpriteComponent>(entity);
+
+        float worldX = transform.position.x;
+        float worldY = transform.position.y;
+        float worldW = (float)sprite.size * 5;
+        float worldH = (float)sprite.size * 5;
+
+        float screenX = worldX - cameraTransform.position.x;
+        float screenY = worldY - cameraTransform.position.y;
+
+        float newScreenX = cam_vw / 2.0f + (screenX - cam_vw / 2.0f) * zoom;
+        float newScreenY = cam_vh / 2.0f + (screenY - cam_vh / 2.0f) * zoom;
 
         Rectangle sourceRec = {
             (float)sprite.xIndex * sprite.size,
@@ -242,10 +274,10 @@ void SpriteRenderSystem::render() {
         };
 
         Rectangle destRec = {
-            transform.position.x - cameraTransform.position.x,
-            transform.position.y - cameraTransform.position.y,
-            (float)sprite.size * 5,
-            (float)sprite.size * 5
+            newScreenX,
+            newScreenY,
+            worldW * zoom,
+            worldH * zoom
         };
 
         DrawTexturePro(sprite.texture, sourceRec, destRec, {0, 0}, 0, WHITE);

@@ -47,9 +47,9 @@ struct TilemapComponent {
 };
 
 struct CameraComponent {
-  int zoom = 1;
-  int vw = 0;
-  int vh = 0;
+    float zoom = 1.0f;
+    int vw;
+    int vh;
 };
 
 struct WorldComponent {
