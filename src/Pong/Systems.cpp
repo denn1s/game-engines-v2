@@ -12,8 +12,7 @@
 #include <bitset>
 #include "FastNoiseLite.h"
 
-const float WATER_LEVEL = -0.2f;
-const float NOISE_SCALE = 10.0f;
+const float WATER_LEVEL = 0.2f;
 
 void TilemapSetupSystem::setup() {
     Entity tilemapEntity = scene->createEntity("tilemap");
@@ -27,6 +26,7 @@ void TilemapSetupSystem::setup() {
 
     FastNoiseLite noise;
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    noise.SetFrequency(0.05f);
 
     for (int y = 0; y < tilemap.height; y++) {
         for (int x = 0; x < tilemap.width; x++) {
@@ -34,7 +34,7 @@ void TilemapSetupSystem::setup() {
             tile.x = x;
             tile.y = y;
             
-            float noiseValue = noise.GetNoise((float)x / NOISE_SCALE, (float)y / NOISE_SCALE);
+            float noiseValue = noise.GetNoise((float)x, (float)y);
 
             if (noiseValue > WATER_LEVEL) {
                 tile.upTexture = grassTexture;
