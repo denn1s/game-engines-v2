@@ -10,6 +10,10 @@
 #include <vector>
 #include <map>
 #include <bitset>
+#include "FastNoiseLite.h"
+
+const float WATER_LEVEL = -0.2f;
+const float NOISE_SCALE = 10.0f;
 
 void TilemapSetupSystem::setup() {
     Entity tilemapEntity = scene->createEntity("tilemap");
@@ -21,21 +25,23 @@ void TilemapSetupSystem::setup() {
     Texture2D waterTexture = TextureManager::LoadTexture("assets/Tilesets/Water.png");
     Texture2D grassTexture = TextureManager::LoadTexture("assets/Tilesets/Grass.png");
 
+    FastNoiseLite noise;
+    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+
     for (int y = 0; y < tilemap.height; y++) {
         for (int x = 0; x < tilemap.width; x++) {
             TileComponent tile;
             tile.x = x;
             tile.y = y;
             
-            switch (TILEMAP_DATA[y][x]) {
-                case 0:
-                    tile.upTexture = grassTexture;
-                    tile.downTexture = waterTexture;
-                    tile.needsAutoTiling = true;
-                    break;
-                case 1:
-                    tile.upTexture = waterTexture;
-                    break;
+            float noiseValue = noise.GetNoise((float)x / NOISE_SCALE, (float)y / NOISE_SCALE);
+
+            if (noiseValue > WATER_LEVEL) {
+                tile.upTexture = grassTexture;
+                tile.downTexture = waterTexture;
+                tile.needsAutoTiling = true;
+            } else {
+                tile.upTexture = waterTexture;
             }
 
             tilemap.tiles.push_back(tile);

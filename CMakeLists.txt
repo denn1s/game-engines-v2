@@ -24,6 +24,7 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE ${PROJECT_SOURCE_DIR}/include
     PUBLIC ${PROJECT_SOURCE_DIR}/src
     PUBLIC ${PROJECT_SOURCE_DIR}/external/rlImGui
+    PUBLIC ${PROJECT_SOURCE_DIR}/external/FastNoise/Cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
