@@ -78,4 +78,19 @@ public:
     void render() override;
 };
 
+class SolidCollisionSystem : public System {
+public:
+    void update() override;
+};
+
+class TreasureSystem : public System {
+public:
+    void update() override;
+};
+
+class TeleportSystem : public System {
+public:
+    void update() override;
+};
+
 

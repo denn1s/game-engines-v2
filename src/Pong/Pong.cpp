@@ -44,6 +44,9 @@ Scene* Pong::createGameplayScene() {
     gameplayScene->addSystem(new HelloSystem());
     gameplayScene->addSystem(new InputSystem());
     gameplayScene->addSystem(new CollisionSystem());
+    gameplayScene->addSystem(new SolidCollisionSystem());
+    gameplayScene->addSystem(new TreasureSystem());
+    gameplayScene->addSystem(new TeleportSystem());
     gameplayScene->addSystem(new PlayerActionSystem());
     gameplayScene->addSystem(new MovementSystem());
     gameplayScene->addSystem(new RenderSystem());

@@ -27,6 +27,21 @@ struct ColliderComponent {
     float offsetX;
     float offsetY;
     bool triggered = false;
+
+    enum TriggerType {
+        NONE,
+        SOLID,
+        TREASURE,
+        TELEPORT
+    };
+
+    TriggerType triggerType = NONE;
+
+    union {
+        struct {
+            int x, y;
+        } teleport;
+    } data;
 };
 
 struct ColorComponent {

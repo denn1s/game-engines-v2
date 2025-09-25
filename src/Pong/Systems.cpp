@@ -53,6 +53,9 @@ void TilemapSetupSystem::setup() {
             tilemap.tiles.push_back(tile);
         }
     }
+
+    intGrid.grid[0 * tilemap.width + 0] = 2; // Treasure
+    intGrid.grid[0 * tilemap.width + 1] = 3; // Teleport
 }
 
 void TilemapRenderSystem::render() {
@@ -472,9 +475,12 @@ void CollisionSystem::update() {
     auto tilemapView = scene->r.view<TilemapComponent, IntGridComponent>();
 
     for (auto playerEntity : playerView) {
+        auto& playerCollider = playerView.get<ColliderComponent>(playerEntity);
+        playerCollider.triggered = false;
+        playerCollider.triggerType = ColliderComponent::NONE;
+
         auto& playerTransform = playerView.get<TransformComponent>(playerEntity);
         auto& playerVelocity = playerView.get<VelocityComponent>(playerEntity);
-        auto& playerCollider = playerView.get<ColliderComponent>(playerEntity);
         auto& sprite = playerView.get<SpriteComponent>(playerEntity);
 
         if (playerVelocity.velocity.x == 0 && playerVelocity.velocity.y == 0) {
@@ -488,7 +494,7 @@ void CollisionSystem::update() {
             float tileScale = tilemap.tiles[0].scale;
             float scaledTileSize = tilemap.tileSize * tileScale;
 
-            float spriteScale = 5.0f; // This seems to be hardcoded in SpriteRenderSystem
+            float spriteScale = 5.0f;
             
             // Future position
             Vector2 nextPos = {
@@ -507,69 +513,38 @@ void CollisionSystem::update() {
             Vector2 bottomLeft = {nextColliderX, nextColliderY + colliderHeight};
             Vector2 bottomRight = {nextColliderX + colliderWidth, nextColliderY + colliderHeight};
 
-            // Check X movement
-            if (playerVelocity.velocity.x != 0) {
-                bool collisionX = false;
-                Vector2 corner1, corner2;
-                if (playerVelocity.velocity.x > 0) { // Moving right
-                    corner1 = topRight;
-                    corner2 = bottomRight;
-                } else { // Moving left
-                    corner1 = topLeft;
-                    corner2 = bottomLeft;
-                }
-
-                int tileX1 = static_cast<int>(corner1.x / scaledTileSize);
-                int tileY1 = static_cast<int>(corner1.y / scaledTileSize);
-                int tileX2 = static_cast<int>(corner2.x / scaledTileSize);
-                int tileY2 = static_cast<int>(corner2.y / scaledTileSize);
-
-                if (tileX1 >= 0 && tileX1 < intGrid.width && tileY1 >= 0 && tileY1 < intGrid.height) {
-                    if (intGrid.grid[tileY1 * intGrid.width + tileX1] == 0) {
-                        collisionX = true;
+            auto handleTileInteraction = [&](int tileX, int tileY) {
+                if (tileX >= 0 && tileX < intGrid.width && tileY >= 0 && tileY < intGrid.height) {
+                    int tileType = intGrid.grid[tileY * intGrid.width + tileX];
+                    if (tileType != 1) { // Not grass
+                        playerCollider.triggered = true;
+                        switch (tileType) {
+                            case 0: // Water
+                                playerCollider.triggerType = ColliderComponent::SOLID;
+                                break;
+                            case 2: // Treasure
+                                playerCollider.triggerType = ColliderComponent::TREASURE;
+                                break;
+                            case 3: // Teleport
+                                playerCollider.triggerType = ColliderComponent::TELEPORT;
+                                playerCollider.data.teleport = {10, 10};
+                                break;
+                        }
+                        return true;
                     }
                 }
-                if (tileX2 >= 0 && tileX2 < intGrid.width && tileY2 >= 0 && tileY2 < intGrid.height) {
-                    if (intGrid.grid[tileY2 * intGrid.width + tileX2] == 0) {
-                        collisionX = true;
+                return false;
+            };
+
+            // Check X and Y movement
+            if (playerVelocity.velocity.x != 0 || playerVelocity.velocity.y != 0) {
+                Vector2 corners[] = {topLeft, topRight, bottomLeft, bottomRight};
+                for (const auto& corner : corners) {
+                    int tileX = static_cast<int>(corner.x / scaledTileSize);
+                    int tileY = static_cast<int>(corner.y / scaledTileSize);
+                    if (handleTileInteraction(tileX, tileY)) {
+                        return; // Stop after first trigger
                     }
-                }
-
-                if (collisionX) {
-                    playerVelocity.velocity.x = 0;
-                }
-            }
-
-            // Check Y movement
-            if (playerVelocity.velocity.y != 0) {
-                bool collisionY = false;
-                Vector2 corner1, corner2;
-                if (playerVelocity.velocity.y > 0) { // Moving down
-                    corner1 = bottomLeft;
-                    corner2 = bottomRight;
-                } else { // Moving up
-                    corner1 = topLeft;
-                    corner2 = topRight;
-                }
-
-                int tileX1 = static_cast<int>(corner1.x / scaledTileSize);
-                int tileY1 = static_cast<int>(corner1.y / scaledTileSize);
-                int tileX2 = static_cast<int>(corner2.x / scaledTileSize);
-                int tileY2 = static_cast<int>(corner2.y / scaledTileSize);
-
-                if (tileX1 >= 0 && tileX1 < intGrid.width && tileY1 >= 0 && tileY1 < intGrid.height) {
-                    if (intGrid.grid[tileY1 * intGrid.width + tileX1] == 0) {
-                        collisionY = true;
-                    }
-                }
-                if (tileX2 >= 0 && tileX2 < intGrid.width && tileY2 >= 0 && tileY2 < intGrid.height) {
-                    if (intGrid.grid[tileY2 * intGrid.width + tileX2] == 0) {
-                        collisionY = true;
-                    }
-                }
-
-                if (collisionY) {
-                    playerVelocity.velocity.y = 0;
                 }
             }
         }
@@ -629,7 +604,26 @@ void IntGridRenderSystem::render() {
 
         for (int y = 0; y < intGrid.height; y++) {
             for (int x = 0; x < intGrid.width; x++) {
-                if (intGrid.grid[y * intGrid.width + x] == 0) {
+                int tileType = intGrid.grid[y * intGrid.width + x];
+                Color color;
+                bool shouldDraw = true;
+
+                switch (tileType) {
+                    case 0: // Water
+                        color = Fade(RED, 0.5f);
+                        break;
+                    case 2: // Treasure
+                        color = Fade(YELLOW, 0.5f);
+                        break;
+                    case 3: // Teleport
+                        color = Fade(PURPLE, 0.5f);
+                        break;
+                    default:
+                        shouldDraw = false;
+                        break;
+                }
+
+                if (shouldDraw) {
                     float worldX = x * scaledTileSize;
                     float worldY = y * scaledTileSize;
 
@@ -644,9 +638,48 @@ void IntGridRenderSystem::render() {
                         newScreenY,
                         scaledTileSize * zoom,
                         scaledTileSize * zoom,
-                        Fade(RED, 0.5f)
+                        color
                     );
                 }
+            }
+        }
+    }
+}
+
+void SolidCollisionSystem::update() {
+    auto view = scene->r.view<PlayerComponent, VelocityComponent, ColliderComponent>();
+    for (auto entity : view) {
+        auto& collider = view.get<ColliderComponent>(entity);
+        if (collider.triggered && collider.triggerType == ColliderComponent::SOLID) {
+            auto& vel = view.get<VelocityComponent>(entity);
+            vel.velocity = {0, 0};
+        }
+    }
+}
+
+void TreasureSystem::update() {
+    auto view = scene->r.view<PlayerComponent, ColliderComponent>();
+    for (auto entity : view) {
+        auto& collider = view.get<ColliderComponent>(entity);
+        if (collider.triggered && collider.triggerType == ColliderComponent::TREASURE) {
+            std::println("You found a treasure!");
+        }
+    }
+}
+
+void TeleportSystem::update() {
+    auto view = scene->r.view<PlayerComponent, TransformComponent, ColliderComponent>();
+    auto tilemapView = scene->r.view<TilemapComponent>();
+    for (auto entity : view) {
+        auto& collider = view.get<ColliderComponent>(entity);
+        if (collider.triggered && collider.triggerType == ColliderComponent::TELEPORT) {
+            auto& transform = view.get<TransformComponent>(entity);
+            for (auto tilemapEntity : tilemapView) {
+                auto& tilemap = tilemapView.get<TilemapComponent>(tilemapEntity);
+                float tileScale = tilemap.tiles[0].scale;
+                float scaledTileSize = tilemap.tileSize * tileScale;
+                transform.position.x = collider.data.teleport.x * scaledTileSize;
+                transform.position.y = collider.data.teleport.y * scaledTileSize;
             }
         }
     }
