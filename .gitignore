@@ -2,3 +2,4 @@ build
 .cache
 external/
 imgui.ini
+.env
