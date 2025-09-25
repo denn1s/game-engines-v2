@@ -17,6 +17,21 @@ class MovementSystem : public System {
     void update() override;
 };
 
+class CollisionSystem : public System {
+    public:
+    void update() override;
+};
+
+class ColliderRenderSystem : public System {
+    public:
+    void render() override;
+};
+
+class IntGridRenderSystem : public System {
+    public:
+    void render() override;
+};
+
 class SpriteSetupSystem : public System {
   public:
     void setup() override;
@@ -61,11 +76,6 @@ public:
 class RenderSystem : public System {
 public:
     void render() override;
-};
-
-class PlayerSpriteUpdateSystem : public System {
-  public:
-    void update() override;
 };
 
 

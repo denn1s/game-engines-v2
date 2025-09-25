@@ -1,6 +1,7 @@
 #pragma once
 #include "ECS/Components.h"
 #include <raylib.h>
+#include <vector>
 
 enum ToolType {
     NONE,
@@ -21,9 +22,18 @@ struct PlayerComponent {
 };
 
 struct ColliderComponent {
+    float width;
+    float height;
+    float offsetX;
+    float offsetY;
     bool triggered = false;
 };
 
 struct ColorComponent {
     Color color;
+};
+
+struct IntGridComponent {
+    std::vector<int> grid;
+    int width, height;
 };

@@ -9,7 +9,6 @@
 #include <raylib.h>
 #include <vector>
 #include <map>
-#include <bitset>
 #include "FastNoiseLite.h"
 
 const float WATER_LEVEL = 0.2f;
@@ -20,6 +19,11 @@ void TilemapSetupSystem::setup() {
     tilemap.width = TILEMAP_WIDTH;
     tilemap.height = TILEMAP_HEIGHT;
     tilemap.tileSize = 16;
+
+    auto& intGrid = tilemapEntity.addComponent<IntGridComponent>();
+    intGrid.width = TILEMAP_WIDTH;
+    intGrid.height = TILEMAP_HEIGHT;
+    intGrid.grid.resize(TILEMAP_WIDTH * TILEMAP_HEIGHT);
 
     Texture2D waterTexture = TextureManager::LoadTexture("assets/Tilesets/Water.png");
     Texture2D grassTexture = TextureManager::LoadTexture("assets/Tilesets/Grass.png");
@@ -40,8 +44,10 @@ void TilemapSetupSystem::setup() {
                 tile.upTexture = grassTexture;
                 tile.downTexture = waterTexture;
                 tile.needsAutoTiling = true;
+                intGrid.grid[y * tilemap.width + x] = 1; // Grass
             } else {
                 tile.upTexture = waterTexture;
+                intGrid.grid[y * tilemap.width + x] = 0; // Water
             }
 
             tilemap.tiles.push_back(tile);
@@ -461,5 +467,187 @@ void RenderSystem::render() {
     }
 }
 
+void CollisionSystem::update() {
+    auto playerView = scene->r.view<PlayerComponent, TransformComponent, VelocityComponent, ColliderComponent, SpriteComponent>();
+    auto tilemapView = scene->r.view<TilemapComponent, IntGridComponent>();
 
+    for (auto playerEntity : playerView) {
+        auto& playerTransform = playerView.get<TransformComponent>(playerEntity);
+        auto& playerVelocity = playerView.get<VelocityComponent>(playerEntity);
+        auto& playerCollider = playerView.get<ColliderComponent>(playerEntity);
+        auto& sprite = playerView.get<SpriteComponent>(playerEntity);
 
+        if (playerVelocity.velocity.x == 0 && playerVelocity.velocity.y == 0) {
+            continue;
+        }
+
+        for (auto tilemapEntity : tilemapView) {
+            auto& tilemap = tilemapView.get<TilemapComponent>(tilemapEntity);
+            auto& intGrid = tilemapView.get<IntGridComponent>(tilemapEntity);
+
+            float tileScale = tilemap.tiles[0].scale;
+            float scaledTileSize = tilemap.tileSize * tileScale;
+
+            float spriteScale = 5.0f; // This seems to be hardcoded in SpriteRenderSystem
+            
+            // Future position
+            Vector2 nextPos = {
+                playerTransform.position.x + playerVelocity.velocity.x * GetFrameTime(),
+                playerTransform.position.y + playerVelocity.velocity.y * GetFrameTime()
+            };
+
+            // Collider corners in next position
+            float nextColliderX = nextPos.x + playerCollider.offsetX * spriteScale;
+            float nextColliderY = nextPos.y + playerCollider.offsetY * spriteScale;
+            float colliderWidth = playerCollider.width * spriteScale;
+            float colliderHeight = playerCollider.height * spriteScale;
+
+            Vector2 topLeft = {nextColliderX, nextColliderY};
+            Vector2 topRight = {nextColliderX + colliderWidth, nextColliderY};
+            Vector2 bottomLeft = {nextColliderX, nextColliderY + colliderHeight};
+            Vector2 bottomRight = {nextColliderX + colliderWidth, nextColliderY + colliderHeight};
+
+            // Check X movement
+            if (playerVelocity.velocity.x != 0) {
+                bool collisionX = false;
+                Vector2 corner1, corner2;
+                if (playerVelocity.velocity.x > 0) { // Moving right
+                    corner1 = topRight;
+                    corner2 = bottomRight;
+                } else { // Moving left
+                    corner1 = topLeft;
+                    corner2 = bottomLeft;
+                }
+
+                int tileX1 = static_cast<int>(corner1.x / scaledTileSize);
+                int tileY1 = static_cast<int>(corner1.y / scaledTileSize);
+                int tileX2 = static_cast<int>(corner2.x / scaledTileSize);
+                int tileY2 = static_cast<int>(corner2.y / scaledTileSize);
+
+                if (tileX1 >= 0 && tileX1 < intGrid.width && tileY1 >= 0 && tileY1 < intGrid.height) {
+                    if (intGrid.grid[tileY1 * intGrid.width + tileX1] == 0) {
+                        collisionX = true;
+                    }
+                }
+                if (tileX2 >= 0 && tileX2 < intGrid.width && tileY2 >= 0 && tileY2 < intGrid.height) {
+                    if (intGrid.grid[tileY2 * intGrid.width + tileX2] == 0) {
+                        collisionX = true;
+                    }
+                }
+
+                if (collisionX) {
+                    playerVelocity.velocity.x = 0;
+                }
+            }
+
+            // Check Y movement
+            if (playerVelocity.velocity.y != 0) {
+                bool collisionY = false;
+                Vector2 corner1, corner2;
+                if (playerVelocity.velocity.y > 0) { // Moving down
+                    corner1 = bottomLeft;
+                    corner2 = bottomRight;
+                } else { // Moving up
+                    corner1 = topLeft;
+                    corner2 = topRight;
+                }
+
+                int tileX1 = static_cast<int>(corner1.x / scaledTileSize);
+                int tileY1 = static_cast<int>(corner1.y / scaledTileSize);
+                int tileX2 = static_cast<int>(corner2.x / scaledTileSize);
+                int tileY2 = static_cast<int>(corner2.y / scaledTileSize);
+
+                if (tileX1 >= 0 && tileX1 < intGrid.width && tileY1 >= 0 && tileY1 < intGrid.height) {
+                    if (intGrid.grid[tileY1 * intGrid.width + tileX1] == 0) {
+                        collisionY = true;
+                    }
+                }
+                if (tileX2 >= 0 && tileX2 < intGrid.width && tileY2 >= 0 && tileY2 < intGrid.height) {
+                    if (intGrid.grid[tileY2 * intGrid.width + tileX2] == 0) {
+                        collisionY = true;
+                    }
+                }
+
+                if (collisionY) {
+                    playerVelocity.velocity.y = 0;
+                }
+            }
+        }
+    }
+}
+
+void ColliderRenderSystem::render() {
+    auto view = scene->r.view<TransformComponent, ColliderComponent, SpriteComponent>();
+    auto& cameraTransform = scene->camera->get<TransformComponent>();
+    auto& cameraComponent = scene->camera->get<CameraComponent>();
+    float cam_vw = (float)cameraComponent.vw;
+    float cam_vh = (float)cameraComponent.vh;
+    float zoom = cameraComponent.zoom;
+
+    for (auto entity : view) {
+        const auto& transform = view.get<TransformComponent>(entity);
+        const auto& collider = view.get<ColliderComponent>(entity);
+        const auto& sprite = view.get<SpriteComponent>(entity);
+
+        float spriteScale = 5.0f; // This seems to be hardcoded in SpriteRenderSystem
+
+        float worldX = transform.position.x + collider.offsetX * spriteScale;
+        float worldY = transform.position.y + collider.offsetY * spriteScale;
+        float worldW = collider.width * spriteScale;
+        float worldH = collider.height * spriteScale;
+
+        float screenX = worldX - cameraTransform.position.x;
+        float screenY = worldY - cameraTransform.position.y;
+
+        float newScreenX = cam_vw / 2.0f + (screenX - cam_vw / 2.0f) * zoom;
+        float newScreenY = cam_vh / 2.0f + (screenY - cam_vh / 2.0f) * zoom;
+
+        DrawRectangleLines(
+            newScreenX,
+            newScreenY,
+            worldW * zoom,
+            worldH * zoom,
+            RED
+        );
+    }
+}
+
+void IntGridRenderSystem::render() {
+    auto view = scene->r.view<TilemapComponent, IntGridComponent>();
+    auto& cameraTransform = scene->camera->get<TransformComponent>();
+    auto& cameraComponent = scene->camera->get<CameraComponent>();
+    float cam_vw = (float)cameraComponent.vw;
+    float cam_vh = (float)cameraComponent.vh;
+    float zoom = cameraComponent.zoom;
+
+    for (auto entity : view) {
+        auto& tilemap = view.get<TilemapComponent>(entity);
+        auto& intGrid = view.get<IntGridComponent>(entity);
+
+        float tileScale = tilemap.tiles[0].scale;
+        float scaledTileSize = tilemap.tileSize * tileScale;
+
+        for (int y = 0; y < intGrid.height; y++) {
+            for (int x = 0; x < intGrid.width; x++) {
+                if (intGrid.grid[y * intGrid.width + x] == 0) {
+                    float worldX = x * scaledTileSize;
+                    float worldY = y * scaledTileSize;
+
+                    float screenX = worldX - cameraTransform.position.x;
+                    float screenY = worldY - cameraTransform.position.y;
+
+                    float newScreenX = cam_vw / 2.0f + (screenX - cam_vw / 2.0f) * zoom;
+                    float newScreenY = cam_vh / 2.0f + (screenY - cam_vh / 2.0f) * zoom;
+
+                    DrawRectangle(
+                        newScreenX,
+                        newScreenY,
+                        scaledTileSize * zoom,
+                        scaledTileSize * zoom,
+                        Fade(RED, 0.5f)
+                    );
+                }
+            }
+        }
+    }
+}
