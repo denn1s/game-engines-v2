@@ -2,6 +2,7 @@
 #include "Game/Scene/Scene.h"
 #include "ECS/Entity.h"
 #include "Components.h"
+#include "Game/Graphics/TextureManager.h"
 #include <random>
 
 void EnemySpawnSystem::setup() {
@@ -24,7 +25,7 @@ void EnemySpawnSystem::update() {
             // Random position near player
             std::random_device rd;
             std::mt19937 gen(rd());
-            std::uniform_real_distribution<> dis(-200.0, 200.0);
+            std::uniform_real_distribution<> dis(-100.0, 100.0);
             float spawnX = playerX + dis(gen);
             float spawnY = playerY + dis(gen);
 
@@ -44,6 +45,7 @@ void EnemySpawnSystem::update() {
             enemy.addComponent<EnemyComponent>();
             auto& s = enemy.addComponent<SpriteComponent>();
             s.name = "assets/Sprites/EvilCat/1.png";
+            s.texture = TextureManager::LoadTexture(s.name);
             s.xIndex = 0;
             s.yIndex = 0;
             s.size = 48;

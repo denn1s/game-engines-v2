@@ -12,5 +12,5 @@ public:
 
 private:
     float spawnTimer = 0.0f;
-    float spawnInterval = 2.0f;
+    float spawnInterval = 1.0f;
 };
