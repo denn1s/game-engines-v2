@@ -11,11 +11,7 @@ ScriptingSystem::ScriptingSystem(const std::string& script_path) : script_path(s
 }
 
 void ScriptingSystem::update() {
-    timer += GetFrameTime();
-    if (timer < interval) {
-        return;
-    }
-    timer = 0.0f;
+    total_time += GetFrameTime();
 
     // Get player position
     auto view = scene->r.view<PlayerComponent, TransformComponent>();
@@ -26,6 +22,8 @@ void ScriptingSystem::update() {
         sol::table input = lua.create_table();
         input["player_x"] = playerTransform.position.x;
         input["player_y"] = playerTransform.position.y;
+        input["delta_time"] = GetFrameTime();
+        input["total_time"] = total_time;
 
         // Add random number to input
         std::random_device rd;

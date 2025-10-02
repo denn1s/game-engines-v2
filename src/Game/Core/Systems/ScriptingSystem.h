@@ -13,6 +13,5 @@ public:
 private:
     sol::state lua;
     std::string script_path;
-    float timer = 0.0f;
-    float interval = 1.0f;
+    float total_time = 0.0f;
 };

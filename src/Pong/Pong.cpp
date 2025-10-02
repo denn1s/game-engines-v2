@@ -38,7 +38,7 @@ Scene* Pong::createGameplayScene() {
     collider.offsetY = 20;
 
     // Add systems
-    gameplayScene->addSystem(new ScriptingSystem("assets/Scripts/Enemy/CircleSpawn.lua"));
+    gameplayScene->addSystem(new ScriptingSystem("assets/Scripts/Enemy/OneTimeSpawn.lua"));
     gameplayScene->addSystem(new CameraSystem());
     gameplayScene->addSystem(new TilemapSetupSystem());
     gameplayScene->addSystem(new AutoTilingSetupSystem());
