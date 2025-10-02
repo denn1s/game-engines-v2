@@ -3,10 +3,10 @@
 
 #include "ECS/Entity.h"
 #include "Systems.h"
-#include "EnemySystems.h"
 #include "Game/Core/Systems/ImGuiSystem.h"
 #include "Game/Core/Systems/CameraSystem.h"
 #include "Game/Core/Systems/CameraZoomSystem.h"
+#include "Game/Core/Systems/ScriptingSystem.h"
 
 Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
     Scene* gameplayScene = createGameplayScene();
@@ -38,7 +38,7 @@ Scene* Pong::createGameplayScene() {
     collider.offsetY = 20;
 
     // Add systems
-    gameplayScene->addSystem(new EnemySpawnSystem());
+    gameplayScene->addSystem(new ScriptingSystem("assets/Scripts/Enemy/CircleSpawn.lua"));
     gameplayScene->addSystem(new CameraSystem());
     gameplayScene->addSystem(new TilemapSetupSystem());
     gameplayScene->addSystem(new AutoTilingSetupSystem());

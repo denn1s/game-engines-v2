@@ -9,6 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(raylib REQUIRED)
 find_package(imgui REQUIRED)
+find_package(Lua REQUIRED)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${PROJECT_SOURCE_DIR}/src/*.cpp"
@@ -25,9 +26,11 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}/src
     PUBLIC ${PROJECT_SOURCE_DIR}/external/rlImGui
     PUBLIC ${PROJECT_SOURCE_DIR}/external/FastNoise/Cpp
+    PUBLIC ${LUA_INCLUDE_DIR}
 )
 
 target_link_libraries(${PROJECT_NAME}
     raylib
     imgui
+    ${LUA_LIBRARIES}
 )
