@@ -48,7 +48,7 @@ public:
     void update() override;
 };
 
-class SpriteAnimationSystem : public System {
+class AnimationSystem : public System {
 public:
     void update() override;
 };

@@ -300,12 +300,11 @@ void SpriteRenderSystem::render() {
 }
 
 void SpriteUpdateSystem::update() {
-    auto view = scene->r.view<SpriteComponent, PlayerComponent>();
+    auto view = scene->r.view<SpriteComponent>();
     long now = GetTime() * 1000;
 
     for (auto entity : view) {
         auto& sprite = view.get<SpriteComponent>(entity);
-        auto& player = view.get<PlayerComponent>(entity);
 
         if (sprite.animationFrames > 0) {
             float timeSinceLastUpdate = now - sprite.lastUpdate;
@@ -320,8 +319,11 @@ void SpriteUpdateSystem::update() {
                 sprite.xIndex += framesToUpdate;
                 sprite.xIndex %= sprite.animationFrames;
 
-                if (player.isAttacking && sprite.xIndex < oldXIndex) {
-                    player.isAttacking = false;
+                if (scene->r.all_of<PlayerComponent>(entity)) {
+                    auto& player = scene->r.get<PlayerComponent>(entity);
+                    if (player.isAttacking && sprite.xIndex < oldXIndex) {
+                        player.isAttacking = false;
+                    }
                 }
                 sprite.lastUpdate = now;
             }
@@ -329,62 +331,75 @@ void SpriteUpdateSystem::update() {
     }
 }
 
-void SpriteAnimationSystem::update() {
-    auto view = scene->r.view<SpriteComponent, VelocityComponent, PlayerComponent>();
+void AnimationSystem::update() {
+    auto view = scene->r.view<SpriteComponent, VelocityComponent>();
     for (auto entity : view) {
-        auto& sprite = view.get<SpriteComponent>(entity);
-        auto& vel = view.get<VelocityComponent>(entity);
-        auto& player = view.get<PlayerComponent>(entity);
+        if (scene->r.all_of<PlayerComponent>(entity)) {
+            auto& sprite = view.get<SpriteComponent>(entity);
+            auto& vel = view.get<VelocityComponent>(entity);
+            auto& player = scene->r.get<PlayerComponent>(entity);
 
-        if (player.isAttacking) {
-            std::println("Animation: Attacking with tool {}", (int)player.currentTool);
-            sprite.animationDuration = 500;
-            switch (player.currentTool) {
-                case SHOVEL:
-                    if (player.lastDirection.y > 0) sprite.yIndex = 12;
-                    else if (player.lastDirection.y < 0) sprite.yIndex = 13;
-                    else if (player.lastDirection.x < 0) sprite.yIndex = 14;
-                    else if (player.lastDirection.x > 0) sprite.yIndex = 15;
-                    break;
-                case AXE:
-                    if (player.lastDirection.y > 0) sprite.yIndex = 16;
-                    else if (player.lastDirection.y < 0) sprite.yIndex = 17;
-                    else if (player.lastDirection.x < 0) sprite.yIndex = 18;
-                    else if (player.lastDirection.x > 0) sprite.yIndex = 19;
-                    break;
-                case WATER_CAN:
-                    if (player.lastDirection.y > 0) sprite.yIndex = 20;
-                    else if (player.lastDirection.y < 0) sprite.yIndex = 21;
-                    else if (player.lastDirection.x < 0) sprite.yIndex = 22;
-                    else if (player.lastDirection.x > 0) sprite.yIndex = 23;
-                    break;
-                case NONE:
-                    std::println("Animation: Attacking with no tool");
-                    break;
-            }
-        } else if (vel.velocity.x != 0 || vel.velocity.y != 0) {
-            std::println("Animation: Moving");
-            sprite.animationDuration = 1000;
-            player.lastDirection = vel.velocity;
+            if (player.isAttacking) {
+                std::println("Animation: Attacking with tool {}", (int)player.currentTool);
+                sprite.animationDuration = 500;
+                switch (player.currentTool) {
+                    case SHOVEL:
+                        if (player.lastDirection.y > 0) sprite.yIndex = 12;
+                        else if (player.lastDirection.y < 0) sprite.yIndex = 13;
+                        else if (player.lastDirection.x < 0) sprite.yIndex = 14;
+                        else if (player.lastDirection.x > 0) sprite.yIndex = 15;
+                        break;
+                    case AXE:
+                        if (player.lastDirection.y > 0) sprite.yIndex = 16;
+                        else if (player.lastDirection.y < 0) sprite.yIndex = 17;
+                        else if (player.lastDirection.x < 0) sprite.yIndex = 18;
+                        else if (player.lastDirection.x > 0) sprite.yIndex = 19;
+                        break;
+                    case WATER_CAN:
+                        if (player.lastDirection.y > 0) sprite.yIndex = 20;
+                        else if (player.lastDirection.y < 0) sprite.yIndex = 21;
+                        else if (player.lastDirection.x < 0) sprite.yIndex = 22;
+                        else if (player.lastDirection.x > 0) sprite.yIndex = 23;
+                        break;
+                    case NONE:
+                        std::println("Animation: Attacking with no tool");
+                        break;
+                }
+            } else if (vel.velocity.x != 0 || vel.velocity.y != 0) {
+                std::println("Animation: Moving");
+                sprite.animationDuration = 1000;
+                player.lastDirection = vel.velocity;
 
-            if (player.isRunning) {
-                if (vel.velocity.y > 0) sprite.yIndex = 8;
-                else if (vel.velocity.y < 0) sprite.yIndex = 9;
-                else if (vel.velocity.x > 0) sprite.yIndex = 10;
-                else if (vel.velocity.x < 0) sprite.yIndex = 11;
+                if (player.isRunning) {
+                    if (vel.velocity.y > 0) sprite.yIndex = 8;
+                    else if (vel.velocity.y < 0) sprite.yIndex = 9;
+                    else if (vel.velocity.x > 0) sprite.yIndex = 10;
+                    else if (vel.velocity.x < 0) sprite.yIndex = 11;
+                } else {
+                    if (vel.velocity.y > 0) sprite.yIndex = 4;
+                    else if (vel.velocity.y < 0) sprite.yIndex = 5;
+                    else if (vel.velocity.x > 0) sprite.yIndex = 6;
+                    else if (vel.velocity.x < 0) sprite.yIndex = 7;
+                }
             } else {
-                if (vel.velocity.y > 0) sprite.yIndex = 4;
-                else if (vel.velocity.y < 0) sprite.yIndex = 5;
-                else if (vel.velocity.x > 0) sprite.yIndex = 6;
-                else if (vel.velocity.x < 0) sprite.yIndex = 7;
+                std::println("Animation: Idle");
+                sprite.animationDuration = 1000;
+                if (player.lastDirection.y > 0) sprite.yIndex = 0;
+                else if (player.lastDirection.y < 0) sprite.yIndex = 1;
+                else if (player.lastDirection.x < 0) sprite.yIndex = 2;
+                else if (player.lastDirection.x > 0) sprite.yIndex = 3;
             }
-        } else {
-            std::println("Animation: Idle");
-            sprite.animationDuration = 1000;
-            if (player.lastDirection.y > 0) sprite.yIndex = 0;
-            else if (player.lastDirection.y < 0) sprite.yIndex = 1;
-            else if (player.lastDirection.x < 0) sprite.yIndex = 2;
-            else if (player.lastDirection.x > 0) sprite.yIndex = 3;
+        } else if (scene->r.all_of<EnemyComponent>(entity)) {
+            auto& sprite = view.get<SpriteComponent>(entity);
+            auto& vel = view.get<VelocityComponent>(entity);
+
+            if (vel.velocity.x != 0 || vel.velocity.y != 0) {
+                // Moving animation
+                sprite.yIndex = 4; // Assuming row 4 is move animation
+            } else {
+                // Idle
+                sprite.yIndex = 0; // Assuming row 0 is idle
+            }
         }
     }
 }

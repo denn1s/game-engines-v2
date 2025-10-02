@@ -21,6 +21,10 @@ struct PlayerComponent {
     Vector2 lastDirection = {0, 1}; // Default to facing down
 };
 
+struct EnemyComponent {
+    bool isEnemy = true;
+};
+
 struct ColliderComponent {
     float width;
     float height;

@@ -3,6 +3,7 @@
 
 #include "ECS/Entity.h"
 #include "Systems.h"
+#include "EnemySystems.h"
 #include "Game/Core/Systems/ImGuiSystem.h"
 #include "Game/Core/Systems/CameraSystem.h"
 #include "Game/Core/Systems/CameraZoomSystem.h"
@@ -37,6 +38,7 @@ Scene* Pong::createGameplayScene() {
     collider.offsetY = 20;
 
     // Add systems
+    gameplayScene->addSystem(new EnemySpawnSystem());
     gameplayScene->addSystem(new CameraSystem());
     gameplayScene->addSystem(new TilemapSetupSystem());
     gameplayScene->addSystem(new AutoTilingSetupSystem());
@@ -56,7 +58,7 @@ Scene* Pong::createGameplayScene() {
     gameplayScene->addSystem(new ColliderRenderSystem());
     gameplayScene->addSystem(new IntGridRenderSystem());
     gameplayScene->addSystem(new SpriteUpdateSystem());
-    gameplayScene->addSystem(new SpriteAnimationSystem());
+    gameplayScene->addSystem(new AnimationSystem());
     gameplayScene->addSystem(new CameraZoomSystem());
 
 
