@@ -11,11 +11,16 @@ if not spawned and input.total_time > 5 then
     local x = input.player_x + (diameter / 2) * math.cos(angle)
     local y = input.player_y + (diameter / 2) * math.sin(angle)
 
-    -- Select a random movement pattern
+    -- Select a random movement pattern (including advanced tracking)
     local movement_scripts = {
         "assets/Scripts/Enemy/Movement/LinearTowardsPlayer.lua",
         "assets/Scripts/Enemy/Movement/SineWave.lua",
-        "assets/Scripts/Enemy/Movement/Circular.lua"
+        "assets/Scripts/Enemy/Movement/Circular.lua",
+        "assets/Scripts/Enemy/Movement/DirectChase.lua",
+        "assets/Scripts/Enemy/Movement/ZigzagChase.lua",
+        "assets/Scripts/Enemy/Movement/CircleStrafe.lua",
+        "assets/Scripts/Enemy/Movement/LeapChase.lua",
+        "assets/Scripts/Enemy/Movement/ApproachRetreat.lua"
     }
 
     local script_index = math.floor(input.rng * #movement_scripts) + 1
