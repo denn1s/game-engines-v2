@@ -9,6 +9,7 @@
 #include <raylib.h>
 #include <vector>
 #include <map>
+#include <sol/sol.hpp>
 #include "FastNoiseLite.h"
 
 const float WATER_LEVEL = 0.2f;
@@ -695,6 +696,72 @@ void TeleportSystem::update() {
                 float scaledTileSize = tilemap.tileSize * tileScale;
                 transform.position.x = collider.data.teleport.x * scaledTileSize;
                 transform.position.y = collider.data.teleport.y * scaledTileSize;
+            }
+        }
+    }
+}
+
+void EnemyMovementSystem::update() {
+    auto view = scene->r.view<EnemyComponent, EnemyMovementComponent, TransformComponent, VelocityComponent>();
+
+    // Get player position
+    auto playerView = scene->r.view<PlayerComponent, TransformComponent>();
+    float player_x = 0.0f;
+    float player_y = 0.0f;
+    for (auto playerEntity : playerView) {
+        auto& playerTransform = playerView.get<TransformComponent>(playerEntity);
+        player_x = playerTransform.position.x;
+        player_y = playerTransform.position.y;
+        break; // Only need one player
+    }
+
+    for (auto entity : view) {
+        auto& movement = view.get<EnemyMovementComponent>(entity);
+        auto& transform = view.get<TransformComponent>(entity);
+        auto& velocity = view.get<VelocityComponent>(entity);
+
+        // Initialize start time if not set
+        if (movement.startTime == 0.0f) {
+            movement.startTime = GetTime();
+            movement.startPosition = transform.position;
+        }
+
+        // Calculate elapsed time since spawn
+        float elapsed = GetTime() - movement.startTime;
+
+        // Load and execute the Lua script
+        if (!movement.movementScript.empty()) {
+            sol::state lua;
+            lua.open_libraries(sol::lib::base, sol::lib::math);
+
+            // Create input table for Lua
+            sol::table input = lua.create_table();
+            input["elapsed_time"] = elapsed;
+            input["delta_time"] = GetFrameTime();
+            input["start_x"] = movement.startPosition.x;
+            input["start_y"] = movement.startPosition.y;
+            input["current_x"] = transform.position.x;
+            input["current_y"] = transform.position.y;
+            input["player_x"] = player_x;
+            input["player_y"] = player_y;
+
+            lua["input"] = input;
+
+            // Run the script
+            try {
+                lua.script_file(movement.movementScript);
+
+                // Get output from Lua
+                sol::table output = lua["output"];
+                if (output) {
+                    // Check if output contains velocity
+                    if (output["velocity_x"].valid() && output["velocity_y"].valid()) {
+                        velocity.velocity.x = output["velocity_x"];
+                        velocity.velocity.y = output["velocity_y"];
+                    }
+                }
+            } catch (const std::exception& e) {
+                std::println("Error executing movement script {}: {}", movement.movementScript, e.what());
             }
         }
     }

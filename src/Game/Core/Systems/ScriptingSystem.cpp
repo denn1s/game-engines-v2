@@ -46,8 +46,16 @@ void ScriptingSystem::update() {
 
                 // Spawn enemy
                 Entity enemy = scene->createEntity("enemy", x, y);
-                enemy.addComponent<VelocityComponent>(Vector2{0, 0}); // For now, no movement from script
+                enemy.addComponent<VelocityComponent>(Vector2{0, 0});
                 enemy.addComponent<EnemyComponent>();
+
+                // Add movement component with script path if provided
+                if (output["movement_script"].valid()) {
+                    std::string movement_script = output["movement_script"];
+                    auto& movement = enemy.addComponent<EnemyMovementComponent>();
+                    movement.movementScript = movement_script;
+                }
+
                 auto& s = enemy.addComponent<SpriteComponent>();
                 s.name = "assets/Sprites/EvilCat/1.png";
                 s.texture = TextureManager::LoadTexture(s.name);

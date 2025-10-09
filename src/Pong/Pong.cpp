@@ -50,6 +50,7 @@ Scene* Pong::createGameplayScene() {
     gameplayScene->addSystem(new TreasureSystem());
     gameplayScene->addSystem(new TeleportSystem());
     gameplayScene->addSystem(new PlayerActionSystem());
+    gameplayScene->addSystem(new EnemyMovementSystem());
     gameplayScene->addSystem(new MovementSystem());
     gameplayScene->addSystem(new RenderSystem());
     gameplayScene->addSystem(new ImGuiSystem());

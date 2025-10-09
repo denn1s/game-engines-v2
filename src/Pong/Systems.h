@@ -93,4 +93,9 @@ public:
     void update() override;
 };
 
+class EnemyMovementSystem : public System {
+public:
+    void update() override;
+};
+
 

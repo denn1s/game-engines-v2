@@ -11,11 +11,22 @@ if not spawned and input.total_time > 5 then
     local x = input.player_x + (diameter / 2) * math.cos(angle)
     local y = input.player_y + (diameter / 2) * math.sin(angle)
 
+    -- Select a random movement pattern
+    local movement_scripts = {
+        "assets/Scripts/Enemy/Movement/LinearTowardsPlayer.lua",
+        "assets/Scripts/Enemy/Movement/SineWave.lua",
+        "assets/Scripts/Enemy/Movement/Circular.lua"
+    }
+
+    local script_index = math.floor(input.rng * #movement_scripts) + 1
+    local selected_movement = movement_scripts[script_index]
+
     -- Set the output table
     output = {
         type = "default",
         x = x,
-        y = y
+        y = y,
+        movement_script = selected_movement
     }
     spawned = true
 else

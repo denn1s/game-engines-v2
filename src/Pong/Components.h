@@ -25,6 +25,13 @@ struct EnemyComponent {
     bool isEnemy = true;
 };
 
+struct EnemyMovementComponent {
+    std::string movementScript;  // Path to Lua script defining movement
+    float startTime = 0.0f;      // When the enemy was spawned
+    Vector2 startPosition;       // Initial spawn position
+    bool scriptLoaded = false;   // Track if script has been loaded
+};
+
 struct ColliderComponent {
     float width;
     float height;
