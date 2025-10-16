@@ -98,4 +98,19 @@ public:
     void update() override;
 };
 
+class PlayerEnemyCollisionSystem : public System {
+public:
+    void update() override;
+};
+
+class DeathSystem : public System {
+public:
+    void update() override;
+};
+
+class HPRenderSystem : public System {
+public:
+    void render() override;
+};
+
 

@@ -37,6 +37,15 @@ Scene* Pong::createGameplayScene() {
     collider.offsetX = 14;
     collider.offsetY = 20;
 
+    // Add HP component to player
+    auto& hp = white.addComponent<HPComponent>();
+    hp.maxHP = 100;
+    hp.currentHP = 100;
+
+    // Add damage cooldown component
+    auto& cooldown = white.addComponent<DamageCooldownComponent>();
+    cooldown.cooldownDuration = 1.0f;
+
     // Add systems
     gameplayScene->addSystem(new ScriptingSystem("assets/Scripts/Enemy/OneTimeSpawn.lua"));
     gameplayScene->addSystem(new CameraSystem());
@@ -52,10 +61,13 @@ Scene* Pong::createGameplayScene() {
     gameplayScene->addSystem(new PlayerActionSystem());
     gameplayScene->addSystem(new EnemyMovementSystem());
     gameplayScene->addSystem(new MovementSystem());
+    gameplayScene->addSystem(new PlayerEnemyCollisionSystem());  // Check player-enemy collisions
+    gameplayScene->addSystem(new DeathSystem());                 // Remove dead entities
     gameplayScene->addSystem(new RenderSystem());
     gameplayScene->addSystem(new ImGuiSystem());
     gameplayScene->addSystem(new SpriteSetupSystem());
     gameplayScene->addSystem(new SpriteRenderSystem());
+    gameplayScene->addSystem(new HPRenderSystem());              // Render health bars
     gameplayScene->addSystem(new ColliderRenderSystem());
     gameplayScene->addSystem(new IntGridRenderSystem());
     gameplayScene->addSystem(new SpriteUpdateSystem());

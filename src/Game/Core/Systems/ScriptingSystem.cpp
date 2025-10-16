@@ -65,6 +65,18 @@ void ScriptingSystem::update() {
                 s.animationFrames = 8;
                 s.animationDuration = 1000;
                 s.lastUpdate = GetTime() * 1000;
+
+                // Add collider for enemy (similar to player)
+                auto& collider = enemy.addComponent<ColliderComponent>();
+                collider.width = 20;
+                collider.height = 20;
+                collider.offsetX = 14;
+                collider.offsetY = 20;
+
+                // Add HP component
+                auto& hp = enemy.addComponent<HPComponent>();
+                hp.maxHP = 30;
+                hp.currentHP = 30;
             }
         }
     }
