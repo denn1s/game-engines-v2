@@ -766,3 +766,162 @@ void EnemyMovementSystem::update() {
         }
     }
 }
+
+void PlayerEnemyCollisionSystem::update() {
+    // Get all players with collision components
+    auto playerView = scene->r.view<PlayerComponent, TransformComponent, ColliderComponent, HPComponent, DamageCooldownComponent>();
+
+    // Get all enemies with collision components
+    auto enemyView = scene->r.view<EnemyComponent, TransformComponent, ColliderComponent>();
+
+    float currentTime = GetTime();
+    float spriteScale = 5.0f; // Same scale used throughout the game
+
+    for (auto playerEntity : playerView) {
+        auto& playerTransform = playerView.get<TransformComponent>(playerEntity);
+        auto& playerCollider = playerView.get<ColliderComponent>(playerEntity);
+        auto& playerHP = playerView.get<HPComponent>(playerEntity);
+        auto& cooldown = playerView.get<DamageCooldownComponent>(playerEntity);
+
+        // Check if player can take damage (cooldown expired)
+        if (currentTime - cooldown.lastDamageTime < cooldown.cooldownDuration) {
+            continue; // Player is still in cooldown period
+        }
+
+        // Calculate player's collision rectangle
+        Rectangle playerRect = {
+            playerTransform.position.x + playerCollider.offsetX * spriteScale,
+            playerTransform.position.y + playerCollider.offsetY * spriteScale,
+            playerCollider.width * spriteScale,
+            playerCollider.height * spriteScale
+        };
+
+        // Check collision with each enemy
+        for (auto enemyEntity : enemyView) {
+            auto& enemyTransform = enemyView.get<TransformComponent>(enemyEntity);
+            auto& enemyCollider = enemyView.get<ColliderComponent>(enemyEntity);
+
+            // Calculate enemy's collision rectangle
+            Rectangle enemyRect = {
+                enemyTransform.position.x + enemyCollider.offsetX * spriteScale,
+                enemyTransform.position.y + enemyCollider.offsetY * spriteScale,
+                enemyCollider.width * spriteScale,
+                enemyCollider.height * spriteScale
+            };
+
+            // Check if rectangles intersect
+            if (CheckCollisionRecs(playerRect, enemyRect)) {
+                // Apply chunk damage to player
+                int damage = 10;
+                playerHP.currentHP -= damage;
+                cooldown.lastDamageTime = currentTime;
+
+                std::println("Player hit by enemy! Took {} damage. HP: {}/{}", damage, playerHP.currentHP, playerHP.maxHP);
+
+                break; // Only process one collision per frame
+            }
+        }
+    }
+}
+
+void DeathSystem::update() {
+    // Check all entities with HP component
+    auto view = scene->r.view<HPComponent>();
+
+    std::vector<entt::entity> entitiesToDestroy;
+
+    for (auto entity : view) {
+        auto& hp = view.get<HPComponent>(entity);
+
+        // Check if entity is dead
+        if (hp.currentHP <= 0) {
+            // Check if it's the player
+            if (scene->r.all_of<PlayerComponent>(entity)) {
+                std::println("Player has died! Game Over!");
+            } else if (scene->r.all_of<EnemyComponent>(entity)) {
+                std::println("Enemy defeated!");
+            }
+
+            // Mark for destruction
+            entitiesToDestroy.push_back(entity);
+        }
+    }
+
+    // Destroy all dead entities
+    for (auto entity : entitiesToDestroy) {
+        scene->r.destroy(entity);
+    }
+}
+
+void HPRenderSystem::render() {
+    auto view = scene->r.view<TransformComponent, HPComponent>();
+    auto& cameraTransform = scene->camera->get<TransformComponent>();
+    auto& cameraComponent = scene->camera->get<CameraComponent>();
+    float cam_vw = (float)cameraComponent.vw;
+    float cam_vh = (float)cameraComponent.vh;
+    float zoom = cameraComponent.zoom;
+
+    for (auto entity : view) {
+        auto& transform = view.get<TransformComponent>(entity);
+        auto& hp = view.get<HPComponent>(entity);
+
+        // HP bar dimensions
+        float barWidth = 100.0f;
+        float barHeight = 10.0f;
+        float spriteScale = 5.0f;
+
+        // Sprite has 16px offset in the texture, adjust HP bar position
+        // Move 16 pixels right and 16*2 pixels down (below sprite) accounting for scale
+        float barOffsetX = 16.0f * spriteScale;
+        float barOffsetY = 16.0f * 2.0f * spriteScale;
+
+        // Calculate HP bar position in world coordinates
+        float worldX = transform.position.x + barOffsetX;
+        float worldY = transform.position.y + barOffsetY;
+
+        // Convert to screen coordinates with camera transform
+        float screenX = worldX - cameraTransform.position.x;
+        float screenY = worldY - cameraTransform.position.y;
+
+        float newScreenX = cam_vw / 2.0f + (screenX - cam_vw / 2.0f) * zoom;
+        float newScreenY = cam_vh / 2.0f + (screenY - cam_vh / 2.0f) * zoom;
+
+        // Calculate HP ratio
+        float hpRatio = (float)hp.currentHP / (float)hp.maxHP;
+        if (hpRatio < 0) hpRatio = 0;
+        if (hpRatio > 1) hpRatio = 1;
+
+        // Determine bar color based on entity type
+        Color barColor = GREEN; // Default for player
+        if (scene->r.all_of<EnemyComponent>(entity)) {
+            barColor = RED;
+        }
+
+        // Draw background (dark gray)
+        DrawRectangle(
+            newScreenX,
+            newScreenY,
+            barWidth * zoom,
+            barHeight * zoom,
+            DARKGRAY
+        );
+
+        // Draw HP bar (colored based on entity type)
+        DrawRectangle(
+            newScreenX,
+            newScreenY,
+            barWidth * hpRatio * zoom,
+            barHeight * zoom,
+            barColor
+        );
+
+        // Draw border
+        DrawRectangleLines(
+            newScreenX,
+            newScreenY,
+            barWidth * zoom,
+            barHeight * zoom,
+            BLACK
+        );
+    }
+}

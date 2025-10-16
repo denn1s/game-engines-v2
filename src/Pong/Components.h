@@ -63,3 +63,13 @@ struct IntGridComponent {
     std::vector<int> grid;
     int width, height;
 };
+
+struct HPComponent {
+    int maxHP;
+    int currentHP;
+};
+
+struct DamageCooldownComponent {
+    float lastDamageTime = 0.0f;
+    float cooldownDuration = 1.0f;  // 1 second cooldown between damage
+};
