@@ -70,6 +70,13 @@ struct HPComponent {
 };
 
 struct DamageCooldownComponent {
-    float lastDamageTime = 0.0f;
-    float cooldownDuration = 1.0f;  // 1 second cooldown between damage
+    float lastDamageTime = -999.0f;  // Initialize to far in the past to prevent initial blinking
+    float cooldownDuration = 1.0f;   // 1 second cooldown between damage
+};
+
+struct KnockbackComponent {
+    Vector2 knockbackVelocity = {0, 0};  // The knockback force
+    float knockbackDuration = 0.2f;      // How long knockback lasts
+    float knockbackStartTime = 0.0f;     // When knockback started
+    bool isKnockedBack = false;          // Is currently being knocked back
 };

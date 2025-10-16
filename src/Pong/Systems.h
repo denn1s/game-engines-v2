@@ -113,4 +113,9 @@ public:
     void render() override;
 };
 
+class KnockbackSystem : public System {
+public:
+    void update() override;
+};
+
 

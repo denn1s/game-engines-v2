@@ -267,6 +267,8 @@ void SpriteRenderSystem::render() {
     float cam_vh = (float)cameraComponent.vh;
     float zoom = cameraComponent.zoom;
 
+    const float BLINK_INTERVAL = 0.08f;  // How fast to blink (seconds)
+
     for (auto entity : view) {
         const auto& transform = view.get<TransformComponent>(entity);
         const auto& sprite = view.get<SpriteComponent>(entity);
@@ -296,7 +298,27 @@ void SpriteRenderSystem::render() {
             worldH * zoom
         };
 
-        DrawTexturePro(sprite.texture, sourceRec, destRec, {0, 0}, 0, WHITE);
+        // Determine tint color (for iframe blinking effect)
+        Color tintColor = WHITE;
+
+        // Check if entity has damage cooldown (iframe)
+        if (scene->r.all_of<PlayerComponent>(entity) &&
+            scene->r.all_of<DamageCooldownComponent>(entity)) {
+            auto& cooldown = scene->r.get<DamageCooldownComponent>(entity);
+            float timeSinceDamage = GetTime() - cooldown.lastDamageTime;
+
+            // Only blink if within cooldown period (iframe)
+            if (timeSinceDamage < cooldown.cooldownDuration) {
+                // Blink every BLINK_INTERVAL seconds
+                int blinkCount = (int)(timeSinceDamage / BLINK_INTERVAL);
+                if (blinkCount % 2 == 0) {
+                    // Tint red on even blinks
+                    tintColor = RED;
+                }
+            }
+        }
+
+        DrawTexturePro(sprite.texture, sourceRec, destRec, {0, 0}, 0, tintColor);
     }
 }
 
@@ -447,8 +469,18 @@ void InputSystem::update() {
     for (auto entity : view) {
         auto& player = view.get<PlayerComponent>(entity);
         auto& vel = view.get<VelocityComponent>(entity);
+
+        // Check if player is being knocked back
+        if (scene->r.all_of<KnockbackComponent>(entity)) {
+            auto& knockback = scene->r.get<KnockbackComponent>(entity);
+            if (knockback.isKnockedBack) {
+                // Skip input processing during knockback
+                continue;
+            }
+        }
+
         vel.velocity = {0, 0};
-        
+
         float currentSpeed = player.isRunning ? 200.0f : 100.0f;
 
         if (IsKeyDown(KEY_W)) vel.velocity.y = -currentSpeed;
@@ -769,19 +801,21 @@ void EnemyMovementSystem::update() {
 
 void PlayerEnemyCollisionSystem::update() {
     // Get all players with collision components
-    auto playerView = scene->r.view<PlayerComponent, TransformComponent, ColliderComponent, HPComponent, DamageCooldownComponent>();
+    auto playerView = scene->r.view<PlayerComponent, TransformComponent, ColliderComponent, HPComponent, DamageCooldownComponent, KnockbackComponent>();
 
     // Get all enemies with collision components
     auto enemyView = scene->r.view<EnemyComponent, TransformComponent, ColliderComponent>();
 
     float currentTime = GetTime();
     float spriteScale = 5.0f; // Same scale used throughout the game
+    const float KNOCKBACK_FORCE = 300.0f;  // Speed of knockback
 
     for (auto playerEntity : playerView) {
         auto& playerTransform = playerView.get<TransformComponent>(playerEntity);
         auto& playerCollider = playerView.get<ColliderComponent>(playerEntity);
         auto& playerHP = playerView.get<HPComponent>(playerEntity);
         auto& cooldown = playerView.get<DamageCooldownComponent>(playerEntity);
+        auto& knockback = playerView.get<KnockbackComponent>(playerEntity);
 
         // Check if player can take damage (cooldown expired)
         if (currentTime - cooldown.lastDamageTime < cooldown.cooldownDuration) {
@@ -816,7 +850,28 @@ void PlayerEnemyCollisionSystem::update() {
                 playerHP.currentHP -= damage;
                 cooldown.lastDamageTime = currentTime;
 
-                std::println("Player hit by enemy! Took {} damage. HP: {}/{}", damage, playerHP.currentHP, playerHP.maxHP);
+                // Calculate knockback direction (from enemy to player)
+                Vector2 knockbackDir = {
+                    playerTransform.position.x - enemyTransform.position.x,
+                    playerTransform.position.y - enemyTransform.position.y
+                };
+
+                // Normalize direction
+                float length = sqrt(knockbackDir.x * knockbackDir.x + knockbackDir.y * knockbackDir.y);
+                if (length > 0) {
+                    knockbackDir.x /= length;
+                    knockbackDir.y /= length;
+                }
+
+                // Apply knockback
+                knockback.knockbackVelocity = {
+                    knockbackDir.x * KNOCKBACK_FORCE,
+                    knockbackDir.y * KNOCKBACK_FORCE
+                };
+                knockback.isKnockedBack = true;
+                knockback.knockbackStartTime = currentTime;
+
+                std::println("Player hit by enemy! Took {} damage. HP: {}/{}. Knocked back!", damage, playerHP.currentHP, playerHP.maxHP);
 
                 break; // Only process one collision per frame
             }
@@ -923,5 +978,31 @@ void HPRenderSystem::render() {
             barHeight * zoom,
             BLACK
         );
+    }
+}
+
+void KnockbackSystem::update() {
+    auto view = scene->r.view<KnockbackComponent, VelocityComponent>();
+    float currentTime = GetTime();
+
+    for (auto entity : view) {
+        auto& knockback = view.get<KnockbackComponent>(entity);
+        auto& velocity = view.get<VelocityComponent>(entity);
+
+        // Check if knockback is active
+        if (knockback.isKnockedBack) {
+            float elapsed = currentTime - knockback.knockbackStartTime;
+
+            // Check if knockback duration has expired
+            if (elapsed >= knockback.knockbackDuration) {
+                // End knockback
+                knockback.isKnockedBack = false;
+                knockback.knockbackVelocity = {0, 0};
+                std::println("Knockback ended");
+            } else {
+                // Apply knockback velocity (overrides any input velocity)
+                velocity.velocity = knockback.knockbackVelocity;
+            }
+        }
     }
 }
