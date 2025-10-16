@@ -46,6 +46,9 @@ Scene* Pong::createGameplayScene() {
     auto& cooldown = white.addComponent<DamageCooldownComponent>();
     cooldown.cooldownDuration = 1.0f;
 
+    // Add knockback component
+    white.addComponent<KnockbackComponent>();
+
     // Add systems
     gameplayScene->addSystem(new ScriptingSystem("assets/Scripts/Enemy/OneTimeSpawn.lua"));
     gameplayScene->addSystem(new CameraSystem());
@@ -54,6 +57,7 @@ Scene* Pong::createGameplayScene() {
     gameplayScene->addSystem(new TilemapRenderSystem());
     gameplayScene->addSystem(new HelloSystem());
     gameplayScene->addSystem(new InputSystem());
+    gameplayScene->addSystem(new KnockbackSystem());             // Apply knockback (overrides input)
     gameplayScene->addSystem(new CollisionSystem());
     gameplayScene->addSystem(new SolidCollisionSystem());
     gameplayScene->addSystem(new TreasureSystem());
